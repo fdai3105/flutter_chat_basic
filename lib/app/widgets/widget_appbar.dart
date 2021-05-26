@@ -18,7 +18,7 @@ class WidgetAppBar extends StatelessWidget implements PreferredSizeWidget {
       shadowColor: Colors.transparent,
       iconTheme: const IconThemeData(color: Colors.black87),
       title: Text(
-        title ?? '',
+        title,
         style: TextStyle(
           color: Colors.black87,
         ),
