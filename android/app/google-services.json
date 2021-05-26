@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "921625531325-smbapcfihapd38kulruf8e5iflhadhgm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.pdteam_demo_chat",
+            "certificate_hash": "b26fdb61dba67df262cfbd1db4ecc2e97ad5cf5d"
+          }
+        },
+        {
           "client_id": "921625531325-m3orspd5kboouim4vkp85qfjtmds3abr.apps.googleusercontent.com",
           "client_type": 3
         }
