@@ -39,6 +39,7 @@ dependencies:
   get: ^4.1.4
 
   # utils
+  shared_preferences: ^2.0.6
 
 dev_dependencies:
   flutter_test:
