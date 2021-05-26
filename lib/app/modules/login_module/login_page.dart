@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pdteam_demo_chat/app/data/provider/auth_provider.dart';
 import 'package:pdteam_demo_chat/app/modules/login_module/login_controller.dart';
 import 'package:pdteam_demo_chat/app/widgets/widgets.dart';
 
@@ -33,16 +32,17 @@ class LoginPage extends GetView<LoginController> {
                 ),
               ),
             ),
-            onPressed: () {
-              controller.loginWithGoogle();
-            },
+            onPressed: () => controller.loginWithGoogle(),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Image.network("https://raw.githubusercontent.com/sbis04/flutterfire-samples/google-sign-in/assets/google_logo.png", height: 35.0,),
+                  Image.network(
+                    "https://raw.githubusercontent.com/sbis04/flutterfire-samples/google-sign-in/assets/google_logo.png",
+                    height: 35.0,
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
                     child: Text(

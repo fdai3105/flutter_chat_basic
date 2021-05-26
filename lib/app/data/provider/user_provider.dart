@@ -1,8 +1,6 @@
-import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:pdteam_demo_chat/app/data/models/user.dart';
+import 'package:pdteam_demo_chat/app/data/models/user.dart' as MyUser;
 
 class UserProvider {
   final FirebaseFirestore store;
@@ -13,20 +11,16 @@ class UserProvider {
     final ref = store.collection('user').doc(user.uid);
     final isExit = await ref.get();
     if (!isExit.exists) {
-      await ref.set(MyUser.fromAuth(user).toMap());
+      await ref.set(MyUser.User.fromAuth(user).toMap());
     }
   }
 
-  Stream<List<MyUser>> getListUsers() {
-    final ref = store.collection('user');
-    return ref.snapshots().transform(StreamTransformer.fromHandlers(
-      handleData: (snapshot, sink) {
-        final users = <MyUser>[];
-        snapshot.docs.forEach((element) {
-          users.add(MyUser.fromMap(element.data()));
-        });
-        sink.add(users);
-      },
-    ));
+  Future<List<MyUser.User>> getListUsers() async {
+    final users = <MyUser.User>[];
+    final ref = await store.collection('user').get();
+    ref.docs.forEach((element) {
+      users.add(MyUser.User.fromMap(element.data()));
+    });
+    return users;
   }
 }
