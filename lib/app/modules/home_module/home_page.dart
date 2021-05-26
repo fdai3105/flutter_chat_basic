@@ -8,7 +8,9 @@ class HomePage extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: WidgetAppBar(title: 'Home'),
+      appBar: WidgetAppBar(title: Text("Home", style: TextStyle(
+        color: Colors.black87,
+      ),)),
       body: SafeArea(
         child: GetX<HomeController>(
           builder: (_) {
@@ -18,7 +20,7 @@ class HomePage extends GetView<HomeController> {
                 final item = controller.users[i];
                 return GestureDetector(
                   onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=> ChatPage(name: item.name)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=> ChatPage(name: item.name, avatar: item.avatar!,)));
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0),

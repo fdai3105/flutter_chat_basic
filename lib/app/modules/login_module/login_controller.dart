@@ -11,6 +11,11 @@ class LoginController extends GetxController {
 
   LoginController({required this.provider, this.isLogin});
 
+@override
+  void onInit() {
+    // TODO: implement onInit
+    super.onInit();
+  }
   void loginWithGoogle() async {
     final user = await provider.loginWithGoogle();
     final SharedPreferences _prefs = await SharedPreferences.getInstance();

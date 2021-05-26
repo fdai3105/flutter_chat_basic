@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:pdteam_demo_chat/app/data/models/user.dart' as MyUser;
 import 'package:pdteam_demo_chat/app/data/provider/user_provider.dart';

@@ -7,7 +7,7 @@ class LoginPage extends GetView<LoginController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: WidgetAppBar(title: 'Login'),
+      appBar: WidgetAppBar(title: Text('login')),
       body: Column(
         children: [
           TextFormField(
