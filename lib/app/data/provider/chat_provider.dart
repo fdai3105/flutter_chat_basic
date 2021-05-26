@@ -34,26 +34,26 @@ class ChatProvider {
   //   ));
   // }
   //
-  // Future sendMessage(Message message) async {
-  //   final ref = await store.collection('conversations').where('members',
-  //       arrayContainsAny: [message.senderUID, message.receiverUID]).get();
-  //
-  //   if (ref.docs.isEmpty) {
-  //     final newC = await store.collection('conversations').add({
-  //       'members': [message.senderUID, message.receiverUID]
-  //     });
-  //
-  //     store
-  //         .collection('conversations')
-  //         .doc(newC.id)
-  //         .collection('messages')
-  //         .add(message.toMap());
-  //   } else {
-  //     store
-  //         .collection('conversations')
-  //         .doc(ref.docs.first.id)
-  //         .collection('messages')
-  //         .add(message.toMap());
-  //   }
-  // }
+  Future sendMessage(Message message) async {
+    final ref = await store.collection('conversations').where('members',
+        arrayContainsAny: [message.senderUID, message.receiverUID]).get();
+
+    if (ref.docs.isEmpty) {
+      final newC = await store.collection('conversations').add({
+        'members': [message.senderUID, message.receiverUID]
+      });
+
+      store
+          .collection('conversations')
+          .doc(newC.id)
+          .collection('messages')
+          .add(message.toMap());
+    } else {
+      store
+          .collection('conversations')
+          .doc(ref.docs.first.id)
+          .collection('messages')
+          .add(message.toMap());
+    }
+  }
 }

@@ -5,6 +5,7 @@ import 'package:pdteam_demo_chat/app/modules/chat_module/chat.dart';
 import 'package:pdteam_demo_chat/app/widgets/widget_appbar.dart';
 
 class ChatPage extends GetView<ChatController> {
+  double? height, width;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +48,6 @@ class ChatPage extends GetView<ChatController> {
                   itemCount: controller.messages.length,
                   itemBuilder: (context, i) {
                     final item = controller.messages[i];
-
                     return Bubble(
                       message: item.message,
                       isMe: item.senderUID ==
@@ -88,6 +88,7 @@ class ChatPage extends GetView<ChatController> {
                 ),
                 Expanded(
                   child: TextFormField(
+                    controller: controller.textController,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                       hintText: 'Enter Message',
