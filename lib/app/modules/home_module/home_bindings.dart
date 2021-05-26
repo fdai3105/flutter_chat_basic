@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:pdteam_demo_chat/app/data/provider/user_provider.dart';
 
@@ -8,6 +7,6 @@ class HomeBinding implements Bindings {
   @override
   void dependencies() {
     Get.lazyPut(() => HomeController(
-        provider: UserProvider(store: FirebaseFirestore.instance)));
+        provider: UserProvider()));
   }
 }

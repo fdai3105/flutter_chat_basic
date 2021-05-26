@@ -1,20 +1,20 @@
-import 'package:firebase_auth/firebase_auth.dart' as FB;
+import 'package:firebase_auth/firebase_auth.dart';
 
-class User {
+class MyUser {
   String uID;
   String name;
   String email;
   String? avatar;
 
-  User({
+  MyUser({
     required this.uID,
     required this.name,
     required this.email,
     this.avatar,
   });
 
-  factory User.fromAuth(FB.User userAuth) {
-    return User(
+  factory MyUser.fromAuth(User userAuth) {
+    return MyUser(
       uID: userAuth.uid,
       name: userAuth.displayName ?? '',
       email: userAuth.email ?? '',
@@ -22,8 +22,8 @@ class User {
     );
   }
 
-  factory User.fromMap(Map map) {
-    return User(
+  factory MyUser.fromMap(Map map) {
+    return MyUser(
       uID: map['uid'],
       name: map['name'],
       email: map['email'],

@@ -1,17 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pdteam_demo_chat/app/modules/chat_module/chat.dart';
 import 'package:pdteam_demo_chat/app/widgets/widget_appbar.dart';
 
-class ChatPage extends GetView<ChatController>{
-  final String name;
-  final String avatar;
-
-  ChatPage({required this.name, required this.avatar});
-
+class ChatPage extends GetView<ChatController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: WidgetAppBar(
         title: Row(
           children: [
@@ -20,15 +17,16 @@ class ChatPage extends GetView<ChatController>{
               width: 50,
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: Colors.grey.shade200, width: 2)
-              ),
+                  border: Border.all(color: Colors.grey.shade200, width: 2)),
               child: ClipOval(
-                child: Image.network(avatar),
+                child: Image.network(Get.arguments['avatar']),
               ),
             ),
-            SizedBox(width: 5,),
+            SizedBox(
+              width: 5,
+            ),
             Text(
-              name,
+              Get.arguments['name'],
               style: TextStyle(
                 color: Colors.black87,
               ),
@@ -37,56 +35,27 @@ class ChatPage extends GetView<ChatController>{
         ),
       ),
       body: Column(
-        children: <Widget>[
+        children: [
           Expanded(
-            child: Container(
-              color: Colors.white,
-              child: Column(
-                children: <Widget>[
-                  Flexible(
-                    child: ListView.builder(
-                      reverse: true,
-                      itemCount: 3,
-                      shrinkWrap: true,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Column(
-                            children: <Widget>[
-                              Text(
-                                'Today',
-                                style:
-                                TextStyle(color: Colors.grey, fontSize: 12),
-                              ),
-                              Bubble(
-                                message: 'Hi How are you ?',
-                                isMe: true,
-                              ),
-                              Bubble(
-                                message: 'have you seen the docs yet?',
-                                isMe: true,
-                              ),
-                              Text(
-                                'Feb 25, 2018',
-                                style:
-                                TextStyle(color: Colors.grey, fontSize: 12),
-                              ),
-                              Bubble(
-                                message: 'i am fine !',
-                                isMe: false,
-                              ),
-                              Bubble(
-                                message: 'yes i\'ve seen the docs',
-                                isMe: false,
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
+            child: GetX<ChatController>(
+              builder: (_) {
+                if(controller.messages.isEmpty) {
+                  return SizedBox();
+                }
+                return ListView.builder(
+                  reverse: true,
+                  itemCount: controller.messages.length,
+                  itemBuilder: (context, i) {
+                    final item = controller.messages[i];
+
+                    return Bubble(
+                      message: item.message,
+                      isMe: item.senderUID ==
+                          FirebaseAuth.instance.currentUser!.uid,
+                    );
+                  },
+                );
+              },
             ),
           ),
           Container(
@@ -127,7 +96,9 @@ class ChatPage extends GetView<ChatController>{
                   ),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    controller.sendMessage();
+                  },
                   icon: Icon(
                     Icons.send,
                     color: Color(0xff3E8DF3),
@@ -157,53 +128,53 @@ class Bubble extends StatelessWidget {
         children: <Widget>[
           Column(
             mainAxisAlignment:
-            isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+                isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
             crossAxisAlignment:
-            isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: <Widget>[
               Container(
                 padding: EdgeInsets.all(15),
                 decoration: BoxDecoration(
                   gradient: isMe
                       ? LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      stops: [
-                        0.1,
-                        1
-                      ],
-                      colors: [
-                        Colors.grey,
-                        Colors.blueGrey,
-                      ])
+                          begin: Alignment.topRight,
+                          end: Alignment.bottomLeft,
+                          stops: [
+                              0.1,
+                              1
+                            ],
+                          colors: [
+                              Colors.grey,
+                              Colors.blueGrey,
+                            ])
                       : LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      stops: [
-                        0.1,
-                        1
-                      ],
-                      colors: [
-                        Color(0xFFEBF5FC),
-                        Color(0xFFEBF5FC),
-                      ]),
+                          begin: Alignment.topRight,
+                          end: Alignment.bottomLeft,
+                          stops: [
+                              0.1,
+                              1
+                            ],
+                          colors: [
+                              Color(0xFFEBF5FC),
+                              Color(0xFFEBF5FC),
+                            ]),
                   borderRadius: isMe
                       ? BorderRadius.only(
-                    topRight: Radius.circular(15),
-                    topLeft: Radius.circular(15),
-                    bottomRight: Radius.circular(0),
-                    bottomLeft: Radius.circular(15),
-                  )
+                          topRight: Radius.circular(15),
+                          topLeft: Radius.circular(15),
+                          bottomRight: Radius.circular(0),
+                          bottomLeft: Radius.circular(15),
+                        )
                       : BorderRadius.only(
-                    topRight: Radius.circular(15),
-                    topLeft: Radius.circular(15),
-                    bottomRight: Radius.circular(15),
-                    bottomLeft: Radius.circular(0),
-                  ),
+                          topRight: Radius.circular(15),
+                          topLeft: Radius.circular(15),
+                          bottomRight: Radius.circular(15),
+                          bottomLeft: Radius.circular(0),
+                        ),
                 ),
                 child: Column(
                   crossAxisAlignment:
-                  isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                      isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
                       message,
@@ -221,5 +192,4 @@ class Bubble extends StatelessWidget {
       ),
     );
   }
-
 }

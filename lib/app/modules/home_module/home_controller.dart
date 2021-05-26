@@ -8,7 +8,7 @@ class HomeController extends GetxController {
   HomeController({required this.provider});
 
   final _isLoading = true.obs;
-  final _users = <MyUser.User>[].obs;
+  final _users = <MyUser.MyUser>[].obs;
 
   get isLoading => _isLoading.value;
 
@@ -16,7 +16,7 @@ class HomeController extends GetxController {
     _isLoading.value = value;
   }
 
-  List<MyUser.User> get users => _users.value;
+  List<MyUser.MyUser> get users => _users.value;
 
   set users(value) {
     _users.value = value;
@@ -24,7 +24,9 @@ class HomeController extends GetxController {
 
   @override
   void onInit() async {
-    users = await provider.getListUsers();
+    provider.getListUsers().listen((event) {
+      users = event;
+    });
     isLoading = false;
     super.onInit();
   }

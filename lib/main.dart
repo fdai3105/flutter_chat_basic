@@ -11,6 +11,7 @@ import 'package:pdteam_demo_chat/app/routes/app_pages.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   runApp(
       GetMaterialApp(
         title: 'Flutter Demo',
