@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "921625531325",
+    "project_id": "pdteam-demo-chat",
+    "storage_bucket": "pdteam-demo-chat.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:921625531325:android:e65e5d47a3495aa95238d4",
+        "android_client_info": {
+          "package_name": "com.example.pdteam_demo_chat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "921625531325-40mfh8cbme9lligrc77f9ncghaisoukj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.pdteam_demo_chat",
+            "certificate_hash": "a7541be5f11baf8cdf4b45ef05d74ff2279ac86b"
+          }
+        },
+        {
+          "client_id": "921625531325-m3orspd5kboouim4vkp85qfjtmds3abr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8NlRKmtY9nBzUOMqX3RuPlPE05np0Y2c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "921625531325-m3orspd5kboouim4vkp85qfjtmds3abr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
