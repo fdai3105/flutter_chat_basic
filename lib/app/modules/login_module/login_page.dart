@@ -32,15 +32,17 @@ class LoginPage extends GetView<LoginController> {
                 ),
               ),
             ),
-            onPressed: () {
-            },
+            onPressed: () => controller.loginWithGoogle(),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Image.network("https://raw.githubusercontent.com/sbis04/flutterfire-samples/google-sign-in/assets/google_logo.png", height: 35.0,),
+                  Image.network(
+                    "https://raw.githubusercontent.com/sbis04/flutterfire-samples/google-sign-in/assets/google_logo.png",
+                    height: 35.0,
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
                     child: Text(
