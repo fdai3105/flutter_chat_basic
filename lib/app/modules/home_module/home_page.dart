@@ -18,7 +18,7 @@ class HomePage extends GetView<HomeController> {
                 final item = controller.users[i];
                 return GestureDetector(
                   onTap: (){
-                    // Navigator.push(context, MaterialPageRoute(builder: (context)=> ChatPage(avatar: item.avatar!, name: item.name)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=> ChatPage(name: item.name)));
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -26,6 +26,7 @@ class HomePage extends GetView<HomeController> {
                       leading: Container(
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
+                          border: Border.all(color: Colors.grey.shade200, width: 2)
                         ),
                         child: ClipOval(
                           child: Image.network(item.avatar!,),
