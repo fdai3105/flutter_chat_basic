@@ -37,6 +37,13 @@
             {
               "client_id": "921625531325-m3orspd5kboouim4vkp85qfjtmds3abr.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "921625531325-etq8kekhvvptq0t58d6cm7ps14v962hm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.pdteamDemoChat"
+              }
             }
           ]
         }
