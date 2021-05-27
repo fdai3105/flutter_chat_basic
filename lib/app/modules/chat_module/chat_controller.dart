@@ -37,12 +37,14 @@ class ChatController extends GetxController {
   }
 
   void sendMessage() {
-    provider.sendMessage(Message(
-      message: textController.text,
-      senderUID: FirebaseAuth.instance.currentUser!.uid,
-      receiverUID: Get.arguments['uID'],
-      createdAt: DateTime.now().millisecondsSinceEpoch,
-    ));
-    textController.clear();
+    if (textController.text.isNotEmpty) {
+      provider.sendMessage(Message(
+        message: textController.text,
+        senderUID: FirebaseAuth.instance.currentUser!.uid,
+        receiverUID: Get.arguments['uID'],
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+      ));
+      textController.clear();
+    }
   }
 }

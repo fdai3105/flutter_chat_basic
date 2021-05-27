@@ -22,58 +22,30 @@ class HomePage extends GetView<HomeController> {
               itemCount: controller.users.length,
               itemBuilder: (context, i) {
                 final item = controller.users[i];
-                return GestureDetector(
-                  onTap: () {
-                    Get.toNamed(Routes.chat, arguments: {
-                      'uID': item.uID,
-                      'name': item.name,
-                      'avatar': item.avatar,
-                    });
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    child: ListTile(
-                      leading: Stack(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                    color: Colors.grey.shade200, width: 2)),
-                            child: ClipOval(
-                              child: Image.network(
-                                item.avatar!,
-                              ),
-                            ),
-                          ),
-                          item.isActive
-                              ? Positioned(
-                                  bottom: 4,
-                                  right: 4,
-                                  child: Container(
-                                    height: 14,
-                                    width: 14,
-                                    decoration: BoxDecoration(
-                                      color: Colors.green,
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                          color: Colors.white, width: 2),
-                                    ),
-                                  ),
-                                )
-                              : SizedBox(),
-                        ],
-                      ),
-                      title: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(item.name),
-                          Text(
-                            item.email,
-                            style: TextStyle(color: Colors.grey),
-                          )
-                        ],
-                      ),
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: ListTile(
+                    onTap: () {
+                      Get.toNamed(Routes.chat, arguments: {
+                        'uID': item.uID,
+                        'name': item.name,
+                        'avatar': item.avatar,
+                        'isActive': item.isActive,
+                      });
+                    },
+                    leading: WidgetAvatar(
+                      url: item.avatar,
+                      isActive: item.isActive,
+                    ),
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(item.name),
+                        Text(
+                          item.email,
+                          style: TextStyle(color: Colors.grey),
+                        )
+                      ],
                     ),
                   ),
                 );
