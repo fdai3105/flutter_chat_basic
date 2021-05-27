@@ -9,11 +9,18 @@ class HomePage extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: WidgetAppBar(
         title: Text(
           "Home",
           style: TextStyle(color: Colors.black87),
         ),
+        actions: [
+          IconButton(
+            onPressed: () => controller.logout(),
+            icon: Icon(Icons.logout),
+          ),
+        ],
       ),
       body: SafeArea(
         child: GetX<HomeController>(

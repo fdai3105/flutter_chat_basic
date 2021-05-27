@@ -28,8 +28,8 @@ class WidgetAvatar extends StatelessWidget {
 
   Widget _buildDot() {
     return Positioned(
-      bottom: 4,
-      right: 4,
+      bottom: 2,
+      right: 2,
       child: Container(
         height: 14,
         width: 14,
@@ -45,8 +45,9 @@ class WidgetAvatar extends StatelessWidget {
   Widget _buildAvatar() {
     return Container(
       decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: Colors.grey.shade200, width: 2)),
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.grey.shade200, width: 2),
+      ),
       child: ClipOval(
         child: url == null ? Image.asset('') : Image.network(url!),
       ),

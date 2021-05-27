@@ -7,58 +7,99 @@ class LoginPage extends GetView<LoginController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: WidgetAppBar(title: Text('login')),
-      body: Column(
-        children: [
-          TextFormField(
-            decoration: InputDecoration(
-              hintText: 'Email',
-            ),
-          ),
-          TextFormField(
-            decoration: InputDecoration(
-              hintText: 'Password',
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          OutlinedButton(
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.white),
-              shape: MaterialStateProperty.all(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(40),
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(height: 40),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Welcome To\nDemo Chat',
+                  style: TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
-            ),
-            onPressed: () => controller.loginWithGoogle(),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Image.network(
-                    "https://raw.githubusercontent.com/sbis04/flutterfire-samples/google-sign-in/assets/google_logo.png",
-                    height: 35.0,
+              const SizedBox(height: 20),
+              WidgetField(hint: 'Email'),
+              const SizedBox(height: 10),
+              WidgetField(hint: 'Password'),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: TextButton(
+                  onPressed: () => controller.loginWithGoogle(),
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    elevation: 0,
+                    shadowColor: Colors.transparent,
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: Text(
-                      'Sign in with Google',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.black54,
-                        fontWeight: FontWeight.w600,
-                      ),
+                  child: Text(
+                    'Sign in',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
                     ),
-                  )
+                  ),
+                ),
+              ),
+              const SizedBox(height: 30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Flexible(child: Divider(color: Colors.black87)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Text('or'),
+                  ),
+                  Flexible(child: Divider(color: Colors.black87)),
                 ],
               ),
-            ),
+              const SizedBox(height: 30),
+              SizedBox(
+                width: Get.size.width / 1.4,
+                height: 50,
+                child: TextButton(
+                  onPressed: () => controller.loginWithGoogle(),
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    elevation: 0,
+                    shadowColor: Colors.transparent,
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Image.asset(
+                        'assets/images/logo_google.png',
+                        height: 24,
+                        color: Colors.white,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10),
+                        child: Text(
+                          'Sign in with Google',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

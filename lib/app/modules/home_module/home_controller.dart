@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:pdteam_demo_chat/app/data/models/user.dart' as MyUser;
 import 'package:pdteam_demo_chat/app/data/provider/user_provider.dart';
+import 'package:pdteam_demo_chat/app/routes/app_pages.dart';
 
 class HomeController extends GetxController with WidgetsBindingObserver {
   final UserProvider provider;
@@ -25,6 +27,7 @@ class HomeController extends GetxController with WidgetsBindingObserver {
 
   @override
   void onInit() async {
+    UserProvider().changeActive(true);
     WidgetsBinding.instance!.addObserver(this);
     provider.getListUsers().listen((event) {
       users = event;
@@ -49,5 +52,10 @@ class HomeController extends GetxController with WidgetsBindingObserver {
         break;
     }
     super.didChangeAppLifecycleState(state);
+  }
+
+  Future logout() async {
+    await FirebaseAuth.instance.signOut();
+    Get.offAllNamed(Routes.login);
   }
 }
