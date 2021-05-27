@@ -17,8 +17,10 @@ class UserProvider {
 
   Future changeActive(bool isActive) async {
     final currentUser = FirebaseAuth.instance.currentUser;
-    final ref = store.collection('user').doc(currentUser!.uid);
-    ref.update({'active': isActive});
+    if (currentUser != null) {
+      final ref = store.collection('user').doc(currentUser.uid);
+      ref.update({'active': isActive});
+    }
   }
 
   Stream<List<MyUser>> getListUsers() {

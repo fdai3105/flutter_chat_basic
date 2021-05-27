@@ -7,53 +7,46 @@ import 'package:pdteam_demo_chat/app/data/models/message.dart';
 class ChatProvider {
   final FirebaseFirestore store = FirebaseFirestore.instance;
 
-  // Future<Stream<List<Message>>> getMessages(String uID) async {
-  //   final currentUser = FirebaseAuth.instance.currentUser;
-  //   final ref = await store
-  //       .collection('conversations')
-  //       .where('members', arrayContains: currentUser!.uid)
-  //       .get();
-  //
-  //   if (ref.size < 1) {
-  //     return Stream.empty();
-  //   }
-  //
-  //   return store
-  //       .collection('conversations')
-  //       .doc(ref.docs.first.id)
-  //       .collection('messages')
-  //       .snapshots()
-  //       .transform(StreamTransformer.fromHandlers(
-  //     handleData: (snapshot, sink) {
-  //       final messages = <Message>[];
-  //       snapshot.docs.forEach((element) {
-  //         messages.add(Message.fromMap(element.data()));
-  //       });
-  //       sink.add(messages);
-  //     },
-  //   ));
-  // }
-  //
-  Future sendMessage(Message message) async {
-    final ref = await store.collection('conversations').where('members',
-        arrayContainsAny: [message.senderUID, message.receiverUID]).get();
+  Stream<List<Message>> getMessages(String uID) {
+    final currentUser = FirebaseAuth.instance.currentUser;
 
-    if (ref.docs.isEmpty) {
-      final newC = await store.collection('conversations').add({
-        'members': [message.senderUID, message.receiverUID]
-      });
-
-      store
-          .collection('conversations')
-          .doc(newC.id)
-          .collection('messages')
-          .add(message.toMap());
+    var docID = '';
+    if (currentUser!.uid.hashCode <= uID.hashCode) {
+      docID = uID + currentUser.uid;
     } else {
-      store
-          .collection('conversations')
-          .doc(ref.docs.first.id)
-          .collection('messages')
-          .add(message.toMap());
+      docID = currentUser.uid + uID;
     }
+
+    final ref =
+        store.collection('conversations').doc(docID).collection('messages');
+
+    return ref
+        .orderBy('created_at', descending: true)
+        .snapshots()
+        .transform(StreamTransformer.fromHandlers(
+      handleData: (snapshot, sink) {
+        final messages = <Message>[];
+        snapshot.docs.forEach((element) {
+          messages.add(Message.fromMap(element.data()));
+        });
+        sink.add(messages);
+      },
+    ));
+  }
+
+  Future sendMessage(Message message) async {
+    final ref = store.collection('conversations');
+
+    var docID = '';
+    if (message.senderUID.hashCode <= message.receiverUID.hashCode) {
+      docID = message.receiverUID + message.senderUID;
+    } else {
+      docID = message.senderUID + message.receiverUID;
+    }
+
+    ref
+        .doc(docID)
+        .collection('messages')
+        .add(message.toMap());
   }
 }

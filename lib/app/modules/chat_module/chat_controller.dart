@@ -6,9 +6,10 @@ import 'package:pdteam_demo_chat/app/data/provider/chat_provider.dart';
 
 class ChatController extends GetxController {
   final ChatProvider provider;
-  TextEditingController? textController;
 
   ChatController({required this.provider});
+
+  final textController = TextEditingController();
 
   final _isLoading = true.obs;
   final _messages = <Message>[].obs;
@@ -27,29 +28,22 @@ class ChatController extends GetxController {
 
   @override
   void onInit() async {
-    // await provider.getMessages(Get.arguments['uID'])
-    //   ..listen((event) {
-    //     messages = event;
-    //   });
-    textController = TextEditingController();
+    provider.getMessages(Get.arguments['uID'])
+      ..listen((event) {
+        messages = event;
+      });
     isLoading = false;
     super.onInit();
   }
 
   void sendMessage() {
-    if(textController!.text.isNotEmpty){
-      _messages.add(Message(
-          senderUID: FirebaseAuth.instance.currentUser!.uid,
-          receiverUID: Get.arguments['uID'],
-          message: textController!.text,
-          createdAt: DateTime.now().millisecondsSinceEpoch));
-      textController!.clear();
-    }
-    // provider.sendMessage(Message(
-    //   message: 'demo',
-    //   senderUID: FirebaseAuth.instance.currentUser!.uid,
-    //   receiverUID: Get.arguments['uID'],
-    //   createdAt: DateTime.now().millisecondsSinceEpoch,
-    // ));
+    provider.sendMessage(Message(
+      message: textController.text,
+      senderUID: FirebaseAuth.instance.currentUser!.uid,
+      receiverUID: Get.arguments['uID'],
+      createdAt: DateTime.now().millisecondsSinceEpoch,
+    ));
+
+    textController.clear();
   }
 }
