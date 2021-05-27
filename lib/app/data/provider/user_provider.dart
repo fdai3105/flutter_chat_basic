@@ -22,7 +22,10 @@ class UserProvider {
   }
 
   Stream<List<MyUser>> getListUsers() {
-    final ref = store.collection('user');
+    final ref = store
+        .collection('user')
+        .orderBy('active', descending: true)
+        .orderBy('name');
     return ref.snapshots().transform(StreamTransformer.fromHandlers(
       handleData: (snapshot, sink) {
         final users = <MyUser>[];
