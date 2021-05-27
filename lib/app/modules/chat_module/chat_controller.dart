@@ -43,7 +43,6 @@ class ChatController extends GetxController {
       receiverUID: Get.arguments['uID'],
       createdAt: DateTime.now().millisecondsSinceEpoch,
     ));
-
     textController.clear();
   }
 }

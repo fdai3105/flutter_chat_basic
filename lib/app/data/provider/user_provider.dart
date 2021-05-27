@@ -32,7 +32,9 @@ class UserProvider {
       handleData: (snapshot, sink) {
         final users = <MyUser>[];
         snapshot.docs.forEach((element) {
-          users.add(MyUser.fromMap(element.data()));
+          if (element.id != getCurrentUser()!.uid) {
+            users.add(MyUser.fromMap(element.data()));
+          }
         });
         sink.add(users);
       },

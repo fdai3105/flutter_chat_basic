@@ -9,17 +9,14 @@ class ChatProvider {
 
   Stream<List<Message>> getMessages(String uID) {
     final currentUser = FirebaseAuth.instance.currentUser;
-
     var docID = '';
     if (currentUser!.uid.hashCode <= uID.hashCode) {
       docID = uID + currentUser.uid;
     } else {
       docID = currentUser.uid + uID;
     }
-
     final ref =
         store.collection('conversations').doc(docID).collection('messages');
-
     return ref
         .orderBy('created_at', descending: true)
         .snapshots()
@@ -36,17 +33,12 @@ class ChatProvider {
 
   Future sendMessage(Message message) async {
     final ref = store.collection('conversations');
-
     var docID = '';
     if (message.senderUID.hashCode <= message.receiverUID.hashCode) {
       docID = message.receiverUID + message.senderUID;
     } else {
       docID = message.senderUID + message.receiverUID;
     }
-
-    ref
-        .doc(docID)
-        .collection('messages')
-        .add(message.toMap());
+    ref.doc(docID).collection('messages').add(message.toMap());
   }
 }
