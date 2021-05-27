@@ -12,12 +12,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  runApp(
-      GetMaterialApp(
-        title: 'Flutter Demo',
-        getPages: AppPages.pages,
-        initialBinding: FirebaseAuth.instance.currentUser != null ? HomeBinding() : LoginBinding(),
-        home: FirebaseAuth.instance.currentUser != null ? HomePage() : LoginPage(),
-      )
-  );
+  runApp(GetMaterialApp(
+    title: 'Flutter Demo',
+    getPages: AppPages.pages,
+    initialBinding: FirebaseAuth.instance.currentUser != null
+        ? HomeBinding()
+        : LoginBinding(),
+    home: FirebaseAuth.instance.currentUser != null ? HomePage() : LoginPage(),
+  ));
 }

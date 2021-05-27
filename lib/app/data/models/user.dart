@@ -1,16 +1,19 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
+
 class MyUser {
-  String uID;
-  String name;
-  String email;
-  String? avatar;
+  final String uID;
+  final String name;
+  final String email;
+  final String? avatar;
+  final bool isActive;
 
   MyUser({
     required this.uID,
     required this.name,
     required this.email,
     this.avatar,
+    required this.isActive,
   });
 
   factory MyUser.fromAuth(User userAuth) {
@@ -19,6 +22,7 @@ class MyUser {
       name: userAuth.displayName ?? '',
       email: userAuth.email ?? '',
       avatar: userAuth.photoURL,
+      isActive: true,
     );
   }
 
@@ -28,6 +32,7 @@ class MyUser {
       name: map['name'],
       email: map['email'],
       avatar: map['avatar'],
+      isActive: map['active'],
     );
   }
 
@@ -37,6 +42,7 @@ class MyUser {
     map['name'] = name;
     map['email'] = email;
     map['avatar'] = avatar;
+    map['active'] = isActive;
     return map;
   }
 }

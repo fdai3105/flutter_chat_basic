@@ -1,8 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:pdteam_demo_chat/app/data/models/user.dart' as MyUser;
 import 'package:pdteam_demo_chat/app/data/provider/user_provider.dart';
 
-class HomeController extends GetxController {
+class HomeController extends GetxController with WidgetsBindingObserver {
   final UserProvider provider;
 
   HomeController({required this.provider});
@@ -24,10 +25,29 @@ class HomeController extends GetxController {
 
   @override
   void onInit() async {
+    WidgetsBinding.instance!.addObserver(this);
     provider.getListUsers().listen((event) {
       users = event;
     });
     isLoading = false;
     super.onInit();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        UserProvider().changeActive(true);
+        break;
+      case AppLifecycleState.inactive:
+        UserProvider().changeActive(false);
+        break;
+      case AppLifecycleState.detached:
+        UserProvider().changeActive(false);
+        break;
+      default:
+        break;
+    }
+    super.didChangeAppLifecycleState(state);
   }
 }

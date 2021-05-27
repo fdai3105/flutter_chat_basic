@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pdteam_demo_chat/app/modules/home_module/home.dart';
@@ -9,12 +10,11 @@ class HomePage extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: WidgetAppBar(
-          title: Text(
-        "Home",
-        style: TextStyle(
-          color: Colors.black87,
+        title: Text(
+          "Home",
+          style: TextStyle(color: Colors.black87),
         ),
-      )),
+      ),
       body: SafeArea(
         child: GetX<HomeController>(
           builder: (_) {
@@ -33,16 +33,36 @@ class HomePage extends GetView<HomeController> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
                     child: ListTile(
-                      leading: Container(
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                                color: Colors.grey.shade200, width: 2)),
-                        child: ClipOval(
-                          child: Image.network(
-                            item.avatar!,
+                      leading: Stack(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                    color: Colors.grey.shade200, width: 2)),
+                            child: ClipOval(
+                              child: Image.network(
+                                item.avatar!,
+                              ),
+                            ),
                           ),
-                        ),
+                          item.isActive
+                              ? Positioned(
+                                  bottom: 4,
+                                  right: 4,
+                                  child: Container(
+                                    height: 14,
+                                    width: 14,
+                                    decoration: BoxDecoration(
+                                      color: Colors.green,
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                          color: Colors.white, width: 2),
+                                    ),
+                                  ),
+                                )
+                              : SizedBox(),
+                        ],
                       ),
                       title: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
