@@ -1,6 +1,8 @@
+import 'package:collection/collection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:pdteam_demo_chat/app/data/models/message.dart';
 import 'package:pdteam_demo_chat/app/data/provider/chat_provider.dart';
 
@@ -10,9 +12,9 @@ class ChatController extends GetxController {
   ChatController({required this.provider});
 
   final textController = TextEditingController();
-
   final _isLoading = true.obs;
   final _messages = <Message>[].obs;
+  var dateTime = ''.obs;
 
   get isLoading => _isLoading.value;
 
@@ -30,7 +32,21 @@ class ChatController extends GetxController {
   void onInit() async {
     provider.getMessages(Get.arguments['uID'])
       ..listen((event) {
-        messages = event;
+        // messages = event;
+        var grByDate = groupBy<Message, String>(event, (message) {
+          DateTime time = DateTime.parse(message.createdAt);
+          return '${time.day}/${time.month}/${time.year}';
+        });
+        grByDate.forEach((date, list) {
+          dateTime.value = date;
+          print('$date');
+          messages = list;
+          // list.forEach((listItem) {
+          //   print('${listItem.createdAt}');
+          // });
+        });
+      // grouped = grByDate;
+      // print(grouped);
       });
     isLoading = false;
     super.onInit();
@@ -42,7 +58,7 @@ class ChatController extends GetxController {
         message: textController.text,
         senderUID: FirebaseAuth.instance.currentUser!.uid,
         receiverUID: Get.arguments['uID'],
-        createdAt: DateTime.now().millisecondsSinceEpoch,
+        createdAt: DateFormat('yyyy-MM-dd HH:mm').format(DateTime.now()),
       ));
       textController.clear();
     }

@@ -34,17 +34,27 @@ class ChatPage extends GetView<ChatController> {
                 if (controller.messages.isEmpty) {
                   return SizedBox();
                 }
-                return ListView.builder(
-                  reverse: true,
-                  itemCount: controller.messages.length,
-                  itemBuilder: (context, i) {
-                    final item = controller.messages[i];
-                    return WidgetBubble(
-                      message: item.message,
-                      isMe: item.senderUID ==
-                          FirebaseAuth.instance.currentUser!.uid,
-                    );
-                  },
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    WidgetDateTime(
+                      dateTime: controller.dateTime.value,
+                    ),
+                    // Text('${controller.dateTime}'),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      reverse: true,
+                      itemCount: controller.messages.length,
+                      itemBuilder: (context, i) {
+                        final item = controller.messages[i];
+                        return WidgetBubble(
+                          message: item.message,
+                          isMe: item.senderUID ==
+                              FirebaseAuth.instance.currentUser!.uid,
+                        );
+                      },
+                    )
+                  ],
                 );
               },
             ),

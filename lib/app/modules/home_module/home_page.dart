@@ -29,6 +29,7 @@ class HomePage extends GetView<HomeController> {
               itemCount: controller.users.length,
               itemBuilder: (context, i) {
                 final item = controller.users[i];
+
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: ListTile(
@@ -54,6 +55,7 @@ class HomePage extends GetView<HomeController> {
                         )
                       ],
                     ),
+                    // subtitle: Text(item.lastMessage!.message),
                   ),
                 );
               },

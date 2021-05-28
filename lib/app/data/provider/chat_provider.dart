@@ -39,6 +39,9 @@ class ChatProvider {
     } else {
       docID = message.senderUID + message.receiverUID;
     }
+
     ref.doc(docID).collection('messages').add(message.toMap());
+    //
+    // ref.doc(docID).set({'last_message': message.toMap()});
   }
 }
