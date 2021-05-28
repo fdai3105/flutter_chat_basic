@@ -3,7 +3,7 @@ class Message {
   final String senderUID;
   final String receiverUID;
   final String message;
-  final String createdAt;
+  final int createdAt;
 
   Message({
     required this.senderUID,
@@ -15,7 +15,7 @@ class Message {
   Map<String, dynamic> toMap() {
     return {
       'sender_uid': senderUID,
-      'receiver_uid': receiverUID,
+      'receiver_uid' : receiverUID,
       'message': message,
       'created_at': createdAt,
     };
@@ -28,10 +28,5 @@ class Message {
       message: map['message'],
       createdAt: map['created_at'],
     );
-  }
-
-  @override
-  String toString() {
-    return 'senderUID: $senderUID, receiverUID: $receiverUID, message: $message, createdAt: $createdAt';
   }
 }

@@ -15,7 +15,7 @@ class WidgetBubble extends StatelessWidget {
         children: [
           Column(
             crossAxisAlignment:
-            isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
               Container(
                 padding: EdgeInsets.all(15),
