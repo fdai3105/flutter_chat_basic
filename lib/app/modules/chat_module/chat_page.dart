@@ -40,7 +40,6 @@ class ChatPage extends GetView<ChatController> {
                     WidgetDateTime(
                       dateTime: controller.dateTime.value,
                     ),
-                    // Text('${controller.dateTime}'),
                     ListView.builder(
                       shrinkWrap: true,
                       reverse: true,
