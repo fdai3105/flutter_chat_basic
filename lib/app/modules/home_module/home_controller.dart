@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:pdteam_demo_chat/app/data/models/message.dart';
-import 'package:pdteam_demo_chat/app/data/models/user.dart' as MyUser;
+import 'package:pdteam_demo_chat/app/data/models/models.dart' as MyUser;
 import 'package:pdteam_demo_chat/app/data/provider/auth_provider.dart';
 import 'package:pdteam_demo_chat/app/data/provider/user_provider.dart';
 import 'package:pdteam_demo_chat/app/routes/app_pages.dart';
@@ -13,7 +12,6 @@ class HomeController extends GetxController with WidgetsBindingObserver {
 
   final _isLoading = true.obs;
   final _users = <MyUser.MyUser>[].obs;
-  final _lastMessages = <Message>[].obs;
 
   get isLoading => _isLoading.value;
 
@@ -27,17 +25,13 @@ class HomeController extends GetxController with WidgetsBindingObserver {
     _users.value = value;
   }
 
-  List<Message> get lastMessages => _lastMessages.value;
-
-  set lastMessages(value) {
-    _lastMessages.value = value;
-  }
-
   @override
   void onInit() async {
     UserProvider().changeActive(true);
     WidgetsBinding.instance!.addObserver(this);
-    await provider.getListUsers()..listen((event) => users = event);
+    provider.getListUsers().listen((event) {
+      users = event;
+    });
     isLoading = false;
     super.onInit();
   }

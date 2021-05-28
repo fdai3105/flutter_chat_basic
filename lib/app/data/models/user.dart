@@ -1,6 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:pdteam_demo_chat/app/data/models/message.dart';
 
+part of 'models.dart';
 
 class MyUser {
   final String uID;
