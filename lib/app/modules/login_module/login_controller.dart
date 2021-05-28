@@ -10,9 +10,7 @@ class LoginController extends GetxController {
 
   void loginWithGoogle() async {
     final user = await provider.loginWithGoogle();
-    if (user == null) {
-      Get.snackbar('Something wrong', 'Something wrong idk');
-    } else {
+    if (user != null) {
       UserProvider().saveUserToStore(user);
       Get.offNamed(Routes.home);
     }
