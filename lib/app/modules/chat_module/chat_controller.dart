@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pdteam_demo_chat/app/data/models/message.dart';
+import 'package:pdteam_demo_chat/app/data/models/models.dart';
 import 'package:pdteam_demo_chat/app/data/provider/chat_provider.dart';
 
 class ChatController extends GetxController {

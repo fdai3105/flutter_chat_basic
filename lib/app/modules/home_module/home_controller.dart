@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:pdteam_demo_chat/app/data/models/user.dart' as MyUser;
+import 'package:pdteam_demo_chat/app/data/models/models.dart' as MyUser;
 import 'package:pdteam_demo_chat/app/data/provider/auth_provider.dart';
 import 'package:pdteam_demo_chat/app/data/provider/user_provider.dart';
 import 'package:pdteam_demo_chat/app/routes/app_pages.dart';

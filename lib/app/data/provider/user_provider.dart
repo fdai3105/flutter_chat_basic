@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:pdteam_demo_chat/app/data/models/user.dart';
+import 'package:pdteam_demo_chat/app/data/models/models.dart';
 
 class UserProvider {
   final FirebaseFirestore store = FirebaseFirestore.instance;

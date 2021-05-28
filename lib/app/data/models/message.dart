@@ -1,3 +1,4 @@
+part of 'models.dart';
 class Message {
   final String senderUID;
   final String receiverUID;
