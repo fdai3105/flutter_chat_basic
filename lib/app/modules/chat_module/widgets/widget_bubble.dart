@@ -3,8 +3,10 @@ part of 'widgets.dart';
 class WidgetBubble extends StatelessWidget {
   final bool isMe;
   final String message;
+  final String dateTime;
 
-  WidgetBubble({required this.message, required this.isMe});
+  WidgetBubble(
+      {required this.message, required this.isMe, required this.dateTime});
 
   Widget build(BuildContext context) {
     return Container(
@@ -17,25 +19,69 @@ class WidgetBubble extends StatelessWidget {
             crossAxisAlignment:
                 isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
-              Container(
-                padding: EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: isMe ? Colors.green : Colors.grey.shade200,
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(15),
-                    topLeft: Radius.circular(15),
-                    bottomRight: Radius.circular(isMe ? 0 : 15),
-                    bottomLeft: Radius.circular(!isMe ? 0 : 15),
-                  ),
-                ),
-                child: Text(
-                  message,
-                  textAlign: isMe ? TextAlign.end : TextAlign.start,
-                  style: TextStyle(
-                    color: isMe ? Colors.white : Colors.black87,
-                  ),
-                ),
-              ),
+              isMe
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(5),
+                          child: Text(
+                            dateTime,
+                            style: TextStyle(color: Colors.black26),
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            color: isMe ? Colors.green : Colors.grey.shade200,
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(15),
+                              topLeft: Radius.circular(15),
+                              bottomRight: Radius.circular(isMe ? 0 : 15),
+                              bottomLeft: Radius.circular(!isMe ? 0 : 15),
+                            ),
+                          ),
+                          child: Text(
+                            message,
+                            textAlign: isMe ? TextAlign.end : TextAlign.start,
+                            style: TextStyle(
+                              color: isMe ? Colors.white : Colors.black87,
+                            ),
+                          ),
+                        )
+                      ],
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            color: isMe ? Colors.green : Colors.grey.shade200,
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(15),
+                              topLeft: Radius.circular(15),
+                              bottomRight: Radius.circular(isMe ? 0 : 15),
+                              bottomLeft: Radius.circular(!isMe ? 0 : 15),
+                            ),
+                          ),
+                          child: Text(
+                            message,
+                            textAlign: isMe ? TextAlign.end : TextAlign.start,
+                            style: TextStyle(
+                              color: isMe ? Colors.white : Colors.black87,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(5),
+                          child: Text(
+                            dateTime,
+                            style: TextStyle(color: Colors.black26),
+                          ),
+                        ),
+                      ],
+                    ),
             ],
           )
         ],
