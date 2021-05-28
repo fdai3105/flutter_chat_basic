@@ -40,6 +40,7 @@ dependencies:
 
   # utils
   shared_preferences: ^2.0.6
+  cached_network_image: ^3.0.0
 
 dev_dependencies:
   flutter_test:

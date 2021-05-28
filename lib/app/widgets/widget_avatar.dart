@@ -45,11 +45,26 @@ class WidgetAvatar extends StatelessWidget {
   Widget _buildAvatar() {
     return Container(
       decoration: BoxDecoration(
+        color: Colors.grey.shade200,
         shape: BoxShape.circle,
         border: Border.all(color: Colors.grey.shade200, width: 2),
       ),
-      child: ClipOval(
-        child: url == null ? Image.asset('') : Image.network(url!),
+      child: SizedBox(
+        height: 48,
+        width: 48,
+        child: ClipOval(
+          child: url == null
+              ? Image.asset('assets/images/place_avatar.png')
+              : CachedNetworkImage(
+                  imageUrl: url!,
+                  placeholder: (_, url) {
+                    return Image.asset('assets/images/place_avatar.png');
+                  },
+                  errorWidget: (_, url, widget) {
+                    return Image.asset('assets/images/place_avatar.png');
+                  },
+                ),
+        ),
       ),
     );
   }
