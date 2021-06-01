@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:pdteam_demo_chat/app/modules/home_module/home.dart';
 import 'package:pdteam_demo_chat/app/routes/app_pages.dart';
 import 'package:pdteam_demo_chat/app/widgets/widgets.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 
 class HomePage extends GetView<HomeController> {
   @override
