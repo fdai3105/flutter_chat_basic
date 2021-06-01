@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:pdteam_demo_chat/app/data/models/models.dart';
 import 'package:pdteam_demo_chat/app/data/provider/chat_provider.dart';
+import 'package:pdteam_demo_chat/app/data/provider/provider.dart';
+import 'package:pdteam_demo_chat/app/routes/app_pages.dart';
 
 class TabConversationController extends GetxController {
   final ChatProvider provider;
@@ -44,5 +46,10 @@ class TabConversationController extends GetxController {
       });
     isLoading = false;
     super.onInit();
+  }
+
+  void logout() {
+    AuthProvider.logout();
+    Get.offAllNamed(Routes.login);
   }
 }

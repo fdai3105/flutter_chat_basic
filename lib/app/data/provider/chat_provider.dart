@@ -14,14 +14,23 @@ class ChatProvider {
         .orderBy('created_at', descending: true)
         .snapshots()
         .transform(StreamTransformer.fromHandlers(
-      handleData: (snapshot, sink) {
-        final messages = <Message>[];
-        snapshot.docs.forEach((element) {
-          messages.add(Message.fromMap(element.data()));
-        });
-        sink.add(messages);
-      },
-    ));
+          handleData: _tranDocToMessages,
+        ));
+  }
+
+  Future _tranDocToMessages(QuerySnapshot<Map<String, dynamic>> snapshot,
+      EventSink<List<Message>> sink) async {
+    final messages = <Message>[];
+    for (final element in snapshot.docs) {
+      messages.add(Message(
+        uid: element.id,
+        createdAt: element.data()['created_at'],
+        message: element.data()['message'],
+        senderUID: element.data()['sender_uid'],
+        sender: await UserProvider().getUser(element.data()['sender_uid']),
+      ));
+    }
+    sink.add(messages);
   }
 
   Future<Stream<List<Group>>> getConversations() async {
@@ -31,29 +40,32 @@ class ChatProvider {
       return Stream.empty();
     }
     final ref = store.collection('conversations').where('id', whereIn: l);
-    return ref.snapshots().transform(StreamTransformer.fromHandlers(
-      handleData: (snapshot, sink) async {
-        final groups = <Group>[];
-        snapshot.docs.forEach((element) async {
-          final members = <MyUser>[];
-          List.from(element.get('members')).forEach((element) async {
-            final user = await UserProvider().getUser(element);
-            members.add(user);
-          });
-          final group = Group(
-              uid: element.id,
-              lastMessage: element.data().containsKey('last_message')
-                  ? Message.fromMap(element.get('last_message'))
-                  : null,
-              members: members);
-          groups.add(group);
-        });
-        sink.add(groups);
-      },
-    ));
+    return ref.snapshots().transform(
+        StreamTransformer.fromHandlers(handleData: _tranDocToConversations));
   }
 
-  Future sendMessage(String uid, Message message) async {
+  Future _tranDocToConversations(QuerySnapshot<Map<String, dynamic>> snapshot,
+      EventSink<List<Group>> sink) async {
+    final groups = <Group>[];
+    snapshot.docs;
+    for (final element in snapshot.docs) {
+      final members = <MyUser>[];
+      for (final u in List.from(element.get('members'))) {
+        final user = await UserProvider().getUser(u);
+        members.add(user);
+      }
+      final group = Group(
+          uid: element.id,
+          lastMessage: element.data().containsKey('last_message')
+              ? FirebaseMessage.fromMap(element.get('last_message'))
+              : null,
+          members: members);
+      groups.add(group);
+    }
+    sink.add(groups);
+  }
+
+  Future sendMessage(String uid, FirebaseMessage message) async {
     final ref = store.collection('conversations').doc(uid);
     ref.update({'last_message': message.toMap()});
     ref.collection('messages').add(message.toMap());

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pdteam_demo_chat/app/modules/home_module/home.dart';
 import 'package:pdteam_demo_chat/app/routes/app_pages.dart';
-import 'package:pdteam_demo_chat/app/widgets/widgets.dart';
 
 class HomePage extends GetView<HomeController> {
   HomePage({Key? key}) : super(key: key);

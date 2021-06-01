@@ -2,11 +2,16 @@ part of 'widgets.dart';
 
 class WidgetBubble extends StatelessWidget {
   final bool isMe;
+  final String? avatar;
   final String message;
   final String dateTime;
 
-  WidgetBubble(
-      {required this.message, required this.isMe, required this.dateTime});
+  WidgetBubble({
+    required this.message,
+    required this.isMe,
+    required this.dateTime,
+    required this.avatar,
+  });
 
   Widget build(BuildContext context) {
     return Container(
@@ -54,6 +59,12 @@ class WidgetBubble extends StatelessWidget {
                   : Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
+                        WidgetAvatar(
+                          url: avatar,
+                          isActive: false,
+                          size: 40,
+                        ),
+                        SizedBox(width: 5),
                         Container(
                           padding: EdgeInsets.all(15),
                           decoration: BoxDecoration(

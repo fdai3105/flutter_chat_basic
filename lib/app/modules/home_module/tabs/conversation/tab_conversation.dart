@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pdteam_demo_chat/app/data/models/models.dart';
-import 'package:pdteam_demo_chat/app/data/provider/provider.dart';
-import 'package:pdteam_demo_chat/app/modules/chat_module/chat.dart';
-import 'package:pdteam_demo_chat/app/modules/create_group_chat_module/create_group_chat_page.dart';
 import 'package:pdteam_demo_chat/app/modules/home_module/tabs/conversation/tab_conversation_controller.dart';
 import 'package:pdteam_demo_chat/app/routes/app_pages.dart';
 import 'package:pdteam_demo_chat/app/widgets/widgets.dart';
@@ -16,9 +12,16 @@ class ConversationTab extends GetView<TabConversationController> {
     return Scaffold(
       appBar: WidgetAppBar(
         title: Text(
-          "Home",
+          "Chats",
           style: TextStyle(color: Colors.black87),
         ),
+        actions: [
+          IconButton(
+              onPressed: () {
+                controller.logout();
+              },
+              icon: Icon(Icons.logout)),
+        ],
       ),
       body: SafeArea(
         child: GetX<TabConversationController>(
@@ -26,7 +29,6 @@ class ConversationTab extends GetView<TabConversationController> {
             if (controller.isLoading) {
               return Center(child: CircularProgressIndicator());
             } else {
-              print(controller.groups);
               return ListView.builder(
                 itemCount: controller.groups.length,
                 itemBuilder: (context, i) {
@@ -40,7 +42,9 @@ class ConversationTab extends GetView<TabConversationController> {
                       'isActive': false,
                     }),
                     title: Text(grpName),
-                    subtitle: Text(item.lastMessage!.message),
+                    subtitle: item.lastMessage == null
+                        ? Text('')
+                        : Text(item.lastMessage!.message),
                   );
                 },
               );

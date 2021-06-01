@@ -41,8 +41,9 @@ class ChatPage extends GetView<ChatController> {
                   itemBuilder: (context, i) {
                     final item = controller.messages[i];
                     return WidgetBubble(
-                      dateTime: '${DateFormat('hh:mm a')
-                          .format(DateTime.fromMillisecondsSinceEpoch(item.createdAt))}',
+                      dateTime:
+                          '${DateFormat('hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(item.createdAt))}',
+                      avatar: item.sender.avatar,
                       message: item.message,
                       isMe: item.senderUID ==
                           FirebaseAuth.instance.currentUser!.uid,

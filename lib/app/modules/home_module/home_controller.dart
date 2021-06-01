@@ -89,9 +89,4 @@ class HomeController extends GetxController with WidgetsBindingObserver {
     currentTab = index;
     Get.toNamed(pages[index], id: 1);
   }
-
-  void logout() {
-    AuthProvider.logout();
-    Get.offAllNamed(Routes.login);
-  }
 }

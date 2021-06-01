@@ -40,7 +40,7 @@ class ChatController extends GetxController {
     if (textController.text.isNotEmpty) {
       provider.sendMessage(
           Get.arguments['uID'],
-          Message(
+          FirebaseMessage(
             message: textController.text,
             senderUID: FirebaseAuth.instance.currentUser!.uid,
             createdAt: DateTime.now().millisecondsSinceEpoch,
