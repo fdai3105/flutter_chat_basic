@@ -1,8 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pdteam_demo_chat/app/data/models/models.dart';
 import 'package:pdteam_demo_chat/app/data/provider/chat_provider.dart';
+import 'package:pdteam_demo_chat/app/data/provider/provider.dart';
 
 class ChatController extends GetxController {
   final ChatProvider provider;
@@ -41,8 +41,9 @@ class ChatController extends GetxController {
       provider.sendMessage(
           Get.arguments['uID'],
           FirebaseMessage(
+            senderUID: UserProvider.getCurrentUser()!.uid,
+            senderName: UserProvider.getCurrentUser()!.displayName!,
             message: textController.text,
-            senderUID: FirebaseAuth.instance.currentUser!.uid,
             createdAt: DateTime.now().millisecondsSinceEpoch,
           ));
       textController.clear();

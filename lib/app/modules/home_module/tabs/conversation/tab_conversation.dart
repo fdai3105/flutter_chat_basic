@@ -44,7 +44,11 @@ class ConversationTab extends GetView<TabConversationController> {
                     title: Text(grpName),
                     subtitle: item.lastMessage == null
                         ? Text('')
-                        : Text(item.lastMessage!.message),
+                        : Text(
+                            item.lastMessage!.senderName +
+                                ': ' +
+                                item.lastMessage!.message,
+                          ),
                   );
                 },
               );

@@ -67,7 +67,6 @@ class ChatProvider {
 
   Future sendMessage(String? uid, FirebaseMessage message) async {
     final ref = store.collection('conversations').doc(uid);
-
     final a = await ref.get();
     if (a.data() != null) {
       if (a.data()!.containsKey('last_message')) {
