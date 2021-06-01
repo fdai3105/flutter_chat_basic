@@ -20,7 +20,7 @@ class ChatController extends GetxController {
     _isLoading.value = value;
   }
 
-  List<Message> get messages => _messages.value;
+  List<Message> get messages => _messages;
 
   set messages(value) {
     _messages.value = value;
@@ -38,12 +38,13 @@ class ChatController extends GetxController {
 
   void sendMessage() {
     if (textController.text.isNotEmpty) {
-      provider.sendMessage(Message(
-        message: textController.text,
-        senderUID: FirebaseAuth.instance.currentUser!.uid,
-        receiverUID: Get.arguments['uID'],
-        createdAt: DateTime.now().millisecondsSinceEpoch,
-      ));
+      provider.sendMessage(
+          Get.arguments['uID'],
+          Message(
+            message: textController.text,
+            senderUID: FirebaseAuth.instance.currentUser!.uid,
+            createdAt: DateTime.now().millisecondsSinceEpoch,
+          ));
       textController.clear();
     }
   }

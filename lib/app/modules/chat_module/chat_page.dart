@@ -63,7 +63,7 @@ class ChatPage extends GetView<ChatController> {
 }
 
 class WidgetInputField extends StatelessWidget {
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final Function()? onSubmit;
 
   const WidgetInputField({

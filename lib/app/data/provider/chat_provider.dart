@@ -1,22 +1,15 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pdteam_demo_chat/app/data/models/models.dart';
+import 'package:pdteam_demo_chat/app/data/provider/provider.dart';
 
 class ChatProvider {
   final FirebaseFirestore store = FirebaseFirestore.instance;
 
-  Stream<List<Message>> getMessages(String uID) {
-    final currentUser = FirebaseAuth.instance.currentUser;
-    var docID = '';
-    if (currentUser!.uid.hashCode <= uID.hashCode) {
-      docID = uID + currentUser.uid;
-    } else {
-      docID = currentUser.uid + uID;
-    }
+  Stream<List<Message>> getMessages(String uid) {
     final ref =
-        store.collection('conversations').doc(docID).collection('messages');
+        store.collection('conversations').doc(uid).collection('messages');
     return ref
         .orderBy('created_at', descending: true)
         .snapshots()
@@ -31,14 +24,67 @@ class ChatProvider {
     ));
   }
 
-  Future sendMessage(Message message) async {
-    final ref = store.collection('conversations');
-    var docID = '';
-    if (message.senderUID.hashCode <= message.receiverUID.hashCode) {
-      docID = message.receiverUID + message.senderUID;
-    } else {
-      docID = message.senderUID + message.receiverUID;
+  Future<Stream<List<Group>>> getConversations() async {
+    final currentUser = UserProvider.getCurrentUser();
+    final l = await _getListGroup(currentUser!.uid);
+    if (l.isEmpty) {
+      return Stream.empty();
     }
-    ref.doc(docID).collection('messages').add(message.toMap());
+    final ref = store.collection('conversations').where('id', whereIn: l);
+    return ref.snapshots().transform(StreamTransformer.fromHandlers(
+      handleData: (snapshot, sink) async {
+        final groups = <Group>[];
+        snapshot.docs.forEach((element) async {
+          final members = <MyUser>[];
+          List.from(element.get('members')).forEach((element) async {
+            final user = await UserProvider().getUser(element);
+            members.add(user);
+          });
+          final group = Group(
+              uid: element.id,
+              lastMessage: element.data().containsKey('last_message')
+                  ? Message.fromMap(element.get('last_message'))
+                  : null,
+              members: members);
+          groups.add(group);
+        });
+        sink.add(groups);
+      },
+    ));
+  }
+
+  Future sendMessage(String uid, Message message) async {
+    final ref = store.collection('conversations').doc(uid);
+    ref.update({'last_message': message.toMap()});
+    ref.collection('messages').add(message.toMap());
+  }
+
+  Future createGroupChat(List<String> userUIDs) async {
+    final ref = store.collection('conversations');
+    final doc = ref.doc();
+    doc.set({'id': doc.id});
+    userUIDs.add(UserProvider.getCurrentUser()!.uid);
+    userUIDs.forEach((element) async {
+      final groups = await _getListGroup(element)
+        ..add(doc.id);
+      store.collection('user').doc(element).update({
+        'groups': groups,
+      });
+    });
+    doc.update({'members': userUIDs});
+  }
+
+  Future<List<String>> _getListGroup(String uid) async {
+    final ref = store.collection('user');
+    final data = await ref.doc(uid).get();
+    final d = data.data();
+    if (d == null) {
+      return [];
+    }
+    if (d.containsKey('groups')) {
+      return List<String>.from(data.get('groups'));
+    } else {
+      return [];
+    }
   }
 }

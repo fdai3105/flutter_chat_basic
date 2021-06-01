@@ -23,7 +23,7 @@ class UserTab extends GetView<TabUserController> {
               child: ListTile(
                 onTap: () {
                   Get.toNamed(Routes.chat, arguments: {
-                    'uID': item.uID,
+                    'uID': item.uid,
                     'name': item.name,
                     'avatar': item.avatar,
                     'isActive': item.isActive,

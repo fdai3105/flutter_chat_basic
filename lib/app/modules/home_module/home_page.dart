@@ -23,12 +23,6 @@ class HomePage extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: WidgetAppBar(
-        title: Text(
-          "Home",
-          style: TextStyle(color: Colors.black87),
-        ),
-      ),
       body: SafeArea(
         child: Navigator(
           key: Get.nestedKey(1),
