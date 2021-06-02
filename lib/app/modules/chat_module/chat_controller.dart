@@ -28,25 +28,46 @@ class ChatController extends GetxController {
 
   @override
   void onInit() async {
-    provider.getMessages(Get.arguments['uID'])
-      ..listen((event) {
-        messages = event;
-      });
+    if (Get.arguments['isFromContact']) {
+      provider.getMessagesFromContact(Get.arguments['uID'])
+        ..listen((event) {
+          messages = event;
+        });
+    } else {
+      provider.getMessages(Get.arguments['uID'])
+        ..listen((event) {
+          messages = event;
+        });
+    }
     isLoading = false;
     super.onInit();
   }
 
   void sendMessage() {
-    if (textController.text.isNotEmpty) {
-      provider.sendMessage(
-          Get.arguments['uID'],
-          FirebaseMessage(
-            senderUID: UserProvider.getCurrentUser()!.uid,
-            senderName: UserProvider.getCurrentUser()!.displayName!,
-            message: textController.text,
-            createdAt: DateTime.now().millisecondsSinceEpoch,
-          ));
-      textController.clear();
+    if (Get.arguments['isFromContact']) {
+      if (textController.text.isNotEmpty) {
+        provider.sendMessageFromContact(
+            Get.arguments['uID'],
+            FirebaseMessage(
+              senderUID: UserProvider.getCurrentUser()!.uid,
+              senderName: UserProvider.getCurrentUser()!.displayName!,
+              message: textController.text,
+              createdAt: DateTime.now().millisecondsSinceEpoch,
+            ));
+        textController.clear();
+      }
+    } else {
+      if (textController.text.isNotEmpty) {
+        provider.sendMessage(
+            Get.arguments['uID'],
+            FirebaseMessage(
+              senderUID: UserProvider.getCurrentUser()!.uid,
+              senderName: UserProvider.getCurrentUser()!.displayName!,
+              message: textController.text,
+              createdAt: DateTime.now().millisecondsSinceEpoch,
+            ));
+        textController.clear();
+      }
     }
   }
 }

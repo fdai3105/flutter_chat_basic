@@ -38,6 +38,7 @@ class ConversationTab extends GetView<TabConversationController> {
                       'name': grpName,
                       'avatar': '',
                       'isActive': false,
+                      'isFromContact': false,
                     }),
                     title: Text(grpName),
                     subtitle: item.lastMessage == null
