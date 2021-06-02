@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -58,9 +59,12 @@ class ChatPage extends GetView<ChatController> {
             ),
             WidgetInputField(
               controller: controller.textController,
-              onSubmit: () => controller.sendMessage(),
+              onSubmit: () => controller.sendMessage(0,),
               sendIcon: (){
                 controller.emojiShowing = !controller.emojiShowing;
+              },
+              sendImage: (){
+                controller.getImage();
               },
               isEmojiVisible: controller.emojiShowing,
               isKeyboardVisible: controller.isKeyboardVisible,

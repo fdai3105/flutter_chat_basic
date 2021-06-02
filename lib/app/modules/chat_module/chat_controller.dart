@@ -1,10 +1,14 @@
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pdteam_demo_chat/app/data/models/models.dart';
 import 'package:pdteam_demo_chat/app/data/provider/chat_provider.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class ChatController extends GetxController {
@@ -15,6 +19,11 @@ class ChatController extends GetxController {
   final textController = TextEditingController();
   final _emojiShowing = false.obs;
   final _isKeyboardVisible = false.obs;
+  String imageUrl = '';
+  File? imageFile;
+
+
+
 
   get isKeyboardVisible => _isKeyboardVisible.value;
 
@@ -52,6 +61,9 @@ class ChatController extends GetxController {
       ..listen((event) {
         messages = event;
       });
+
+    imageUrl = '';
+
     var keyboardVisibilityController = KeyboardVisibilityController();
     keyboardVisibilityController.onChange.listen((bool isKeyboardVisible) {
       this.isKeyboardVisible = isKeyboardVisible;
@@ -63,17 +75,19 @@ class ChatController extends GetxController {
     super.onInit();
   }
 
-  void sendMessage() {
+  void sendMessage(int type,) {
     if (textController.text.isNotEmpty) {
       provider.sendMessage(Message(
         message: textController.text,
         senderUID: FirebaseAuth.instance.currentUser!.uid,
         receiverUID: Get.arguments['uID'],
         createdAt: DateTime.now().millisecondsSinceEpoch,
+        type: type
       ));
       textController.clear();
     }
   }
+
 
   void onEmojiSelected(Emoji emoji) {
     textController
@@ -87,14 +101,6 @@ class ChatController extends GetxController {
       ..text = textController.text.characters.skipLast(1).toString()
       ..selection = TextSelection.fromPosition(
           TextPosition(offset: textController.text.length));
-  }
-
-  bool onWillPop(){
-    if (emojiShowing){
-      emojiShowing = false;
-      return false;
-    }
-    return true;
   }
 
   toggleEmojiKeyboard()  {
@@ -112,5 +118,39 @@ class ChatController extends GetxController {
       Navigator.pop(Get.context!);
     }
     return Future.value(false);
+  }
+
+  Future getImage() async {
+
+    ImagePicker imagePicker = ImagePicker();
+    PickedFile? pickedFile;
+
+    pickedFile = await imagePicker.getImage(source: ImageSource.gallery);
+    imageFile = File(pickedFile!.path);
+
+    if (imageFile != null) {
+      isLoading = true;
+      uploadFile();
+    }else {
+      print('no image');
+    }
+  }
+
+  Future uploadFile() async {
+    FirebaseStorage storage = FirebaseStorage.instance;
+    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    Reference ref = storage.ref().child(fileName);
+    UploadTask uploadTask = ref.putFile(imageFile!);
+    uploadTask.then((res){
+      res.ref.getDownloadURL().then((downloadUrl){
+        imageUrl = downloadUrl;
+        isLoading = false;
+        sendMessage(
+          1, imageUrl
+        );
+      }, onError: (err) {
+        isLoading = false;
+      });
+    });
   }
 }

@@ -4,12 +4,14 @@ class Message {
   final String receiverUID;
   final String message;
   final int createdAt;
+  final int type;
 
   Message({
     required this.senderUID,
     required this.receiverUID,
     required this.message,
     required this.createdAt,
+    required this.type
   });
 
   Map<String, dynamic> toMap() {
@@ -18,6 +20,7 @@ class Message {
       'receiver_uid' : receiverUID,
       'message': message,
       'created_at': createdAt,
+      'type': type
     };
   }
 
@@ -27,6 +30,8 @@ class Message {
       receiverUID: map['receiver_uid'],
       message: map['message'],
       createdAt: map['created_at'],
+      type:  map['type']
     );
   }
 }
+
