@@ -41,6 +41,7 @@ class ChatPage extends GetView<ChatController> {
                     return SizedBox();
                   }
                   return ListView.builder(
+                    controller: controller.listScrollController,
                     reverse: true,
                     itemCount: controller.messages.length,
                     itemBuilder: (context, i) {
@@ -60,6 +61,7 @@ class ChatPage extends GetView<ChatController> {
             ),
             WidgetInputField(
               controller: controller.textController,
+              scrollController: controller.listScrollController,
               onSubmit: () => controller.sendMessage(0, null),
               sendIcon: (){
                 controller.emojiShowing = !controller.emojiShowing;
@@ -116,6 +118,7 @@ class ChatPage extends GetView<ChatController> {
 
 class WidgetInputField extends StatelessWidget {
   final TextEditingController controller;
+  final ScrollController? scrollController;
   final Function()? onSubmit;
   final Function()? sendIcon;
   final Function()? sendImage;
@@ -132,8 +135,10 @@ class WidgetInputField extends StatelessWidget {
     this.sendImage,
     required this.isKeyboardVisible,
     required this.isEmojiVisible,
-    required this.onBlurred
+    required this.onBlurred,
+    this.scrollController,
   }) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {

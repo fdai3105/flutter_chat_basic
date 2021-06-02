@@ -32,22 +32,25 @@ class WidgetBubble extends StatelessWidget {
                         style: TextStyle(color: Colors.black26),
                       ),
                     ),
-                    Container(
-                      padding: EdgeInsets.all(15),
-                      decoration: BoxDecoration(
-                        color: isMe ? Colors.green : Colors.grey.shade200,
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(15),
-                          topLeft: Radius.circular(15),
-                          bottomRight: Radius.circular(isMe ? 0 : 15),
-                          bottomLeft: Radius.circular(!isMe ? 0 : 15),
+                    Flexible(
+                      child: Container(
+                        padding: EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                          color: isMe ? Colors.green : Colors.grey.shade200,
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(15),
+                            topLeft: Radius.circular(15),
+                            bottomRight: Radius.circular(isMe ? 0 : 15),
+                            bottomLeft: Radius.circular(!isMe ? 0 : 15),
+                          ),
                         ),
-                      ),
-                      child: Text(
-                        message!,
-                        textAlign: isMe ? TextAlign.end : TextAlign.start,
-                        style: TextStyle(
-                          color: isMe ? Colors.white : Colors.black87,
+                        child: Text(
+                          message!,
+                          overflow: TextOverflow.fade,
+                          textAlign: isMe ? TextAlign.end : TextAlign.start,
+                          style: TextStyle(
+                            color: isMe ? Colors.white : Colors.black87,
+                          ),
                         ),
                       ),
                     )

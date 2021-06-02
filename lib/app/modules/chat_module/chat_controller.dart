@@ -8,7 +8,6 @@ import 'package:pdteam_demo_chat/app/data/provider/chat_provider.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatController extends GetxController {
   final ChatProvider provider;
@@ -16,6 +15,7 @@ class ChatController extends GetxController {
   ChatController({required this.provider});
 
   final textController = TextEditingController();
+  final listScrollController = ScrollController();
   final _emojiShowing = false.obs;
   final _isKeyboardVisible = false.obs;
   String imageUrl = '';
@@ -94,6 +94,7 @@ class ChatController extends GetxController {
           createdAt: DateTime.now().millisecondsSinceEpoch,
           type: type));
     }
+    listScrollController.animateTo(0.0, duration: Duration(milliseconds: 300), curve: Curves.easeOut);
   }
 
   void onEmojiSelected(Emoji emoji) {
@@ -131,7 +132,6 @@ class ChatController extends GetxController {
     PickedFile? pickedFile;
     pickedFile = await imagePicker.getImage(source: ImageSource.gallery);
     imageFile = File(pickedFile!.path);
-
     if (imageFile != null) {
       isLoading = true;
       uploadFile();
