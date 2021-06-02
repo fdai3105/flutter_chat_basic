@@ -10,11 +10,9 @@ class ConversationTab extends GetView<TabConversationController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: WidgetAppBar(
-        title: Text(
-          "Chats",
-          style: TextStyle(color: Colors.black87),
-        ),
+        title: 'Chats',
         actions: [
           IconButton(
               onPressed: () {

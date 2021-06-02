@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pdteam_demo_chat/app/data/provider/chat_provider.dart';
 import 'package:pdteam_demo_chat/app/modules/chat_module/chat.dart';
 import 'package:pdteam_demo_chat/app/widgets/widgets.dart';
 
@@ -11,7 +10,7 @@ class CreateGroupChatPage extends GetView<CreateGroupChatController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: WidgetAppBar(
-        title: Text('Create group chat'),
+        title: 'Create group chat',
         actions: [
           IconButton(
             onPressed: () => controller.onSubmit(),
