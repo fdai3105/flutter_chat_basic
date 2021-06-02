@@ -27,10 +27,11 @@ class UserTab extends GetView<TabUserController> {
                   child: ListTile(
                     onTap: () {
                       Get.toNamed(Routes.chat, arguments: {
-                        'uID': null,
+                        'uID': item.uid,
                         'name': item.name,
                         'avatar': item.avatar,
                         'isActive': item.isActive,
+                        'isFromContact': true,
                       });
                     },
                     leading: WidgetAvatar(
