@@ -155,8 +155,13 @@ class WidgetBubble extends StatelessWidget {
                     : Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Container(
-                      child: Material(
+                    ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                      child: GestureDetector(
+                        onTap: (){
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => FullPhoto(url: message!,)));
+                        },
                         child: CachedNetworkImage(
                           placeholder: (context, url) => Container(
                             child: CircularProgressIndicator(
@@ -175,8 +180,6 @@ class WidgetBubble extends StatelessWidget {
                           errorWidget: (context, url, error) => Material(
                             child: Image.asset(
                               'assets/images/img_not_available.jpeg',
-                              width: 100,
-                              height: 100,
                               fit: BoxFit.cover,
                             ),
                             borderRadius: BorderRadius.all(
@@ -185,11 +188,10 @@ class WidgetBubble extends StatelessWidget {
                             clipBehavior: Clip.hardEdge,
                           ),
                           imageUrl: message!,
-                          width: 150,
+                          width: 200,
                           fit: BoxFit.cover,
+                          alignment: Alignment.center,
                         ),
-                        borderRadius: BorderRadius.all(Radius.circular(15)),
-                        clipBehavior: Clip.hardEdge,
                       ),
                     ),
                     Padding(
