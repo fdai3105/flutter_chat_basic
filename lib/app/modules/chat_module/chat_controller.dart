@@ -1,8 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pdteam_demo_chat/app/data/models/models.dart';
 import 'package:pdteam_demo_chat/app/data/provider/chat_provider.dart';
+import 'package:pdteam_demo_chat/app/data/provider/provider.dart';
 
 class ChatController extends GetxController {
   final ChatProvider provider;
@@ -20,7 +20,7 @@ class ChatController extends GetxController {
     _isLoading.value = value;
   }
 
-  List<Message> get messages => _messages.value;
+  List<Message> get messages => _messages;
 
   set messages(value) {
     _messages.value = value;
@@ -38,12 +38,14 @@ class ChatController extends GetxController {
 
   void sendMessage() {
     if (textController.text.isNotEmpty) {
-      provider.sendMessage(Message(
-        message: textController.text,
-        senderUID: FirebaseAuth.instance.currentUser!.uid,
-        receiverUID: Get.arguments['uID'],
-        createdAt: DateTime.now().millisecondsSinceEpoch,
-      ));
+      provider.sendMessage(
+          Get.arguments['uID'],
+          FirebaseMessage(
+            senderUID: UserProvider.getCurrentUser()!.uid,
+            senderName: UserProvider.getCurrentUser()!.displayName!,
+            message: textController.text,
+            createdAt: DateTime.now().millisecondsSinceEpoch,
+          ));
       textController.clear();
     }
   }

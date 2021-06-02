@@ -23,6 +23,19 @@ class UserProvider {
     }
   }
 
+  Future<List<MyUser>> getUsers() async {
+    final users = <MyUser>[];
+    final ref = await store
+        .collection('user')
+        .orderBy('active', descending: true)
+        .orderBy('name')
+        .get();
+    ref.docs.forEach((element) {
+      users.add(MyUser.fromMap(element.id, element.data()));
+    });
+    return users;
+  }
+
   Stream<List<MyUser>> getListUsers() {
     final ref = store
         .collection('user')
@@ -33,12 +46,17 @@ class UserProvider {
         final users = <MyUser>[];
         snapshot.docs.forEach((element) {
           if (element.id != getCurrentUser()!.uid) {
-            users.add(MyUser.fromMap(element.data()));
+            users.add(MyUser.fromMap(element.id, element.data()));
           }
         });
         sink.add(users);
       },
     ));
+  }
+
+  Future<MyUser> getUser(String uid) async {
+    final snapshot = await store.collection('user').doc(uid).get();
+    return MyUser.fromMap(snapshot.id, snapshot.data()!);
   }
 
   static User? getCurrentUser() => FirebaseAuth.instance.currentUser;

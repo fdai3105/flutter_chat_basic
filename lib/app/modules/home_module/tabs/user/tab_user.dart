@@ -9,45 +9,51 @@ class UserTab extends GetView<TabUserController> {
 
   @override
   Widget build(BuildContext context) {
-    return GetX<TabUserController>(
-      builder: (_) {
-        if (controller.isLoading) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        return ListView.builder(
-          itemCount: controller.users.length,
-          itemBuilder: (context, i) {
-            final item = controller.users[i];
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: ListTile(
-                onTap: () {
-                  Get.toNamed(Routes.chat, arguments: {
-                    'uID': item.uID,
-                    'name': item.name,
-                    'avatar': item.avatar,
-                    'isActive': item.isActive,
-                  });
-                },
-                leading: WidgetAvatar(
-                  url: item.avatar,
-                  isActive: item.isActive,
-                ),
-                title: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(item.name),
-                    Text(
-                      item.email,
-                      style: TextStyle(color: Colors.grey),
-                    )
-                  ],
-                ),
-              ),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: WidgetAppBar(title: 'User'),
+      body: SafeArea(
+        child: GetX<TabUserController>(
+          builder: (_) {
+            if (controller.isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            return ListView.builder(
+              itemCount: controller.users.length,
+              itemBuilder: (context, i) {
+                final item = controller.users[i];
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: ListTile(
+                    onTap: () {
+                      Get.toNamed(Routes.chat, arguments: {
+                        'uID': null,
+                        'name': item.name,
+                        'avatar': item.avatar,
+                        'isActive': item.isActive,
+                      });
+                    },
+                    leading: WidgetAvatar(
+                      url: item.avatar,
+                      isActive: item.isActive,
+                    ),
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(item.name),
+                        Text(
+                          item.email,
+                          style: TextStyle(color: Colors.grey),
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              },
             );
           },
-        );
-      },
+        ),
+      ),
     );
   }
 }

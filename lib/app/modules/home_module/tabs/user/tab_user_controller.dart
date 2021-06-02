@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:pdteam_demo_chat/app/data/models/models.dart' as Models;
+import 'package:pdteam_demo_chat/app/data/models/models.dart';
 import 'package:pdteam_demo_chat/app/data/provider/user_provider.dart';
 
 class TabUserController extends GetxController {
@@ -8,9 +8,9 @@ class TabUserController extends GetxController {
   TabUserController({required this.provider});
 
   final _isLoading = true.obs;
-  final _users = <Models.MyUser>[].obs;
+  final _users = <MyUser>[].obs;
 
-  get users => _users;
+  List<MyUser> get users => _users;
 
   get isLoading => _isLoading.value;
 

@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pdteam_demo_chat/app/data/models/models.dart' as MyUser;
-import 'package:pdteam_demo_chat/app/data/provider/auth_provider.dart';
-import 'package:pdteam_demo_chat/app/data/provider/user_provider.dart';
-import 'package:pdteam_demo_chat/app/modules/home_module/tabs/chat/tab_chat.dart';
-import 'package:pdteam_demo_chat/app/modules/home_module/tabs/chat/tab_chat_bindings.dart';
-import 'package:pdteam_demo_chat/app/modules/home_module/tabs/user/tab_user.dart';
-import 'package:pdteam_demo_chat/app/modules/home_module/tabs/user/tab_user_bindings.dart';
-import 'package:pdteam_demo_chat/app/routes/app_pages.dart';
+import 'package:pdteam_demo_chat/app/data/provider/provider.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+
+import 'tabs/conversation/tab_conversation.dart';
+import 'tabs/user/tab_user.dart';
 
 class HomeController extends GetxController with WidgetsBindingObserver {
   final UserProvider provider;
@@ -31,11 +30,31 @@ class HomeController extends GetxController with WidgetsBindingObserver {
     _isLoading.value = value;
   }
 
-  List<MyUser.MyUser> get users => _users.value;
+  List<MyUser.MyUser> get users => _users;
 
   set users(value) {
     _users.value = value;
   }
+
+  final items = [
+    PersistentBottomNavBarItem(
+      icon: Icon(Icons.chat),
+      title: 'Chats',
+      activeColorPrimary: Colors.green,
+      inactiveColorPrimary: CupertinoColors.systemGrey,
+    ),
+    PersistentBottomNavBarItem(
+      icon: Icon(Icons.person),
+      title: 'User',
+      activeColorPrimary: Colors.green,
+      inactiveColorPrimary: CupertinoColors.systemGrey,
+    ),
+  ];
+
+  final tabs = [
+    ConversationTab(),
+    UserTab(),
+  ];
 
   @override
   void onInit() async {
@@ -64,33 +83,5 @@ class HomeController extends GetxController with WidgetsBindingObserver {
         break;
     }
     super.didChangeAppLifecycleState(state);
-  }
-
-  Route? onGenerateRoute(RouteSettings settings) {
-    if (settings.name == Routes.tabChat)
-      return GetPageRoute(
-        settings: settings,
-        page: () => ChatTab(),
-        binding: TabChatBindings(),
-      );
-
-    if (settings.name == Routes.tabUser)
-      return GetPageRoute(
-        settings: settings,
-        page: () => UserTab(),
-        binding: TabUserBindings(),
-      );
-  }
-
-  final pages = [Routes.tabChat, Routes.tabUser];
-
-  void changePage(int index) {
-    currentTab = index;
-    Get.toNamed(pages[index], id: 1);
-  }
-
-  void logout() {
-    AuthProvider.logout();
-    Get.offAllNamed(Routes.login);
   }
 }

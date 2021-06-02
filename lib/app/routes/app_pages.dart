@@ -3,11 +3,9 @@ import 'package:pdteam_demo_chat/app/modules/chat_module/chat.dart';
 import 'package:pdteam_demo_chat/app/modules/chat_module/chat_page.dart';
 import 'package:pdteam_demo_chat/app/modules/home_module/home.dart';
 import 'package:pdteam_demo_chat/app/modules/home_module/home_page.dart';
-import 'package:pdteam_demo_chat/app/modules/home_module/tabs/chat/tab_chat_bindings.dart';
-import 'package:pdteam_demo_chat/app/modules/home_module/tabs/chat/tab_chat.dart';
-import 'package:pdteam_demo_chat/app/modules/home_module/tabs/user/tab_user_bindings.dart';
-import 'package:pdteam_demo_chat/app/modules/home_module/tabs/user/tab_user.dart';
 
+import '../../app/modules/create_group_chat_module/create_group_chat_bindings.dart';
+import '../../app/modules/create_group_chat_module/create_group_chat_page.dart';
 import '../../app/modules/login_module/login_bindings.dart';
 import '../../app/modules/login_module/login_page.dart';
 
@@ -31,14 +29,9 @@ abstract class AppPages {
       binding: ChatBinding(),
     ),
     GetPage(
-      name: Routes.tabChat,
-      page: () => ChatTab(),
-      binding: TabChatBindings(),
-    ),
-    GetPage(
-      name: Routes.tabUser,
-      page: () => UserTab(),
-      binding: TabUserBindings(),
+      name: Routes.createGroupChat,
+      page: () => CreateGroupChatPage(),
+      binding: CreateGroupChatBinding(),
     ),
   ];
 }

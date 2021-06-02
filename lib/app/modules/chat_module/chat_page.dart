@@ -11,59 +11,70 @@ class ChatPage extends GetView<ChatController> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: WidgetAppBar(
-        title: Row(
+      appBar: _buildAppBar(),
+      body: SafeArea(
+        child: Column(
           children: [
-            WidgetAvatar(
-              url: Get.arguments['avatar'],
-              isActive: Get.arguments['isActive'],
-              size: 40,
+            Expanded(
+              child: GetX<ChatController>(
+                builder: (_) {
+                  if (controller.messages.isEmpty) {
+                    return SizedBox();
+                  }
+                  return ListView.builder(
+                    reverse: true,
+                    itemCount: controller.messages.length,
+                    itemBuilder: (context, i) {
+                      final item = controller.messages[i];
+                      return WidgetBubble(
+                        dateTime:
+                            '${DateFormat('hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(item.createdAt))}',
+                        avatar: item.sender.avatar,
+                        message: item.message,
+                        isMe: item.senderUID ==
+                            FirebaseAuth.instance.currentUser!.uid,
+                      );
+                    },
+                  );
+                },
+              ),
             ),
-            SizedBox(width: 12),
-            Text(
-              Get.arguments['name'],
-              style: TextStyle(color: Colors.black87),
+            WidgetInputField(
+              controller: controller.textController,
+              onSubmit: () => controller.sendMessage(),
             ),
           ],
         ),
       ),
-      body: Column(
+    );
+  }
+
+  PreferredSizeWidget _buildAppBar() {
+    return AppBar(
+      backgroundColor: Colors.white,
+      elevation: 0,
+      shadowColor: Colors.transparent,
+      title: Row(
         children: [
-          Expanded(
-            child: GetX<ChatController>(
-              builder: (_) {
-                if (controller.messages.isEmpty) {
-                  return SizedBox();
-                }
-                return ListView.builder(
-                  reverse: true,
-                  itemCount: controller.messages.length,
-                  itemBuilder: (context, i) {
-                    final item = controller.messages[i];
-                    return WidgetBubble(
-                      dateTime: '${DateFormat('hh:mm a')
-                          .format(DateTime.fromMillisecondsSinceEpoch(item.createdAt))}',
-                      message: item.message,
-                      isMe: item.senderUID ==
-                          FirebaseAuth.instance.currentUser!.uid,
-                    );
-                  },
-                );
-              },
-            ),
+          WidgetAvatar(
+            url: Get.arguments['avatar'],
+            isActive: Get.arguments['isActive'],
+            size: 40,
           ),
-          WidgetInputField(
-            controller: controller.textController,
-            onSubmit: () => controller.sendMessage(),
+          SizedBox(width: 12),
+          Text(
+            Get.arguments['name'],
+            style: TextStyle(color: Colors.black87),
           ),
         ],
       ),
+      iconTheme: IconThemeData(color: Colors.black87),
     );
   }
 }
 
 class WidgetInputField extends StatelessWidget {
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final Function()? onSubmit;
 
   const WidgetInputField({

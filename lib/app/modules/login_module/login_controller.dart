@@ -11,7 +11,7 @@ class LoginController extends GetxController {
   void loginWithGoogle() async {
     final user = await provider.loginWithGoogle();
     if (user != null) {
-      UserProvider().saveUserToStore(user);
+      await UserProvider().saveUserToStore(user);
       Get.offNamed(Routes.home);
     }
   }
