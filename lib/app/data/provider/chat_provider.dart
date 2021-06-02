@@ -70,12 +70,12 @@ class ChatProvider {
     sink.add(messages);
   }
 
-  Future<Stream<List<Group>>> getConversations() async {
+  Stream<List<Group>> getConversations() {
     final currentUser = UserProvider.getCurrentUser()!;
     final ref = store
         .collection('conversations')
-        .where('members', arrayContains: currentUser.uid)
-        .orderBy('last_message', descending: true);
+        .where('members', arrayContains: currentUser.uid);
+    // .orderBy('last_message', descending: true);
     return ref.snapshots().transform(
         StreamTransformer.fromHandlers(handleData: _tranDocToConversations));
   }
@@ -93,7 +93,9 @@ class ChatProvider {
       final group = Group(
           uid: element.id,
           lastMessage: element.data().containsKey('last_message')
-              ? FirebaseMessage.fromMap(element.get('last_message'))
+              ? Map.from(element.get('last_message')).isNotEmpty
+                  ? FirebaseMessage.fromMap(element.get('last_message'))
+                  : null
               : null,
           members: members);
       groups.add(group);
@@ -151,6 +153,7 @@ class ChatProvider {
     final ref = store.collection('conversations');
     final doc = ref.doc();
     doc.set({'id': doc.id});
+    doc.set({'last_message': Map.identity()});
     userUIDs.add(UserProvider.getCurrentUser()!.uid);
     userUIDs.forEach((element) async {
       final groups = await _getListGroup(element)

@@ -26,13 +26,26 @@ class TabConversationController extends GetxController {
 
   String groupName(List<MyUser> members) {
     var name = '';
-    for (int i = 0; i < members.length; i++) {
-      final item = members[i];
-      final n = item.name.split(' ');
-      if (i == members.length - 1) {
-        name += n[n.length - 1];
-      } else {
-        name += n[n.length - 1] + ', ';
+    if (members.length >= 3) {
+      for (int i = 0; i < 3; i++) {
+        final item = members[i];
+        final n = item.name.split(' ');
+        if (i == members.length - 1) {
+          name += n[n.length - 1];
+        } else {
+          name += n[n.length - 1] + ', ';
+        }
+      }
+      name += '+ ${members.length - 3}';
+    } else {
+      for (int i = 0; i < members.length; i++) {
+        final item = members[i];
+        final n = item.name.split(' ');
+        if (i == members.length - 1) {
+          name += n[n.length - 1];
+        } else {
+          name += n[n.length - 1] + ', ';
+        }
       }
     }
     return name;
@@ -40,11 +53,12 @@ class TabConversationController extends GetxController {
 
   @override
   void onInit() async {
-    await provider.getConversations()
-      ..listen((event) {
-        groups = event;
-      });
-    isLoading = false;
+    provider.getConversations().listen((event) {
+      groups = event;
+    }).onData((data) {
+      groups = data;
+      if (isLoading) isLoading = false;
+    });
     super.onInit();
   }
 
