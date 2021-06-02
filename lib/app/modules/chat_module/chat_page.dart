@@ -42,6 +42,7 @@ class ChatPage extends GetView<ChatController> {
             WidgetInputField(
               controller: controller.textController,
               onSubmit: () => controller.sendMessage(),
+              hint: 'Enter Message',
             ),
           ],
         ),
@@ -76,11 +77,13 @@ class ChatPage extends GetView<ChatController> {
 class WidgetInputField extends StatelessWidget {
   final TextEditingController? controller;
   final Function()? onSubmit;
+  final String hint;
 
   const WidgetInputField({
     Key? key,
     required this.controller,
     this.onSubmit,
+    required this.hint,
   }) : super(key: key);
 
   @override
@@ -99,18 +102,20 @@ class WidgetInputField extends StatelessWidget {
               controller: controller,
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
-                hintText: 'Enter Message',
+                hintText: hint,
                 border: InputBorder.none,
               ),
             ),
           ),
-          IconButton(
-            onPressed: onSubmit,
-            icon: Icon(
-              Icons.send,
-              color: Colors.green,
-            ),
-          ),
+          onSubmit == null
+              ? SizedBox()
+              : IconButton(
+                  onPressed: onSubmit,
+                  icon: Icon(
+                    Icons.send,
+                    color: Colors.green,
+                  ),
+                ),
         ],
       ),
     );

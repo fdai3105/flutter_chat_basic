@@ -6,8 +6,8 @@ class CreateGroupChatBinding implements Bindings {
   @override
   void dependencies() {
     Get.lazyPut(() => CreateGroupChatController(
-          provider: UserProvider(),
-          chatProvider: ChatProvider(),
+          provider: GroupChatProvider(),
+          userProvider: UserProvider(),
         ));
   }
 }
