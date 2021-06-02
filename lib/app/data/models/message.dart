@@ -2,14 +2,14 @@ part of 'models.dart';
 class Message {
   final String senderUID;
   final String receiverUID;
-  final String message;
+  final String? message;
   final int createdAt;
   final int type;
 
   Message({
     required this.senderUID,
     required this.receiverUID,
-    required this.message,
+    this.message,
     required this.createdAt,
     required this.type
   });

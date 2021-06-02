@@ -10,7 +10,6 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class ChatController extends GetxController {
   final ChatProvider provider;
 
@@ -21,9 +20,6 @@ class ChatController extends GetxController {
   final _isKeyboardVisible = false.obs;
   String imageUrl = '';
   File? imageFile;
-
-
-
 
   get isKeyboardVisible => _isKeyboardVisible.value;
 
@@ -37,7 +33,7 @@ class ChatController extends GetxController {
   get emojiShowing => _emojiShowing.value;
 
   set emojiShowing(value) {
-    if(value && Get.window.viewInsets.bottom != 0) {
+    if (value && Get.window.viewInsets.bottom != 0) {
       FocusScope.of(Get.context!).requestFocus(FocusNode());
     }
     _emojiShowing.value = value;
@@ -75,19 +71,30 @@ class ChatController extends GetxController {
     super.onInit();
   }
 
-  void sendMessage(int type,) {
-    if (textController.text.isNotEmpty) {
+  void sendMessage(int type, String? url) {
+    //type 0: text; type 1: image
+    if (type == 0) {
+      if (textController.text.isNotEmpty) {
+        provider.sendMessage(Message(
+            message: textController.text,
+            senderUID: FirebaseAuth.instance.currentUser!.uid,
+            receiverUID: Get.arguments['uID'],
+            createdAt: DateTime.now().millisecondsSinceEpoch,
+            type: type));
+        textController.clear();
+      }
+    } else if (type == 1) {
+      if (url == null) {
+        return;
+      }
       provider.sendMessage(Message(
-        message: textController.text,
-        senderUID: FirebaseAuth.instance.currentUser!.uid,
-        receiverUID: Get.arguments['uID'],
-        createdAt: DateTime.now().millisecondsSinceEpoch,
-        type: type
-      ));
-      textController.clear();
+          message: url,
+          senderUID: FirebaseAuth.instance.currentUser!.uid,
+          receiverUID: Get.arguments['uID'],
+          createdAt: DateTime.now().millisecondsSinceEpoch,
+          type: type));
     }
   }
-
 
   void onEmojiSelected(Emoji emoji) {
     textController
@@ -103,12 +110,11 @@ class ChatController extends GetxController {
           TextPosition(offset: textController.text.length));
   }
 
-  toggleEmojiKeyboard()  {
+  toggleEmojiKeyboard() {
     if (isKeyboardVisible) {
       FocusScope.of(Get.context!).unfocus();
     }
     emojiShowing = !emojiShowing;
-
   }
 
   Future<bool> onBackPress() {
@@ -121,17 +127,15 @@ class ChatController extends GetxController {
   }
 
   Future getImage() async {
-
     ImagePicker imagePicker = ImagePicker();
     PickedFile? pickedFile;
-
     pickedFile = await imagePicker.getImage(source: ImageSource.gallery);
     imageFile = File(pickedFile!.path);
 
     if (imageFile != null) {
       isLoading = true;
       uploadFile();
-    }else {
+    } else {
       print('no image');
     }
   }
@@ -141,13 +145,11 @@ class ChatController extends GetxController {
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
     Reference ref = storage.ref().child(fileName);
     UploadTask uploadTask = ref.putFile(imageFile!);
-    uploadTask.then((res){
-      res.ref.getDownloadURL().then((downloadUrl){
+    uploadTask.then((res) {
+      res.ref.getDownloadURL().then((downloadUrl) {
         imageUrl = downloadUrl;
         isLoading = false;
-        sendMessage(
-          1, imageUrl
-        );
+        sendMessage(1, imageUrl);
       }, onError: (err) {
         isLoading = false;
       });

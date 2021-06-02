@@ -51,6 +51,7 @@ class ChatPage extends GetView<ChatController> {
                         message: item.message,
                         isMe: item.senderUID ==
                             FirebaseAuth.instance.currentUser!.uid,
+                        type: item.type
                       );
                     },
                   );
@@ -59,7 +60,7 @@ class ChatPage extends GetView<ChatController> {
             ),
             WidgetInputField(
               controller: controller.textController,
-              onSubmit: () => controller.sendMessage(0,),
+              onSubmit: () => controller.sendMessage(0, null),
               sendIcon: (){
                 controller.emojiShowing = !controller.emojiShowing;
               },
