@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "921625531325",
+    "firebase_url": "https://pdteam-demo-chat-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "pdteam-demo-chat",
     "storage_bucket": "pdteam-demo-chat.appspot.com"
   },
@@ -19,6 +20,14 @@
           "android_info": {
             "package_name": "com.example.pdteam_demo_chat",
             "certificate_hash": "a7541be5f11baf8cdf4b45ef05d74ff2279ac86b"
+          }
+        },
+        {
+          "client_id": "921625531325-i33l0rmudl6o8mq90kr6kdvf5pigcued.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.pdteam_demo_chat",
+            "certificate_hash": "a5119537afbd1999038e971d5750940a8d09a4bb"
           }
         },
         {

@@ -1,0 +1,2 @@
+const String FB_TOKEN = 'AAAA1pUpk70:APA91bEKQinWKxrBiri3LgIHlbIKTNWXKuD_mfhRw4hebDGhoN_bb0C2Jxh4qgFnDXzvy6cF3Wp5sxKnwNYQthWOKFH0f5JOKbLHYeTKGmhxDNwfkJOTMgky8cIrjseGgJn2Mvb2BxKT';
+const String FB_VAPID_KEY = 'BCQvLKgTACmljooZZk8Fll-CdbrvPj6BjMvb9ET2LbKBHyUeC5VHfp3jE5XRvr2NcbNnCceeclH4cUd0w-o8Eyk';

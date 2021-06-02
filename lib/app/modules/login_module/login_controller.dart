@@ -5,12 +5,14 @@ import 'package:pdteam_demo_chat/app/routes/app_pages.dart';
 
 class LoginController extends GetxController {
   final AuthProvider provider;
+  final NotificationProvider ntfProvider;
 
-  LoginController({required this.provider});
+  LoginController({required this.provider, required this.ntfProvider});
 
   void loginWithGoogle() async {
     final user = await provider.loginWithGoogle();
     if (user != null) {
+      await ntfProvider.getDeviceToken();
       await UserProvider().saveUserToStore(user);
       Get.offNamed(Routes.home);
     }

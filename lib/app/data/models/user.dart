@@ -1,4 +1,3 @@
-
 part of 'models.dart';
 
 class MyUser {
@@ -7,6 +6,7 @@ class MyUser {
   final String email;
   final String? avatar;
   final bool isActive;
+  final List<dynamic>? deviceToken;
 
   MyUser({
     required this.uid,
@@ -14,25 +14,28 @@ class MyUser {
     required this.email,
     this.avatar,
     required this.isActive,
+    this.deviceToken,
   });
 
-  factory MyUser.fromAuth(User userAuth) {
+  factory MyUser.fromAuth(User userAuth, String deviceToken) {
     return MyUser(
       uid: userAuth.uid,
       name: userAuth.displayName ?? '',
       email: userAuth.email ?? '',
       avatar: userAuth.photoURL,
       isActive: true,
+      deviceToken: [deviceToken],
     );
   }
 
-  factory MyUser.fromMap(String uid,Map map) {
+  factory MyUser.fromMap(String uid, Map map) {
     return MyUser(
       uid: uid,
       name: map['name'],
       email: map['email'],
       avatar: map['avatar'],
       isActive: map['active'],
+      deviceToken: map['deviceToken'],
     );
   }
 
@@ -43,6 +46,7 @@ class MyUser {
     map['email'] = email;
     map['avatar'] = avatar;
     map['active'] = isActive;
+    map['deviceToken'] = deviceToken;
     return map;
   }
 }

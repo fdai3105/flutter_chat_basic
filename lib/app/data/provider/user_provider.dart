@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pdteam_demo_chat/app/data/models/models.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProvider {
   final FirebaseFirestore store = FirebaseFirestore.instance;
@@ -10,8 +11,10 @@ class UserProvider {
   Future saveUserToStore(User user) async {
     final ref = store.collection('user').doc(user.uid);
     final isExit = await ref.get();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('device_token');
     if (!isExit.exists) {
-      await ref.set(MyUser.fromAuth(user).toMap());
+      await ref.set(MyUser.fromAuth(user, token!).toMap());
     }
   }
 
