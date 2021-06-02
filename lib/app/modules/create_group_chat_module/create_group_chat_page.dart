@@ -9,6 +9,7 @@ class CreateGroupChatPage extends GetView<CreateGroupChatController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: WidgetAppBar(
         title: 'Create group chat',
         actions: [
@@ -22,8 +23,8 @@ class CreateGroupChatPage extends GetView<CreateGroupChatController> {
         child: Column(
           children: [
             WidgetInputField(
-              controller: null,
-              onSubmit: () {},
+              controller: controller.textCtrl,
+              hint: 'Enter group name',
             ),
             Flexible(
               child: GetX<CreateGroupChatController>(

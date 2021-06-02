@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pdteam_demo_chat/app/modules/home_module/tabs/conversation/tab_conversation_controller.dart';
+import 'package:pdteam_demo_chat/app/modules/home_module/widgets/widgets.dart';
 import 'package:pdteam_demo_chat/app/routes/app_pages.dart';
 import 'package:pdteam_demo_chat/app/widgets/widgets.dart';
 
@@ -15,10 +16,9 @@ class ConversationTab extends GetView<TabConversationController> {
         title: 'Chats',
         actions: [
           IconButton(
-              onPressed: () {
-                controller.logout();
-              },
-              icon: Icon(Icons.logout)),
+            onPressed: () => controller.logout(),
+            icon: Icon(Icons.logout),
+          ),
         ],
       ),
       body: SafeArea(
@@ -40,14 +40,9 @@ class ConversationTab extends GetView<TabConversationController> {
                       'isActive': false,
                       'isFromContact': false,
                     }),
-                    title: Text(grpName),
-                    subtitle: item.lastMessage == null
-                        ? Text('')
-                        : Text(
-                            item.lastMessage!.senderName +
-                                ': ' +
-                                item.lastMessage!.message,
-                          ),
+                    leading: WidgetAvatarChat(members: item.members),
+                    title: Text(item.name.length < 1 ? grpName : item.name),
+                    subtitle: Text(controller.lastMess(item.lastMessage)),
                   );
                 },
               );
@@ -55,12 +50,15 @@ class ConversationTab extends GetView<TabConversationController> {
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Get.toNamed(Routes.createGroupChat);
-        },
-        child: Icon(Icons.add),
-      ),
+      floatingActionButton: _buildFloatButton(),
+    );
+  }
+
+  FloatingActionButton _buildFloatButton() {
+    return FloatingActionButton(
+      onPressed: () => Get.toNamed(Routes.createGroupChat),
+      child: Icon(Icons.add),
+      backgroundColor: Colors.green,
     );
   }
 }

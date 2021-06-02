@@ -1,15 +1,19 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:pdteam_demo_chat/app/data/models/models.dart';
+import 'package:pdteam_demo_chat/app/data/provider/group_chat_provider.dart';
 import 'package:pdteam_demo_chat/app/data/provider/provider.dart';
 
 class CreateGroupChatController extends GetxController {
-  final UserProvider provider;
-  final ChatProvider chatProvider;
+  final GroupChatProvider provider;
+  final UserProvider userProvider;
 
   CreateGroupChatController({
     required this.provider,
-    required this.chatProvider,
+    required this.userProvider,
   });
+
+  final textCtrl = TextEditingController();
 
   final _isLoading = true.obs;
   final _users = <MyUser>[].obs;
@@ -35,7 +39,7 @@ class CreateGroupChatController extends GetxController {
 
   @override
   void onInit() async {
-    users = await provider.getUsers();
+    users = await userProvider.getUsers();
     isLoading = false;
     super.onInit();
   }
@@ -49,7 +53,7 @@ class CreateGroupChatController extends GetxController {
   }
 
   Future onSubmit() async {
-    await chatProvider.createGroupChat(selected);
+    await provider.createGroupChat(selected, textCtrl.text);
     Get.back();
   }
 }
