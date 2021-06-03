@@ -1,34 +1,32 @@
 import 'dart:io';
+
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pdteam_demo_chat/app/data/models/models.dart';
 import 'package:pdteam_demo_chat/app/data/provider/chat_provider.dart';
-import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:pdteam_demo_chat/app/data/provider/provider.dart';
 
 class ChatController extends GetxController {
   final ChatProvider provider;
+  final StorageProvider storageProvider;
 
-  ChatController({required this.provider});
+  ChatController({
+    required this.provider,
+    required this.storageProvider,
+  });
 
   final textController = TextEditingController();
   final listScrollController = ScrollController();
+  final keyboardVisibilityController = KeyboardVisibilityController();
+
   final _emojiShowing = false.obs;
   final _isKeyboardVisible = false.obs;
-  String imageUrl = '';
-  File? imageFile;
-
-  get isKeyboardVisible => _isKeyboardVisible.value;
-
-  set isKeyboardVisible(value) {
-    _isKeyboardVisible.value = value;
-  }
-
-  final _isLoading = true.obs;
   final _messages = <Message>[].obs;
+  final _isLoading = true.obs;
 
   get emojiShowing => _emojiShowing.value;
 
@@ -39,13 +37,19 @@ class ChatController extends GetxController {
     _emojiShowing.value = value;
   }
 
+  get isKeyboardVisible => _isKeyboardVisible.value;
+
+  set isKeyboardVisible(value) {
+    _isKeyboardVisible.value = value;
+  }
+
   get isLoading => _isLoading.value;
 
   set isLoading(value) {
     _isLoading.value = value;
   }
 
-  List<Message> get messages => _messages.value;
+  List<Message> get messages => _messages;
 
   set messages(value) {
     _messages.value = value;
@@ -57,10 +61,6 @@ class ChatController extends GetxController {
       ..listen((event) {
         messages = event;
       });
-
-    imageUrl = '';
-
-    var keyboardVisibilityController = KeyboardVisibilityController();
     keyboardVisibilityController.onChange.listen((bool isKeyboardVisible) {
       this.isKeyboardVisible = isKeyboardVisible;
       if (isKeyboardVisible && emojiShowing) {
@@ -71,8 +71,8 @@ class ChatController extends GetxController {
     super.onInit();
   }
 
+  /// type 0: text; type 1: image
   void sendMessage(int type, String? url) {
-    //type 0: text; type 1: image
     if (type == 0) {
       if (textController.text.isNotEmpty) {
         provider.sendMessage(Message(
@@ -84,9 +84,7 @@ class ChatController extends GetxController {
         textController.clear();
       }
     } else if (type == 1) {
-      if (url == null) {
-        return;
-      }
+      if (url == null) return;
       provider.sendMessage(Message(
           message: url,
           senderUID: FirebaseAuth.instance.currentUser!.uid,
@@ -94,7 +92,8 @@ class ChatController extends GetxController {
           createdAt: DateTime.now().millisecondsSinceEpoch,
           type: type));
     }
-    listScrollController.animateTo(0.0, duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+    listScrollController.animateTo(0.0,
+        duration: Duration(milliseconds: 300), curve: Curves.easeOut);
   }
 
   void onEmojiSelected(Emoji emoji) {
@@ -111,48 +110,37 @@ class ChatController extends GetxController {
           TextPosition(offset: textController.text.length));
   }
 
-  toggleEmojiKeyboard() {
+  void toggleEmojiKeyboard() {
     if (isKeyboardVisible) {
       FocusScope.of(Get.context!).unfocus();
     }
-    emojiShowing = !emojiShowing;
   }
 
   Future<bool> onBackPress() {
     if (emojiShowing) {
       toggleEmojiKeyboard();
+      emojiShowing = !emojiShowing;
     } else {
       Navigator.pop(Get.context!);
     }
     return Future.value(false);
   }
 
-  Future getImage() async {
+  Future sendImage() async {
     ImagePicker imagePicker = ImagePicker();
     PickedFile? pickedFile;
     pickedFile = await imagePicker.getImage(source: ImageSource.gallery);
-    imageFile = File(pickedFile!.path);
-    if (imageFile != null) {
-      isLoading = true;
-      uploadFile();
-    } else {
-      print('no image');
-    }
-  }
-
-  Future uploadFile() async {
-    FirebaseStorage storage = FirebaseStorage.instance;
-    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    Reference ref = storage.ref().child(fileName);
-    UploadTask uploadTask = ref.putFile(imageFile!);
-    uploadTask.then((res) {
-      res.ref.getDownloadURL().then((downloadUrl) {
-        imageUrl = downloadUrl;
-        isLoading = false;
-        sendMessage(1, imageUrl);
-      }, onError: (err) {
-        isLoading = false;
+    if (pickedFile != null) {
+      final imageFile = File(pickedFile.path);
+      final ref = await storageProvider.uploadFile(imageFile);
+      ref.getDownloadURL().then((url) {
+        provider.sendMessage(Message(
+            message: url,
+            senderUID: FirebaseAuth.instance.currentUser!.uid,
+            receiverUID: Get.arguments['uID'],
+            createdAt: DateTime.now().millisecondsSinceEpoch,
+            type: 1));
       });
-    });
+    }
   }
 }

@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +12,7 @@ class ChatPage extends GetView<ChatController> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: ()async =>controller.onBackPress(),
+      onWillPop: () async => controller.onBackPress(),
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: WidgetAppBar(
@@ -47,13 +46,12 @@ class ChatPage extends GetView<ChatController> {
                     itemBuilder: (context, i) {
                       final item = controller.messages[i];
                       return WidgetBubble(
-                        dateTime: '${DateFormat('hh:mm a')
-                            .format(DateTime.fromMillisecondsSinceEpoch(item.createdAt))}',
-                        message: item.message,
-                        isMe: item.senderUID ==
-                            FirebaseAuth.instance.currentUser!.uid,
-                        type: item.type
-                      );
+                          dateTime:
+                              '${DateFormat('hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(item.createdAt))}',
+                          message: item.message,
+                          isMe: item.senderUID ==
+                              FirebaseAuth.instance.currentUser!.uid,
+                          type: item.type);
                     },
                   );
                 },
@@ -63,52 +61,49 @@ class ChatPage extends GetView<ChatController> {
               controller: controller.textController,
               scrollController: controller.listScrollController,
               onSubmit: () => controller.sendMessage(0, null),
-              sendIcon: (){
+              sendIcon: () {
                 controller.emojiShowing = !controller.emojiShowing;
               },
-              sendImage: (){
-                controller.getImage();
+              sendImage: () {
+                controller.sendImage();
               },
               isEmojiVisible: controller.emojiShowing,
               isKeyboardVisible: controller.isKeyboardVisible,
-              onBlurred:()=>controller.toggleEmojiKeyboard(),
             ),
-            GetX<ChatController>(
-                builder: (_){
-                  return Offstage(
-                    offstage: !controller.emojiShowing,
-                    child: SizedBox(
-                      height: 250,
-                      child: EmojiPicker(
-                          onEmojiSelected: (Category category, Emoji emoji) {
-                            controller.onEmojiSelected(emoji);
-                          },
-                          onBackspacePressed: (){
-                            controller.onBackspacePressed();
-                          },
-                          config: const Config(
-                              columns: 7,
-                              emojiSizeMax: 32.0,
-                              verticalSpacing: 0,
-                              horizontalSpacing: 0,
-                              initCategory: Category.RECENT,
-                              bgColor: Color(0xFFF2F2F2),
-                              indicatorColor: Colors.blue,
-                              iconColor: Colors.grey,
-                              iconColorSelected: Colors.blue,
-                              progressIndicatorColor: Colors.blue,
-                              backspaceColor: Colors.blue,
-                              showRecentsTab: true,
-                              recentsLimit: 28,
-                              noRecentsText: 'No Recents',
-                              noRecentsStyle:
+            GetX<ChatController>(builder: (_) {
+              return Offstage(
+                offstage: !controller.emojiShowing,
+                child: SizedBox(
+                  height: 250,
+                  child: EmojiPicker(
+                      onEmojiSelected: (Category category, Emoji emoji) {
+                        controller.onEmojiSelected(emoji);
+                      },
+                      onBackspacePressed: () {
+                        controller.onBackspacePressed();
+                      },
+                      config: const Config(
+                          columns: 7,
+                          emojiSizeMax: 32.0,
+                          verticalSpacing: 0,
+                          horizontalSpacing: 0,
+                          initCategory: Category.RECENT,
+                          bgColor: Color(0xFFF2F2F2),
+                          indicatorColor: Colors.blue,
+                          iconColor: Colors.grey,
+                          iconColorSelected: Colors.blue,
+                          progressIndicatorColor: Colors.blue,
+                          backspaceColor: Colors.blue,
+                          showRecentsTab: true,
+                          recentsLimit: 28,
+                          noRecentsText: 'No Recents',
+                          noRecentsStyle:
                               TextStyle(fontSize: 20, color: Colors.black26),
-                              categoryIcons: CategoryIcons(),
-                              buttonMode: ButtonMode.MATERIAL)),
-                    ),
-                  );
-                }
-            ),
+                          categoryIcons: CategoryIcons(),
+                          buttonMode: ButtonMode.MATERIAL)),
+                ),
+              );
+            }),
           ],
         ),
       ),
@@ -122,7 +117,6 @@ class WidgetInputField extends StatelessWidget {
   final Function()? onSubmit;
   final Function()? sendIcon;
   final Function()? sendImage;
-  final Function onBlurred;
   final bool isKeyboardVisible;
   final bool isEmojiVisible;
   final focusNode = FocusNode();
@@ -135,10 +129,8 @@ class WidgetInputField extends StatelessWidget {
     this.sendImage,
     required this.isKeyboardVisible,
     required this.isEmojiVisible,
-    required this.onBlurred,
     this.scrollController,
   }) : super(key: key);
-
 
   @override
   Widget build(BuildContext context) {
@@ -194,8 +186,5 @@ class WidgetInputField extends StatelessWidget {
       await SystemChannels.textInput.invokeMethod('TextInput.hide');
       await Future.delayed(Duration(milliseconds: 100));
     }
-    onBlurred();
   }
 }
-
-
