@@ -73,4 +73,5 @@ class GroupChatProvider {
       return [];
     }
   }
+
 }
