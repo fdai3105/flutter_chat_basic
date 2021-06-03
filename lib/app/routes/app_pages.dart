@@ -4,6 +4,8 @@ import 'package:pdteam_demo_chat/app/modules/chat_module/chat_page.dart';
 import 'package:pdteam_demo_chat/app/modules/home_module/home.dart';
 import 'package:pdteam_demo_chat/app/modules/home_module/home_page.dart';
 
+import '../../app/modules/create_group_chat_module/create_group_chat_bindings.dart';
+import '../../app/modules/create_group_chat_module/create_group_chat_page.dart';
 import '../../app/modules/login_module/login_bindings.dart';
 import '../../app/modules/login_module/login_page.dart';
 
@@ -25,6 +27,11 @@ abstract class AppPages {
       name: Routes.chat,
       page: () => ChatPage(),
       binding: ChatBinding(),
+    ),
+    GetPage(
+      name: Routes.createGroupChat,
+      page: () => CreateGroupChatPage(),
+      binding: CreateGroupChatBinding(),
     ),
   ];
 }

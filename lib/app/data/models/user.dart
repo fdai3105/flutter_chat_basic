@@ -2,14 +2,14 @@
 part of 'models.dart';
 
 class MyUser {
-  final String uID;
+  final String uid;
   final String name;
   final String email;
   final String? avatar;
   final bool isActive;
 
   MyUser({
-    required this.uID,
+    required this.uid,
     required this.name,
     required this.email,
     this.avatar,
@@ -18,7 +18,7 @@ class MyUser {
 
   factory MyUser.fromAuth(User userAuth) {
     return MyUser(
-      uID: userAuth.uid,
+      uid: userAuth.uid,
       name: userAuth.displayName ?? '',
       email: userAuth.email ?? '',
       avatar: userAuth.photoURL,
@@ -26,9 +26,9 @@ class MyUser {
     );
   }
 
-  factory MyUser.fromMap(Map map) {
+  factory MyUser.fromMap(String uid,Map map) {
     return MyUser(
-      uID: map['uid'],
+      uid: uid,
       name: map['name'],
       email: map['email'],
       avatar: map['avatar'],
@@ -38,7 +38,7 @@ class MyUser {
 
   Map<String, dynamic> toMap() {
     final map = <String, dynamic>{};
-    map['uid'] = uID;
+    map['uid'] = uid;
     map['name'] = name;
     map['email'] = email;
     map['avatar'] = avatar;

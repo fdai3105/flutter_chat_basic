@@ -1,14 +1,8 @@
-import 'dart:io';
-
-import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:pdteam_demo_chat/app/data/models/models.dart';
 import 'package:pdteam_demo_chat/app/data/provider/chat_provider.dart';
-import 'package:pdteam_demo_chat/app/data/provider/provider.dart';
 
 class ChatController extends GetxController {
   final ChatProvider provider;
@@ -20,8 +14,6 @@ class ChatController extends GetxController {
   });
 
   final textController = TextEditingController();
-  final listScrollController = ScrollController();
-  final keyboardVisibilityController = KeyboardVisibilityController();
 
   final _emojiShowing = false.obs;
   final _isKeyboardVisible = false.obs;

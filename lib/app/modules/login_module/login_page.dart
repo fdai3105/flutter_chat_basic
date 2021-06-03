@@ -34,7 +34,7 @@ class LoginPage extends GetView<LoginController> {
                 width: double.infinity,
                 height: 50,
                 child: TextButton(
-                  onPressed: () => controller.loginWithGoogle(),
+                  onPressed: () {},
                   style: TextButton.styleFrom(
                     backgroundColor: Colors.green,
                     elevation: 0,

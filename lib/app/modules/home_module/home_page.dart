@@ -2,63 +2,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pdteam_demo_chat/app/modules/home_module/home.dart';
-import 'package:pdteam_demo_chat/app/routes/app_pages.dart';
-import 'package:pdteam_demo_chat/app/widgets/widgets.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 class HomePage extends GetView<HomeController> {
+  HomePage({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: WidgetAppBar(
-        title: Text(
-          "Home",
-          style: TextStyle(color: Colors.black87),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () => controller.logout(),
-            icon: Icon(Icons.logout),
-          ),
-        ],
-      ),
       body: SafeArea(
-        child: GetX<HomeController>(
-          builder: (_) {
-            return ListView.builder(
-              itemCount: controller.users.length,
-              itemBuilder: (context, i) {
-                final item = controller.users[i];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: ListTile(
-                    onTap: () {
-                      Get.toNamed(Routes.chat, arguments: {
-                        'uID': item.uID,
-                        'name': item.name,
-                        'avatar': item.avatar,
-                        'isActive': item.isActive,
-                      });
-                    },
-                    leading: WidgetAvatar(
-                      url: item.avatar,
-                      isActive: item.isActive,
-                    ),
-                    title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(item.name),
-                        Text(
-                          item.email,
-                          style: TextStyle(color: Colors.grey),
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              },
-            );
-          },
+        child: PersistentTabView(
+          context,
+          screens: controller.tabs,
+          items: controller.items,
+          popActionScreens: PopActionScreensType.all,
+          navBarStyle: NavBarStyle.style12,
         ),
       ),
     );
