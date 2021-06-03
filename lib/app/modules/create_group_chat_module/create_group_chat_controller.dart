@@ -52,7 +52,7 @@ class CreateGroupChatController extends GetxController {
     super.onInit();
   }
 
-  void onSelect(String uid) {
+  void onSelect(String uid, token) {
     if (selected.contains(uid)) {
       selected.removeWhere((element) => element == uid);
     } else {

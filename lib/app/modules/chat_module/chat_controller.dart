@@ -68,7 +68,6 @@ class ChatController extends GetxController {
         });
     }
     isLoading = false;
-    print('${Get.arguments['name']} TOKEN: ${Get.arguments['deviceToken']}');
     super.onInit();
   }
 
@@ -91,7 +90,7 @@ class ChatController extends GetxController {
             UserProvider.getCurrentUser()!.displayName!,
             textController.text,
             UserProvider.getCurrentUser()!.uid,
-            Get.arguments['deviceToken']);
+            Get.arguments['deviceToken'] ?? []);
         textController.clear();
       }
     } else {
@@ -111,7 +110,7 @@ class ChatController extends GetxController {
             UserProvider.getCurrentUser()!.displayName!,
             textController.text,
             UserProvider.getCurrentUser()!.uid,
-            Get.arguments['deviceToken']);
+            Get.arguments['deviceToken'] ?? []);
         textController.clear();
       }
     }

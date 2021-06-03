@@ -70,7 +70,7 @@ class CreateGroupChatPage extends GetView<CreateGroupChatController> {
                                 return ListTile(
                                   onTap: () {
                                     controller.listSelect(item);
-                                    controller.onSelect(item.uid);
+                                    controller.onSelect(item.uid, item.deviceToken);
                                   },
                                   leading: WidgetAvatar(
                                     url: item.avatar,
