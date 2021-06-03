@@ -1,7 +1,7 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
@@ -148,8 +148,8 @@ class ChatController extends GetxController {
         provider.sendMessage(
             Get.arguments['uID'],
             FirebaseMessage(
-                senderUID: FirebaseAuth.instance.currentUser!.uid,
-                senderName: '',
+                senderUID: UserProvider.getCurrentUser()!.uid,
+                senderName: UserProvider.getCurrentUser()!.displayName!,
                 message: url,
                 createdAt: DateTime.now().millisecondsSinceEpoch,
                 type: 1));
