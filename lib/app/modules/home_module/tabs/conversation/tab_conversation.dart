@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pdteam_demo_chat/app/modules/home_module/tabs/conversation/tab_conversation_controller.dart';
-import 'package:pdteam_demo_chat/app/modules/home_module/widgets/widgets.dart';
 import 'package:pdteam_demo_chat/app/routes/app_pages.dart';
 import 'package:pdteam_demo_chat/app/widgets/widgets.dart';
 
@@ -31,17 +30,16 @@ class ConversationTab extends GetView<TabConversationController> {
                 itemCount: controller.groups.length,
                 itemBuilder: (context, i) {
                   final item = controller.groups[i];
-                  final grpName = controller.groupName(item.members);
+                  final grpName = controller.groupName(item.name, item.members);
                   return ListTile(
                     onTap: () => Get.toNamed(Routes.chat, arguments: {
                       'uID': item.uid,
                       'name': grpName,
-                      'avatar': '',
-                      'isActive': false,
+                      'members': item.members,
                       'isFromContact': false,
                     }),
                     leading: WidgetAvatarChat(members: item.members),
-                    title: Text(item.name.length < 1 ? grpName : item.name),
+                    title: Text(grpName),
                     subtitle: Text(controller.lastMess(item.lastMessage)),
                   );
                 },

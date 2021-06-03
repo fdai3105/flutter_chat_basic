@@ -24,7 +24,16 @@ class TabConversationController extends GetxController {
     _groups.value = value;
   }
 
-  String groupName(List<MyUser> members) {
+  String groupName(String grpName, List<MyUser> members, {int max = 3}) {
+    if (members.length <= 2) {
+      final find = members
+          .where((element) => element.uid != UserProvider.getCurrentUser()!.uid)
+          .first;
+      return find.name;
+    }
+    if (grpName.length > 0) {
+      return grpName;
+    }
     var name = '';
     if (members.length > 3) {
       for (int i = 0; i < 3; i++) {
@@ -50,9 +59,16 @@ class TabConversationController extends GetxController {
   String lastMess(FirebaseMessage? last) {
     if (last == null) return 'Send your first message';
     if (last.senderUID == UserProvider.getCurrentUser()!.uid) {
+      if (last.type == 1) {
+        return 'You send a photo  •  ${formatDate(last.createdAt)}';
+      }
       return 'You : ${last.message}  •  ${formatDate(last.createdAt)}';
+    } else {
+      if (last.type == 1) {
+        return '${last.senderName} send a photo  •  ${formatDate(last.createdAt)}';
+      }
+      return '${last.senderName} : ${last.message}  •  ${formatDate(last.createdAt)}';
     }
-    return '${last.senderName} : ${last.message} . ${formatDate(last.createdAt)}';
   }
 
   @override

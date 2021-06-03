@@ -38,7 +38,9 @@ class UserProvider {
         .orderBy('name')
         .get();
     ref.docs.forEach((element) {
-      users.add(MyUser.fromMap(element.id, element.data()));
+      if (element.id != UserProvider.getCurrentUser()!.uid) {
+        users.add(MyUser.fromMap(element.id, element.data()));
+      }
     });
     return users;
   }

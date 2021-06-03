@@ -37,6 +37,7 @@ class UserTab extends GetView<TabUserController> {
                     },
                     leading: WidgetAvatar(
                       url: item.avatar,
+                      showDot: true,
                       isActive: item.isActive,
                     ),
                     title: Column(
