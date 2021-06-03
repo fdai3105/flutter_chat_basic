@@ -11,8 +11,8 @@ class GroupChatProvider {
     final currentUser = UserProvider.getCurrentUser()!;
     final ref = store
         .collection('conversations')
-        .where('members', arrayContains: currentUser.uid);
-    // .orderBy('last_message', descending: true);
+        .where('members', arrayContains: currentUser.uid)
+        .orderBy('last_message', descending: true);
     return ref.snapshots().transform(
         StreamTransformer.fromHandlers(handleData: _tranDocToConversations));
   }
@@ -29,7 +29,7 @@ class GroupChatProvider {
       }
       final group = Group(
           uid: element.id,
-          name: element.data()['name'],
+          name: element.data()['name'] ?? '',
           lastMessage: element.data().containsKey('last_message')
               ? Map.from(element.get('last_message')).isNotEmpty
                   ? FirebaseMessage.fromMap(element.get('last_message'))

@@ -25,7 +25,7 @@ class ChatPage extends GetView<ChatController> {
                     return SizedBox();
                   }
                   return ListView.builder(
-                    controller: controller.listScrollController,
+                    controller: controller.scrollController,
                     reverse: true,
                     itemCount: controller.messages.length,
                     itemBuilder: (context, i) {

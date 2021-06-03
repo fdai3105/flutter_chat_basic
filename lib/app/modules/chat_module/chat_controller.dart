@@ -20,7 +20,7 @@ class ChatController extends GetxController {
 
   final textController = TextEditingController();
   final keyboardController = KeyboardVisibilityController();
-  final listScrollController = ScrollController();
+  final scrollController = ScrollController();
 
   final _emojiShowing = false.obs;
   final _isKeyboardVisible = false.obs;
@@ -56,16 +56,17 @@ class ChatController extends GetxController {
 
   @override
   void onInit() async {
-    provider.getMessages(Get.arguments['uID'])
-      ..listen((event) {
-        messages = event;
-      });
-    keyboardController.onChange.listen((bool isKeyboardVisible) {
-      this.isKeyboardVisible = isKeyboardVisible;
-      if (isKeyboardVisible && emojiShowing) {
-        emojiShowing = false;
-      }
-    });
+    if (Get.arguments['isFromContact']) {
+      provider.getMessagesFromContact(Get.arguments['uID'])
+        ..listen((event) {
+          messages = event;
+        });
+    } else {
+      provider.getMessages(Get.arguments['uID'])
+        ..listen((event) {
+          messages = event;
+        });
+    }
     isLoading = false;
     super.onInit();
   }
@@ -99,8 +100,11 @@ class ChatController extends GetxController {
         textController.clear();
       }
     }
-    listScrollController.animateTo(0.0,
-        duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+
+    if (messages.length >= 1) {
+      scrollController.animateTo(0,
+          duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+    }
   }
 
   void onEmojiSelected(Emoji emoji) {
