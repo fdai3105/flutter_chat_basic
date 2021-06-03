@@ -9,6 +9,7 @@ class ChatBinding implements Bindings {
     Get.lazyPut(() => ChatController(
           provider: ChatProvider(),
           storageProvider: StorageProvider(),
+          ntfProvider: NotificationProvider(),
         ));
   }
 }

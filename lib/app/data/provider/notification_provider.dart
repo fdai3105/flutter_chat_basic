@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pdteam_demo_chat/app/data/constant/constant.dart';
 
 class NotificationProvider {
-  static NotificationProvider get instance => NotificationProvider();
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final dio = Dio();
 

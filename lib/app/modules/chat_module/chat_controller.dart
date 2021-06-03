@@ -12,10 +12,12 @@ import 'package:pdteam_demo_chat/app/data/provider/provider.dart';
 class ChatController extends GetxController {
   final ChatProvider provider;
   final StorageProvider storageProvider;
+  final NotificationProvider ntfProvider;
 
   ChatController({
     required this.provider,
     required this.storageProvider,
+    required this.ntfProvider,
   });
 
   final textController = TextEditingController();
@@ -84,8 +86,7 @@ class ChatController extends GetxController {
               createdAt: DateTime.now().millisecondsSinceEpoch,
               type: 0,
             ));
-        NotificationProvider
-            .instance
+        ntfProvider
             .pushNotifyToPeer(
             UserProvider.getCurrentUser()!.displayName!,
             textController.text,
@@ -104,8 +105,7 @@ class ChatController extends GetxController {
               createdAt: DateTime.now().millisecondsSinceEpoch,
               type: 0,
             ));
-        NotificationProvider
-            .instance
+        ntfProvider
             .pushNotifyToPeer(
             UserProvider.getCurrentUser()!.displayName!,
             textController.text,
