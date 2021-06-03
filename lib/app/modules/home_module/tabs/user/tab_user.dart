@@ -31,6 +31,7 @@ class UserTab extends GetView<TabUserController> {
                         'name': item.name,
                         'avatar': item.avatar,
                         'isActive': item.isActive,
+                        'deviceToken': item.deviceToken,
                         'isFromContact': true,
                       });
                     },

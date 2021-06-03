@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pdteam_demo_chat/app/data/constant/constant.dart';
@@ -5,6 +8,7 @@ import 'package:pdteam_demo_chat/app/data/constant/constant.dart';
 class NotificationProvider {
   static NotificationProvider get instance => NotificationProvider();
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  final dio = Dio();
 
   Future getDeviceToken() async {
     try {
@@ -43,5 +47,34 @@ class NotificationProvider {
       print('Token: ' + value!);
       prefs.setString('device_token', value);
     });
+  }
+
+  Future<void> pushNotifyToPeer(String name, String message, String senderUid, List<dynamic> regIds) async {
+    try {
+      await dio.postUri(
+        Uri.parse('https://fcm.googleapis.com/fcm/send'),
+        options: Options(
+          headers: {
+            'Authorization': 'key=$FB_TOKEN',
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+        ),
+        data: jsonEncode(
+          {
+            'notification': {
+              'title': name,
+              'body': message,
+            },
+            'data': {
+              'senderUid': senderUid,
+              // 'type': type,
+            },
+            'registration_ids': regIds
+          }
+        )
+      );
+    } catch(e) {
+      print(e);
+    }
   }
 }
