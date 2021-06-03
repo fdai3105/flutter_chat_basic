@@ -5,6 +5,7 @@ class Message {
   final String senderUID;
   final MyUser sender;
   final String message;
+  final int type;
   final int createdAt;
 
   Message({
@@ -12,6 +13,7 @@ class Message {
     required this.senderUID,
     required this.sender,
     required this.message,
+    required this.type,
     required this.createdAt,
   });
 }

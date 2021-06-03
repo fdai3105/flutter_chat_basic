@@ -15,22 +15,7 @@ class ChatPage extends GetView<ChatController> {
       onWillPop: () async => controller.onBackPress(),
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: WidgetAppBar(
-          title: Row(
-            children: [
-              WidgetAvatar(
-                url: Get.arguments['avatar'],
-                isActive: Get.arguments['isActive'],
-                size: 40,
-              ),
-              SizedBox(width: 12),
-              Text(
-                Get.arguments['name'],
-                style: TextStyle(color: Colors.black87),
-              ),
-            ],
-          ),
-        ),
+        appBar: _buildAppBar(),
         body: Column(
           children: [
             Expanded(
@@ -59,8 +44,7 @@ class ChatPage extends GetView<ChatController> {
             ),
             WidgetInputField(
               controller: controller.textController,
-              scrollController: controller.listScrollController,
-              onSubmit: () => controller.sendMessage(0, null),
+              onSubmit: () => controller.sendMessage(),
               sendIcon: () {
                 controller.emojiShowing = !controller.emojiShowing;
               },
@@ -109,11 +93,32 @@ class ChatPage extends GetView<ChatController> {
       ),
     );
   }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+      backgroundColor: Colors.white,
+      elevation: 0,
+      shadowColor: Colors.transparent,
+      title: Row(
+        children: [
+          WidgetAvatar(
+            url: Get.arguments['avatar'],
+            isActive: Get.arguments['isActive'],
+            size: 40,
+          ),
+          SizedBox(width: 12),
+          Text(
+            Get.arguments['name'],
+            style: TextStyle(color: Colors.black87),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class WidgetInputField extends StatelessWidget {
   final TextEditingController controller;
-  final ScrollController? scrollController;
   final Function()? onSubmit;
   final Function()? sendIcon;
   final Function()? sendImage;
@@ -129,7 +134,6 @@ class WidgetInputField extends StatelessWidget {
     this.sendImage,
     required this.isKeyboardVisible,
     required this.isEmojiVisible,
-    this.scrollController,
   }) : super(key: key);
 
   @override

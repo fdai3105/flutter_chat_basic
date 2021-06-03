@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pdteam_demo_chat/app/modules/chat_module/chat.dart';
 import 'package:pdteam_demo_chat/app/widgets/widgets.dart';
 
 import 'create_group_chat_controller.dart';
@@ -22,10 +21,10 @@ class CreateGroupChatPage extends GetView<CreateGroupChatController> {
       body: SafeArea(
         child: Column(
           children: [
-            WidgetInputField(
-              controller: controller.textCtrl,
-              hint: 'Enter group name',
-            ),
+            // WidgetInputField(
+            //   controller: controller.textCtrl,
+            //   hint: 'Enter group name',
+            // ),
             Flexible(
               child: GetX<CreateGroupChatController>(
                 builder: (_) {

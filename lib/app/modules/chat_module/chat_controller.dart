@@ -1,8 +1,13 @@
+import 'dart:io';
+
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pdteam_demo_chat/app/data/models/models.dart';
-import 'package:pdteam_demo_chat/app/data/provider/chat_provider.dart';
+import 'package:pdteam_demo_chat/app/data/provider/provider.dart';
 
 class ChatController extends GetxController {
   final ChatProvider provider;
@@ -14,6 +19,8 @@ class ChatController extends GetxController {
   });
 
   final textController = TextEditingController();
+  final keyboardController = KeyboardVisibilityController();
+  final listScrollController = ScrollController();
 
   final _emojiShowing = false.obs;
   final _isKeyboardVisible = false.obs;
@@ -53,7 +60,7 @@ class ChatController extends GetxController {
       ..listen((event) {
         messages = event;
       });
-    keyboardVisibilityController.onChange.listen((bool isKeyboardVisible) {
+    keyboardController.onChange.listen((bool isKeyboardVisible) {
       this.isKeyboardVisible = isKeyboardVisible;
       if (isKeyboardVisible && emojiShowing) {
         emojiShowing = false;
@@ -64,25 +71,33 @@ class ChatController extends GetxController {
   }
 
   /// type 0: text; type 1: image
-  void sendMessage(int type, String? url) {
-    if (type == 0) {
+  void sendMessage() {
+    if (Get.arguments['isFromContact']) {
       if (textController.text.isNotEmpty) {
-        provider.sendMessage(Message(
-            message: textController.text,
-            senderUID: FirebaseAuth.instance.currentUser!.uid,
-            receiverUID: Get.arguments['uID'],
-            createdAt: DateTime.now().millisecondsSinceEpoch,
-            type: type));
+        provider.sendMessageFromContact(
+            Get.arguments['uID'],
+            FirebaseMessage(
+              senderUID: UserProvider.getCurrentUser()!.uid,
+              senderName: UserProvider.getCurrentUser()!.displayName!,
+              message: textController.text,
+              createdAt: DateTime.now().millisecondsSinceEpoch,
+              type: 0,
+            ));
         textController.clear();
       }
-    } else if (type == 1) {
-      if (url == null) return;
-      provider.sendMessage(Message(
-          message: url,
-          senderUID: FirebaseAuth.instance.currentUser!.uid,
-          receiverUID: Get.arguments['uID'],
-          createdAt: DateTime.now().millisecondsSinceEpoch,
-          type: type));
+    } else {
+      if (textController.text.isNotEmpty) {
+        provider.sendMessage(
+            Get.arguments['uID'],
+            FirebaseMessage(
+              senderUID: UserProvider.getCurrentUser()!.uid,
+              senderName: UserProvider.getCurrentUser()!.displayName!,
+              message: textController.text,
+              createdAt: DateTime.now().millisecondsSinceEpoch,
+              type: 0,
+            ));
+        textController.clear();
+      }
     }
     listScrollController.animateTo(0.0,
         duration: Duration(milliseconds: 300), curve: Curves.easeOut);
@@ -126,12 +141,14 @@ class ChatController extends GetxController {
       final imageFile = File(pickedFile.path);
       final ref = await storageProvider.uploadFile(imageFile);
       ref.getDownloadURL().then((url) {
-        provider.sendMessage(Message(
-            message: url,
-            senderUID: FirebaseAuth.instance.currentUser!.uid,
-            receiverUID: Get.arguments['uID'],
-            createdAt: DateTime.now().millisecondsSinceEpoch,
-            type: 1));
+        provider.sendMessage(
+            Get.arguments['uID'],
+            FirebaseMessage(
+                senderUID: FirebaseAuth.instance.currentUser!.uid,
+                senderName: '',
+                message: url,
+                createdAt: DateTime.now().millisecondsSinceEpoch,
+                type: 1));
       });
     }
   }
