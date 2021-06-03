@@ -2,13 +2,15 @@ part of 'widgets.dart';
 
 class WidgetAvatar extends StatelessWidget {
   final String? url;
-  final bool isActive;
+  final bool showDot;
+  final bool? isActive;
   final double? size;
 
   const WidgetAvatar({
     Key? key,
     required this.url,
-    required this.isActive,
+    this.showDot = false,
+    this.isActive,
     this.size,
   }) : super(key: key);
 
@@ -20,7 +22,7 @@ class WidgetAvatar extends StatelessWidget {
       child: Stack(
         children: [
           _buildAvatar(),
-          _buildDot(),
+          showDot ? _buildDot() : SizedBox(),
         ],
       ),
     );
@@ -34,7 +36,7 @@ class WidgetAvatar extends StatelessWidget {
         height: 14,
         width: 14,
         decoration: BoxDecoration(
-          color: isActive ? Colors.green : Colors.grey,
+          color: isActive! ? Colors.green : Colors.grey,
           shape: BoxShape.circle,
           border: Border.all(color: Colors.white, width: 2),
         ),

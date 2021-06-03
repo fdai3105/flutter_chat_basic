@@ -107,7 +107,9 @@ class ChatPage extends GetView<ChatController> {
           //   isActive: Get.arguments['isActive'],
           //   size: 40,
           // ),
-          WidgetAvatarChat(members: Get.arguments['members']),
+          Get.arguments['members'] == null
+              ? WidgetAvatar(url: Get.arguments['avatar'], size: 40)
+              : WidgetAvatarChat(members: Get.arguments['members']),
           SizedBox(width: 12),
           Text(
             Get.arguments['name'],

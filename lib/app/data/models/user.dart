@@ -1,4 +1,3 @@
-
 part of 'models.dart';
 
 class MyUser {
@@ -26,7 +25,7 @@ class MyUser {
     );
   }
 
-  factory MyUser.fromMap(String uid,Map map) {
+  factory MyUser.fromMap(String uid, Map map) {
     return MyUser(
       uid: uid,
       name: map['name'],

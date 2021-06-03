@@ -18,6 +18,7 @@ class CreateGroupChatController extends GetxController {
   final _isLoading = true.obs;
   final _users = <MyUser>[].obs;
   final _selected = <String>[].obs;
+  final _listUser = <MyUser>[].obs;
 
   get isLoading => _isLoading.value;
 
@@ -37,6 +38,12 @@ class CreateGroupChatController extends GetxController {
     _selected.value = value;
   }
 
+  List<MyUser> get listUser => _listUser;
+
+  set listUser(value) {
+    _listUser.value = value;
+  }
+
   @override
   void onInit() async {
     users = await userProvider.getUsers();
@@ -49,6 +56,14 @@ class CreateGroupChatController extends GetxController {
       selected.removeWhere((element) => element == uid);
     } else {
       selected.add(uid);
+    }
+  }
+
+  void listSelect(item) {
+    if (listUser.contains(item)) {
+      listUser.removeWhere((element) => element == item);
+    } else {
+      listUser.add(item);
     }
   }
 
