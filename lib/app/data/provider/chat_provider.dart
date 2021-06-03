@@ -32,6 +32,7 @@ class ChatProvider {
         message: element.data()['message'],
         senderUID: element.data()['sender_uid'],
         sender: await UserProvider().getUser(element.data()['sender_uid']),
+        type: element.data()['type'],
       ));
     }
     sink.add(messages);
@@ -65,6 +66,7 @@ class ChatProvider {
         message: element.data()['message'],
         senderUID: element.data()['sender_uid'],
         sender: await UserProvider().getUser(element.data()['sender_uid']),
+        type: element.data()['type'],
       ));
     }
     sink.add(messages);

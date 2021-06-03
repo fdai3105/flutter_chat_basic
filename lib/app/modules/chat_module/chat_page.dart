@@ -1,5 +1,7 @@
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pdteam_demo_chat/app/modules/chat_module/chat.dart';
@@ -9,11 +11,12 @@ import 'package:pdteam_demo_chat/app/widgets/widgets.dart';
 class ChatPage extends GetView<ChatController> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: _buildAppBar(),
-      body: SafeArea(
-        child: Column(
+    return WillPopScope(
+      onWillPop: () async => controller.onBackPress(),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        appBar: _buildAppBar(),
+        body: Column(
           children: [
             Expanded(
               child: GetX<ChatController>(
@@ -22,18 +25,18 @@ class ChatPage extends GetView<ChatController> {
                     return SizedBox();
                   }
                   return ListView.builder(
+                    controller: controller.scrollController,
                     reverse: true,
                     itemCount: controller.messages.length,
                     itemBuilder: (context, i) {
                       final item = controller.messages[i];
                       return WidgetBubble(
-                        dateTime:
-                            '${DateFormat('hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(item.createdAt))}',
-                        avatar: item.sender.avatar,
-                        message: item.message,
-                        isMe: item.senderUID ==
-                            FirebaseAuth.instance.currentUser!.uid,
-                      );
+                          dateTime:
+                              '${DateFormat('hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(item.createdAt))}',
+                          message: item.message,
+                          isMe: item.senderUID ==
+                              FirebaseAuth.instance.currentUser!.uid,
+                          type: item.type);
                     },
                   );
                 },
@@ -42,26 +45,69 @@ class ChatPage extends GetView<ChatController> {
             WidgetInputField(
               controller: controller.textController,
               onSubmit: () => controller.sendMessage(),
-              hint: 'Enter Message',
+              sendIcon: () {
+                controller.emojiShowing = !controller.emojiShowing;
+              },
+              sendImage: () {
+                controller.sendImage();
+              },
+              isEmojiVisible: controller.emojiShowing,
+              isKeyboardVisible: controller.isKeyboardVisible,
             ),
+            GetX<ChatController>(builder: (_) {
+              return Offstage(
+                offstage: !controller.emojiShowing,
+                child: SizedBox(
+                  height: 250,
+                  child: EmojiPicker(
+                      onEmojiSelected: (Category category, Emoji emoji) {
+                        controller.onEmojiSelected(emoji);
+                      },
+                      onBackspacePressed: () {
+                        controller.onBackspacePressed();
+                      },
+                      config: const Config(
+                          columns: 7,
+                          emojiSizeMax: 32.0,
+                          verticalSpacing: 0,
+                          horizontalSpacing: 0,
+                          initCategory: Category.RECENT,
+                          bgColor: Color(0xFFF2F2F2),
+                          indicatorColor: Colors.blue,
+                          iconColor: Colors.grey,
+                          iconColorSelected: Colors.blue,
+                          progressIndicatorColor: Colors.blue,
+                          backspaceColor: Colors.blue,
+                          showRecentsTab: true,
+                          recentsLimit: 28,
+                          noRecentsText: 'No Recents',
+                          noRecentsStyle:
+                              TextStyle(fontSize: 20, color: Colors.black26),
+                          categoryIcons: CategoryIcons(),
+                          buttonMode: ButtonMode.MATERIAL)),
+                ),
+              );
+            }),
           ],
         ),
       ),
     );
   }
 
-  PreferredSizeWidget _buildAppBar() {
+  AppBar _buildAppBar() {
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
       shadowColor: Colors.transparent,
+      iconTheme: IconThemeData(color: Colors.black87),
       title: Row(
         children: [
-          WidgetAvatar(
-            url: Get.arguments['avatar'],
-            isActive: Get.arguments['isActive'],
-            size: 40,
-          ),
+          // WidgetAvatar(
+          //   url: Get.arguments['avatar'],
+          //   isActive: Get.arguments['isActive'],
+          //   size: 40,
+          // ),
+          WidgetAvatarChat(members: Get.arguments['members']),
           SizedBox(width: 12),
           Text(
             Get.arguments['name'],
@@ -69,21 +115,27 @@ class ChatPage extends GetView<ChatController> {
           ),
         ],
       ),
-      iconTheme: IconThemeData(color: Colors.black87),
     );
   }
 }
 
 class WidgetInputField extends StatelessWidget {
-  final TextEditingController? controller;
+  final TextEditingController controller;
   final Function()? onSubmit;
-  final String hint;
+  final Function()? sendIcon;
+  final Function()? sendImage;
+  final bool isKeyboardVisible;
+  final bool isEmojiVisible;
+  final focusNode = FocusNode();
 
-  const WidgetInputField({
+  WidgetInputField({
     Key? key,
     required this.controller,
     this.onSubmit,
-    required this.hint,
+    this.sendIcon,
+    this.sendImage,
+    required this.isKeyboardVisible,
+    required this.isEmojiVisible,
   }) : super(key: key);
 
   @override
@@ -97,27 +149,48 @@ class WidgetInputField extends StatelessWidget {
       ),
       child: Row(
         children: [
+          IconButton(
+            onPressed: sendImage,
+            icon: Icon(
+              Icons.image,
+              color: Colors.green,
+            ),
+          ),
+          IconButton(
+            onPressed: sendIcon,
+            icon: Icon(
+              Icons.emoji_emotions,
+              color: Colors.green,
+            ),
+          ),
           Expanded(
             child: TextFormField(
               controller: controller,
               keyboardType: TextInputType.text,
               decoration: InputDecoration(
-                hintText: hint,
+                hintText: 'Enter Message',
                 border: InputBorder.none,
               ),
             ),
           ),
-          onSubmit == null
-              ? SizedBox()
-              : IconButton(
-                  onPressed: onSubmit,
-                  icon: Icon(
-                    Icons.send,
-                    color: Colors.green,
-                  ),
-                ),
+          IconButton(
+            onPressed: onSubmit,
+            icon: Icon(
+              Icons.send,
+              color: Colors.green,
+            ),
+          ),
         ],
       ),
     );
+  }
+
+  void onClickedEmoji() async {
+    if (isEmojiVisible) {
+      focusNode.requestFocus();
+    } else if (isKeyboardVisible) {
+      await SystemChannels.textInput.invokeMethod('TextInput.hide');
+      await Future.delayed(Duration(milliseconds: 100));
+    }
   }
 }
