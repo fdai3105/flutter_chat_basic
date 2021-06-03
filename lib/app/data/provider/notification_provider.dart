@@ -44,5 +44,4 @@ class NotificationProvider {
       prefs.setString('device_token', value);
     });
   }
-
 }
