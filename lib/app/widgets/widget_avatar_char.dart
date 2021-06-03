@@ -76,7 +76,7 @@ class WidgetAvatarChat extends StatelessWidget {
           height: 26,
           width: 26,
           child: Align(
-            alignment: Alignment.center,
+            alignment: Alignment.centerRight,
             child: Text(
               '+${(members.length - 2)}',
               style: TextStyle(color: Colors.white, fontSize: 12),
