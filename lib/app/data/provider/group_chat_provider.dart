@@ -46,17 +46,17 @@ class GroupChatProvider {
     final doc = ref.doc();
     doc.set({
       'id': doc.id,
-      'name': grpName ?? null,
+      'name': grpName ?? '',
       'last_message': Map.identity(),
     });
     userUIDs.add(UserProvider.getCurrentUser()!.uid);
-    userUIDs.forEach((element) async {
-      final groups = await _getListGroup(element)
+    for (var value in userUIDs) {
+      final groups = await _getListGroup(value)
         ..add(doc.id);
-      store.collection('user').doc(element).update({
+      store.collection('user').doc(value).update({
         'groups': groups,
       });
-    });
+    }
     doc.update({'members': userUIDs});
   }
 

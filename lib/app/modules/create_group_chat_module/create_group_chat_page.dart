@@ -32,6 +32,7 @@ class CreateGroupChatPage extends GetView<CreateGroupChatController> {
                   return Column(
                     children: [
                       WidgetField(
+                        controller: controller.textCtrl,
                         hint: 'Enter group name',
                         margin: EdgeInsets.symmetric(
                           vertical: 10,

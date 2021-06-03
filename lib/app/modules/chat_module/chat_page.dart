@@ -102,11 +102,6 @@ class ChatPage extends GetView<ChatController> {
       iconTheme: IconThemeData(color: Colors.black87),
       title: Row(
         children: [
-          // WidgetAvatar(
-          //   url: Get.arguments['avatar'],
-          //   isActive: Get.arguments['isActive'],
-          //   size: 40,
-          // ),
           Get.arguments['members'] == null
               ? WidgetAvatar(url: Get.arguments['avatar'], size: 40)
               : WidgetAvatarChat(members: Get.arguments['members']),
