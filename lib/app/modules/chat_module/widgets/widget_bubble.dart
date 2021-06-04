@@ -83,7 +83,7 @@ class WidgetBubble extends StatelessWidget {
                               ),
                             ),
                             child: Text(
-                              message!,
+                              message,
                               overflow: TextOverflow.fade,
                               textAlign: isMe ? TextAlign.end : TextAlign.start,
                               style: TextStyle(

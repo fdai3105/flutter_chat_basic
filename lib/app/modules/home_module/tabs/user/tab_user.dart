@@ -32,6 +32,7 @@ class UserTab extends GetView<TabUserController> {
                         'avatar': item.avatar,
                         'isActive': item.isActive,
                         'isFromContact': true,
+                        'members': [item],
                       });
                     },
                     leading: WidgetAvatar(
