@@ -58,16 +58,20 @@ class TabConversationController extends GetxController {
 
   String lastMess(FirebaseMessage? last) {
     if (last == null) return 'Send your first message';
+    var mess = last.message;
+    if(last.message.length > 10 ){
+      mess = last.message.substring(0, 10) + ' ...  ';
+    }
     if (last.senderUID == UserProvider.getCurrentUser()!.uid) {
       if (last.type == 1) {
         return 'You send a photo  •  ${formatDate(last.createdAt)}';
       }
-      return 'You : ${last.message}  •  ${formatDate(last.createdAt)}';
+      return 'You : $mess  •  ${formatDate(last.createdAt)}';
     } else {
       if (last.type == 1) {
         return '${last.senderName} send a photo  •  ${formatDate(last.createdAt)}';
       }
-      return '${last.senderName} : ${last.message}  •  ${formatDate(last.createdAt)}';
+      return '${last.senderName} : $mess  •  ${formatDate(last.createdAt)}';
     }
   }
 

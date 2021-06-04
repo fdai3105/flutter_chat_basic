@@ -24,10 +24,24 @@ class ChatController extends GetxController {
   final keyboardController = KeyboardVisibilityController();
   final scrollController = ScrollController();
 
+  final _id = ''.obs;
+  final _fromContact = false.obs;
   final _emojiShowing = false.obs;
   final _isKeyboardVisible = false.obs;
   final _messages = <Message>[].obs;
   final _isLoading = true.obs;
+
+  get id => _id.value;
+
+  set id(value) {
+    _id.value = value;
+  }
+
+  get fromContact => _fromContact.value;
+
+  set fromContact(value) {
+    _fromContact.value = value;
+  }
 
   get emojiShowing => _emojiShowing.value;
 
@@ -58,13 +72,16 @@ class ChatController extends GetxController {
 
   @override
   void onInit() async {
-    if (Get.arguments['isFromContact']) {
-      provider.getMessagesFromContact(Get.arguments['uID'])
+    id = Get.arguments['uID'];
+    fromContact = Get.arguments['isFromContact'];
+
+    if (fromContact) {
+      provider.getMessagesFromContact(id)
         ..listen((event) {
           messages = event;
         });
     } else {
-      provider.getMessages(Get.arguments['uID'])
+      provider.getMessages(id)
         ..listen((event) {
           messages = event;
         });
@@ -76,15 +93,17 @@ class ChatController extends GetxController {
 
   /// type 0: text; type 1: image
   void sendMessage() {
-    if (Get.arguments['isFromContact']) {
+    if (fromContact) {
       if (textController.text.isNotEmpty) {
         provider.sendMessageFromContact(
-            Get.arguments['uID'],
+            id,
             FirebaseMessage(
               senderUID: UserProvider.getCurrentUser()!.uid,
               senderName: UserProvider.getCurrentUser()!.displayName!,
               message: textController.text,
-              createdAt: DateTime.now().millisecondsSinceEpoch,
+              createdAt: DateTime
+                  .now()
+                  .millisecondsSinceEpoch,
               type: 0,
             ));
         ntfProvider
@@ -98,12 +117,14 @@ class ChatController extends GetxController {
     } else {
       if (textController.text.isNotEmpty) {
         provider.sendMessage(
-            Get.arguments['uID'],
+            id,
             FirebaseMessage(
               senderUID: UserProvider.getCurrentUser()!.uid,
               senderName: UserProvider.getCurrentUser()!.displayName!,
               message: textController.text,
-              createdAt: DateTime.now().millisecondsSinceEpoch,
+              createdAt: DateTime
+                  .now()
+                  .millisecondsSinceEpoch,
               type: 0,
             ));
         ntfProvider
@@ -161,14 +182,18 @@ class ChatController extends GetxController {
       final ref = await storageProvider.uploadFile(imageFile);
       ref.getDownloadURL().then((url) {
         provider.sendMessage(
-            Get.arguments['uID'],
+            id,
             FirebaseMessage(
                 senderUID: UserProvider.getCurrentUser()!.uid,
                 senderName: UserProvider.getCurrentUser()!.displayName!,
                 message: url,
-                createdAt: DateTime.now().millisecondsSinceEpoch,
+                createdAt: DateTime
+                    .now()
+                    .millisecondsSinceEpoch,
                 type: 1));
       });
     }
   }
+
+
 }

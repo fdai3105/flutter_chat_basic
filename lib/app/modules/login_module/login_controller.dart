@@ -10,11 +10,15 @@ class LoginController extends GetxController {
   LoginController({required this.provider, required this.ntfProvider});
 
   void loginWithGoogle() async {
-    final user = await provider.loginWithGoogle();
-    if (user != null) {
-      ntfProvider.setDeviceToken();
-      await UserProvider().saveUserToStore(user);
-      Get.offNamed(Routes.home);
+    try {
+      final user = await provider.loginWithGoogle();
+      if (user != null) {
+        await UserProvider().saveUserToStore(user);
+        Get.offNamed(Routes.home);
+      }
+    } catch (e) {
+      Get.snackbar('Something wrong', 'Please try again');
+      print(e.toString());
     }
   }
 }

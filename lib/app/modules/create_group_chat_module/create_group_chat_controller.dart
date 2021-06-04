@@ -18,8 +18,7 @@ class CreateGroupChatController extends GetxController {
 
   final _isLoading = true.obs;
   final _users = <MyUser>[].obs;
-  final _selected = <String>[].obs;
-  final _listUser = <MyUser>[].obs;
+  final _selected = <MyUser>[].obs;
 
   get isLoading => _isLoading.value;
 
@@ -33,43 +32,38 @@ class CreateGroupChatController extends GetxController {
     _users.value = value;
   }
 
-  List<String> get selected => _selected;
+  List<MyUser> get selected => _selected;
 
   set selected(value) {
     _selected.value = value;
   }
 
-  List<MyUser> get listUser => _listUser;
-
-  set listUser(value) {
-    _listUser.value = value;
-  }
-
   @override
   void onInit() async {
     users = await userProvider.getUsers();
+    selected.add(MyUser(
+        uid: UserProvider.getCurrentUser()!.uid,
+        avatar: UserProvider.getCurrentUser()!.photoURL,
+        name: 'You',
+        email: UserProvider.getCurrentUser()!.email ?? '',
+        isActive: false));
     isLoading = false;
     super.onInit();
   }
 
-  void onSelect(String uid, token) {
-    if (selected.contains(uid)) {
-      selected.removeWhere((element) => element == uid);
+  void onSelect(MyUser item) {
+    if (selected.contains(item)) {
+      selected.removeWhere((element) => element == item);
     } else {
-      selected.add(uid);
-    }
-  }
-
-  void listSelect(item) {
-    if (listUser.contains(item)) {
-      listUser.removeWhere((element) => element == item);
-    } else {
-      listUser.add(item);
+      selected.add(item);
     }
   }
 
   Future onSubmit() async {
-    await provider.createGroupChat(selected, textCtrl.text);
+    await provider.createGroupChat(
+      selected.map((e) => e.uid).toList(),
+      textCtrl.text,
+    );
     Get.back();
   }
 }

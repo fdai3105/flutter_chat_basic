@@ -55,29 +55,6 @@ class GroupChatProvider {
       'name': grpName ?? '',
       'last_message': Map.identity(),
     });
-    userUIDs.add(UserProvider.getCurrentUser()!.uid);
-    for (var value in userUIDs) {
-      final groups = await _getListGroup(value)
-        ..add(doc.id);
-      store.collection('user').doc(value).update({
-        'groups': groups,
-      });
-    }
     doc.update({'members': userUIDs});
   }
-
-  Future<List<String>> _getListGroup(String uid) async {
-    final ref = store.collection('user');
-    final data = await ref.doc(uid).get();
-    final d = data.data();
-    if (d == null) {
-      return [];
-    }
-    if (d.containsKey('groups')) {
-      return List<String>.from(data.get('groups'));
-    } else {
-      return [];
-    }
-  }
-
 }

@@ -2,18 +2,29 @@ part of 'widgets.dart';
 
 class WidgetAvatarChat extends StatelessWidget {
   final List<MyUser> members;
+  final bool isGroup;
+  final double? size;
+  final double? avatarSize;
 
   const WidgetAvatarChat({
     Key? key,
     required this.members,
+    required this.isGroup,
+    this.size = 46,
+    this.avatarSize = 30,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    if (!isGroup) {
+      final user = members.firstWhere(
+          (element) => element.uid != UserProvider.getCurrentUser()!.uid);
+      return WidgetAvatar(url: user.avatar, size: size);
+    }
     if (members.length <= 2) {
       return Container(
-        width: 46,
-        height: 46,
+        width: size,
+        height: size,
         child: Stack(
           fit: StackFit.loose,
           children: [
@@ -24,8 +35,8 @@ class WidgetAvatarChat extends StatelessWidget {
       );
     } else {
       return Container(
-        width: 46,
-        height: 46,
+        width: size,
+        height: size,
         child: Stack(
           fit: StackFit.loose,
           children: [
@@ -41,21 +52,10 @@ class WidgetAvatarChat extends StatelessWidget {
   Widget _buildImage(String url, AlignmentGeometry alignment) {
     return Align(
       alignment: alignment,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: Colors.grey.shade200,
-            width: 2,
-          ),
-        ),
-        child: ClipOval(
-          child: CachedNetworkImage(
-            imageUrl: url,
-            height: members.length <= 2 ? 30 : 24,
-          ),
-        ),
+      child: WidgetAvatar(
+        url: url,
+        size: members.length <= 2 ? avatarSize : avatarSize! - 4,
+        borderSize: 1,
       ),
     );
   }
@@ -69,14 +69,14 @@ class WidgetAvatarChat extends StatelessWidget {
           shape: BoxShape.circle,
           border: Border.all(
             color: Colors.grey.shade200,
-            width: 2,
+            width: 1,
           ),
         ),
         child: SizedBox(
-          height: 26,
-          width: 26,
+          height: avatarSize! - 4,
+          width: avatarSize! - 4,
           child: Align(
-            alignment: Alignment.centerRight,
+            alignment: Alignment.center,
             child: Text(
               '+${(members.length - 2)}',
               style: TextStyle(color: Colors.white, fontSize: 12),

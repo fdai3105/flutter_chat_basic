@@ -8,33 +8,20 @@ class FullPhoto extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FullPhotoScreen(url: url),
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        shadowColor: Colors.transparent,
+      ),
+      body: Hero(
+        tag: url,
+        child: Container(
+          child: PhotoView(
+            minScale: PhotoViewComputedScale.contained * 0.8,
+            maxScale: PhotoViewComputedScale.covered * 2,
+            imageProvider: CachedNetworkImageProvider(url),
+          ),
+        ),
+      ),
     );
-  }
-}
-
-class FullPhotoScreen extends StatefulWidget {
-  final String url;
-
-  FullPhotoScreen({Key? key, required this.url}) : super(key: key);
-
-  @override
-  State createState() => FullPhotoScreenState(url: url);
-}
-
-class FullPhotoScreenState extends State<FullPhotoScreen> {
-  final String url;
-
-  FullPhotoScreenState({Key? key, required this.url});
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        child: PhotoView(imageProvider: CachedNetworkImageProvider(url)));
   }
 }

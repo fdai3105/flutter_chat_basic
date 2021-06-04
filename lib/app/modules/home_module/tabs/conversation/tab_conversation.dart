@@ -39,7 +39,13 @@ class ConversationTab extends GetView<TabConversationController> {
                       'deviceToken': item.membersToken,
                       'isFromContact': false,
                     }),
-                    leading: WidgetAvatarChat(members: item.members),
+                    leading: Hero(
+                      tag: item.uid,
+                      child: WidgetAvatarChat(
+                        members: item.members,
+                        isGroup: item.uid.length <= 20,
+                      ),
+                    ),
                     title: Text(grpName),
                     subtitle: Text(controller.lastMess(item.lastMessage)),
                   );
