@@ -89,7 +89,7 @@ class ChatController extends GetxController {
             ));
         ntfProvider
             .pushNotifyToPeer(
-            Get.arguments['name'],
+            UserProvider.getCurrentUser()!.displayName!,
             textController.text,
             UserProvider.getCurrentUser()!.uid,
             Get.arguments['deviceToken'] ?? []);
@@ -109,7 +109,7 @@ class ChatController extends GetxController {
         ntfProvider
             .pushNotifyToPeer(
             Get.arguments['name'],
-            textController.text,
+            UserProvider.getCurrentUser()!.displayName! + ': ${textController.text}',
             UserProvider.getCurrentUser()!.uid,
             Get.arguments['deviceToken'] ?? []);
         textController.clear();
