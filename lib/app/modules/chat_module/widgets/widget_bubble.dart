@@ -1,6 +1,6 @@
 part of 'widgets.dart';
 
-class WidgetBubble extends GetView<ChatController> {
+class WidgetBubble extends StatelessWidget {
   final bool isMe;
   final String message;
   final String dateTime;
