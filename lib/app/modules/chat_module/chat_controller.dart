@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
@@ -9,7 +8,6 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pdteam_demo_chat/app/data/models/models.dart';
 import 'package:pdteam_demo_chat/app/data/provider/provider.dart';
-import 'package:dio/dio.dart';
 
 class ChatController extends GetxController {
   final ChatProvider provider;
