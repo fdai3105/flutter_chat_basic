@@ -15,7 +15,7 @@ class CreateGroupChatPage extends GetView<CreateGroupChatController> {
           appBar: WidgetAppBar(
             title: 'Create group chat',
             actions: [
-              controller.selected.length > 1
+              controller.selected.length > 2
                   ? IconButton(
                       onPressed: () => controller.onSubmit(),
                       icon: Icon(Icons.add),
