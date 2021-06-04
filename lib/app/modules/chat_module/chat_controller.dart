@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
@@ -8,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pdteam_demo_chat/app/data/models/models.dart';
 import 'package:pdteam_demo_chat/app/data/provider/provider.dart';
+import 'package:dio/dio.dart';
 
 class ChatController extends GetxController {
   final ChatProvider provider;
@@ -98,7 +100,9 @@ class ChatController extends GetxController {
               senderUID: UserProvider.getCurrentUser()!.uid,
               senderName: UserProvider.getCurrentUser()!.displayName!,
               message: textController.text,
-              createdAt: DateTime.now().millisecondsSinceEpoch,
+              createdAt: DateTime
+                  .now()
+                  .millisecondsSinceEpoch,
               type: 0,
             ));
         textController.clear();
@@ -111,7 +115,9 @@ class ChatController extends GetxController {
               senderUID: UserProvider.getCurrentUser()!.uid,
               senderName: UserProvider.getCurrentUser()!.displayName!,
               message: textController.text,
-              createdAt: DateTime.now().millisecondsSinceEpoch,
+              createdAt: DateTime
+                  .now()
+                  .millisecondsSinceEpoch,
               type: 0,
             ));
         textController.clear();
@@ -168,9 +174,13 @@ class ChatController extends GetxController {
                 senderUID: UserProvider.getCurrentUser()!.uid,
                 senderName: UserProvider.getCurrentUser()!.displayName!,
                 message: url,
-                createdAt: DateTime.now().millisecondsSinceEpoch,
+                createdAt: DateTime
+                    .now()
+                    .millisecondsSinceEpoch,
                 type: 1));
       });
     }
   }
+
+
 }

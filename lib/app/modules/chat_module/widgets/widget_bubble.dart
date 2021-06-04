@@ -1,6 +1,6 @@
 part of 'widgets.dart';
 
-class WidgetBubble extends StatelessWidget {
+class WidgetBubble extends GetView<ChatController> {
   final bool isMe;
   final String message;
   final String dateTime;
@@ -55,13 +55,15 @@ class WidgetBubble extends StatelessWidget {
                                 bottomLeft: Radius.circular(!isMe ? 0 : 15),
                               ),
                             ),
-                            child: Text(
+                            child: SelectableText(
                               message,
-                              overflow: TextOverflow.fade,
-                              textAlign: isMe ? TextAlign.end : TextAlign.start,
+                              textAlign: TextAlign.start,
                               style: TextStyle(
                                 color: isMe ? Colors.white : Colors.black87,
                               ),
+                              onTap: (){
+                                Clipboard.setData(ClipboardData(text: message));
+                              },
                             ),
                           ),
                         )
@@ -82,13 +84,15 @@ class WidgetBubble extends StatelessWidget {
                                 bottomLeft: Radius.circular(!isMe ? 0 : 15),
                               ),
                             ),
-                            child: Text(
+                            child: SelectableText(
                               message,
-                              overflow: TextOverflow.fade,
-                              textAlign: isMe ? TextAlign.end : TextAlign.start,
+                              textAlign: TextAlign.start,
                               style: TextStyle(
                                 color: isMe ? Colors.white : Colors.black87,
                               ),
+                              onTap: (){
+                                Clipboard.setData(ClipboardData(text: message));
+                              },
                             ),
                           ),
                         ),
@@ -144,8 +148,8 @@ class WidgetBubble extends StatelessWidget {
                                     valueColor: AlwaysStoppedAnimation<Color>(
                                         Colors.blue),
                                   ),
-                                  width: 100,
-                                  height: 100,
+                                  width: 200,
+                                  height: 200,
                                   padding: EdgeInsets.all(70.0),
                                   decoration: BoxDecoration(
                                     color: Colors.grey,
@@ -177,42 +181,45 @@ class WidgetBubble extends StatelessWidget {
                   : Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                          child: GestureDetector(
-                            onTap: () {
-                              Get.to(() => FullPhoto(url: message));
-                            },
-                            child: CachedNetworkImage(
-                              placeholder: (context, url) => Container(
-                                child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.blue),
+                        Hero(
+                          tag: message,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                            child: GestureDetector(
+                              onTap: () {
+                                Get.to(() => FullPhoto(url: message));
+                              },
+                              child: CachedNetworkImage(
+                                placeholder: (context, url) => Container(
+                                  child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.blue),
+                                  ),
+                                  width: 200,
+                                  height: 200,
+                                  padding: EdgeInsets.all(70.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(8.0),
+                                    ),
+                                  ),
                                 ),
-                                width: 100,
-                                height: 100,
-                                padding: EdgeInsets.all(70.0),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey,
+                                errorWidget: (context, url, error) => Material(
+                                  child: Image.asset(
+                                    'assets/images/img_not_available.jpeg',
+                                    fit: BoxFit.cover,
+                                  ),
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(8.0),
                                   ),
+                                  clipBehavior: Clip.hardEdge,
                                 ),
+                                imageUrl: message,
+                                width: 200,
+                                fit: BoxFit.cover,
+                                alignment: Alignment.center,
                               ),
-                              errorWidget: (context, url, error) => Material(
-                                child: Image.asset(
-                                  'assets/images/img_not_available.jpeg',
-                                  fit: BoxFit.cover,
-                                ),
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(8.0),
-                                ),
-                                clipBehavior: Clip.hardEdge,
-                              ),
-                              imageUrl: message,
-                              width: 200,
-                              fit: BoxFit.cover,
-                              alignment: Alignment.center,
                             ),
                           ),
                         ),

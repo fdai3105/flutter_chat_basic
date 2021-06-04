@@ -16,6 +16,8 @@ class FullPhoto extends StatelessWidget {
         tag: url,
         child: Container(
           child: PhotoView(
+            minScale: PhotoViewComputedScale.contained * 0.8,
+            maxScale: PhotoViewComputedScale.covered * 2,
             imageProvider: CachedNetworkImageProvider(url),
           ),
         ),
