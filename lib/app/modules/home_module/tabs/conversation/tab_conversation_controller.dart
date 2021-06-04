@@ -87,7 +87,7 @@ class TabConversationController extends GetxController {
   }
 
   void logout() {
-    AuthProvider.logout();
+    AuthProvider().logout();
     Get.offAllNamed(Routes.login);
   }
 }

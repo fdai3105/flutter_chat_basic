@@ -36,6 +36,7 @@ class ConversationTab extends GetView<TabConversationController> {
                       'uID': item.uid,
                       'name': grpName,
                       'members': item.members,
+                      'deviceToken': item.membersToken,
                       'isFromContact': false,
                     }),
                     leading: Hero(

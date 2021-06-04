@@ -12,10 +12,12 @@ import 'package:pdteam_demo_chat/app/data/provider/provider.dart';
 class ChatController extends GetxController {
   final ChatProvider provider;
   final StorageProvider storageProvider;
+  final NotificationProvider ntfProvider;
 
   ChatController({
     required this.provider,
     required this.storageProvider,
+    required this.ntfProvider,
   });
 
   final textController = TextEditingController();
@@ -85,6 +87,7 @@ class ChatController extends GetxController {
         });
     }
     isLoading = false;
+    print('${Get.arguments['name']} TOKEN: ${Get.arguments['deviceToken']}');
     super.onInit();
   }
 
@@ -103,6 +106,12 @@ class ChatController extends GetxController {
                   .millisecondsSinceEpoch,
               type: 0,
             ));
+        ntfProvider
+            .pushNotifyToPeer(
+            UserProvider.getCurrentUser()!.displayName!,
+            textController.text,
+            UserProvider.getCurrentUser()!.uid,
+            Get.arguments['deviceToken'] ?? []);
         textController.clear();
       }
     } else {
@@ -118,6 +127,12 @@ class ChatController extends GetxController {
                   .millisecondsSinceEpoch,
               type: 0,
             ));
+        ntfProvider
+            .pushNotifyToPeer(
+            Get.arguments['name'],
+            UserProvider.getCurrentUser()!.displayName! + ': ${textController.text}',
+            UserProvider.getCurrentUser()!.uid,
+            Get.arguments['deviceToken'] ?? []);
         textController.clear();
       }
     }
