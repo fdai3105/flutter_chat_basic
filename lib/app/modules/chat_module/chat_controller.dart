@@ -70,6 +70,7 @@ class ChatController extends GetxController {
         });
     }
     isLoading = false;
+    print('${Get.arguments['name']} TOKEN: ${Get.arguments['deviceToken']}');
     super.onInit();
   }
 
@@ -88,7 +89,7 @@ class ChatController extends GetxController {
             ));
         ntfProvider
             .pushNotifyToPeer(
-            UserProvider.getCurrentUser()!.displayName!,
+            Get.arguments['name'],
             textController.text,
             UserProvider.getCurrentUser()!.uid,
             Get.arguments['deviceToken'] ?? []);
@@ -107,7 +108,7 @@ class ChatController extends GetxController {
             ));
         ntfProvider
             .pushNotifyToPeer(
-            UserProvider.getCurrentUser()!.displayName!,
+            Get.arguments['name'],
             textController.text,
             UserProvider.getCurrentUser()!.uid,
             Get.arguments['deviceToken'] ?? []);
