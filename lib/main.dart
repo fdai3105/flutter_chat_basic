@@ -15,6 +15,7 @@ void main() async {
   runApp(
     GetMaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       getPages: AppPages.pages,
       initialBinding: UserProvider.getCurrentUser() != null
           ? HomeBinding()

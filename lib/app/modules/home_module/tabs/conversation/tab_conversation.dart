@@ -38,7 +38,10 @@ class ConversationTab extends GetView<TabConversationController> {
                       'members': item.members,
                       'isFromContact': false,
                     }),
-                    leading: WidgetAvatarChat(members: item.members),
+                    leading: WidgetAvatarChat(
+                      members: item.members,
+                      isGroup: item.uid.length <= 20,
+                    ),
                     title: Text(grpName),
                     subtitle: Text(controller.lastMess(item.lastMessage)),
                   );

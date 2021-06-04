@@ -49,7 +49,6 @@ class GroupChatProvider {
       'name': grpName ?? '',
       'last_message': Map.identity(),
     });
-    userUIDs.add(UserProvider.getCurrentUser()!.uid);
     for (var value in userUIDs) {
       final groups = await _getListGroup(value)
         ..add(doc.id);
@@ -73,5 +72,4 @@ class GroupChatProvider {
       return [];
     }
   }
-
 }
