@@ -63,7 +63,7 @@ class WidgetBubble extends StatelessWidget {
                               style: TextStyle(
                                 color: isMe ? Colors.white : Colors.black87,
                               ),
-                              onTap: (){
+                              onTap: () {
                                 Clipboard.setData(ClipboardData(text: message));
                               },
                             ),
@@ -77,8 +77,9 @@ class WidgetBubble extends StatelessWidget {
                         WidgetAvatar(
                           url: avatar,
                           isActive: false,
-                          size: 35,
+                          size: 45,
                         ),
+                        SizedBox(width: 5),
                         Flexible(
                           child: Container(
                             padding: EdgeInsets.all(15),
@@ -97,7 +98,7 @@ class WidgetBubble extends StatelessWidget {
                               style: TextStyle(
                                 color: isMe ? Colors.white : Colors.black87,
                               ),
-                              onTap: (){
+                              onTap: () {
                                 Clipboard.setData(ClipboardData(text: message));
                               },
                             ),
@@ -188,6 +189,12 @@ class WidgetBubble extends StatelessWidget {
                   : Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
+                        WidgetAvatar(
+                          url: avatar,
+                          isActive: false,
+                          size: 45,
+                        ),
+                        SizedBox(width: 5),
                         Hero(
                           tag: message,
                           child: ClipRRect(

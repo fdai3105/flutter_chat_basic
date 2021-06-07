@@ -8,18 +8,19 @@ class FullPhoto extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.transparent,
         shadowColor: Colors.transparent,
+        elevation: 0,
       ),
-      body: Hero(
-        tag: url,
-        child: Container(
-          child: PhotoView(
-            minScale: PhotoViewComputedScale.contained * 0.8,
-            maxScale: PhotoViewComputedScale.covered * 2,
-            imageProvider: CachedNetworkImageProvider(url),
-          ),
+      body: Container(
+        child: PhotoView(
+          minScale: PhotoViewComputedScale.contained * 0.8,
+          maxScale: PhotoViewComputedScale.covered * 2,
+          heroAttributes: PhotoViewHeroAttributes(tag: url),
+          imageProvider: CachedNetworkImageProvider(url),
         ),
       ),
     );
