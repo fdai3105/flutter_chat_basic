@@ -14,19 +14,8 @@ class ChatProvider {
         StreamTransformer.fromHandlers(handleData: _tranDocToMessages));
   }
 
-  Future<Stream<List<Message>>> paginationMessages(
-      String id, int startAt) async {
-    final ref =
-        store.collection('conversations').doc(id).collection('messages');
-    final data = await ref.get();
-    if (startAt > data.size) return Stream.empty();
-    final snapshot = ref.startAtDocument(data.docs[startAt]).limit(10);
-    return snapshot.snapshots().transform(
-        StreamTransformer.fromHandlers(handleData: _tranDocToMessages));
-  }
-
-  Future _tranDocToMessages(QuerySnapshot<Map<String, dynamic>> snapshot,
-      EventSink<List<Message>> sink) async {
+  void _tranDocToMessages(QuerySnapshot<Map<String, dynamic>> snapshot,
+      EventSink<List<Message>> sink) {
     final messages = <Message>[];
     for (final element in snapshot.docs) {
       messages.add(Message.fromMap(element.data()));
@@ -51,9 +40,9 @@ class ChatProvider {
         ));
   }
 
-  Future _tranDocToMessagesFromContact(
+  void _tranDocToMessagesFromContact(
       QuerySnapshot<Map<String, dynamic>> snapshot,
-      EventSink<List<Message>> sink) async {
+      EventSink<List<Message>> sink) {
     final messages = <Message>[];
     for (final element in snapshot.docs) {
       messages.add(Message.fromMap(element.data()));
