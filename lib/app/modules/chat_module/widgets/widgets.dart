@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pdteam_demo_chat/app/modules/chat_module/chat.dart';
+import 'package:pdteam_demo_chat/app/widgets/widgets.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:flutter/services.dart';
 

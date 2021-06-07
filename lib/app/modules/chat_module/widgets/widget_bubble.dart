@@ -5,12 +5,14 @@ class WidgetBubble extends StatelessWidget {
   final String message;
   final String dateTime;
   final int type;
+  final String? avatar;
 
   WidgetBubble({
     required this.message,
     required this.isMe,
     required this.dateTime,
     required this.type,
+    this.avatar,
   });
 
   Widget build(BuildContext context) {
@@ -72,6 +74,11 @@ class WidgetBubble extends StatelessWidget {
                   : Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
+                        WidgetAvatar(
+                          url: avatar,
+                          isActive: false,
+                          size: 35,
+                        ),
                         Flexible(
                           child: Container(
                             padding: EdgeInsets.all(15),

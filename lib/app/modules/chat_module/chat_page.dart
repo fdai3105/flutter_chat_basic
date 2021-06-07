@@ -36,7 +36,8 @@ class ChatPage extends GetView<ChatController> {
                           message: item.message,
                           isMe: item.senderUID ==
                               FirebaseAuth.instance.currentUser!.uid,
-                          type: item.type);
+                          type: item.type,
+                          avatar: item.sender.avatar,);
                     },
                   );
                 },
