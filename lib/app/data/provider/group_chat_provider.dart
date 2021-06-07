@@ -8,7 +8,7 @@ class GroupChatProvider {
   final FirebaseFirestore store = FirebaseFirestore.instance;
 
   Stream<List<Group>> getConversations() {
-    final currentUser = UserProvider.getCurrentUser()!;
+    final currentUser = UserProvider.getCurrentUser();
     final ref = store
         .collection('conversations')
         .where('members', arrayContains: currentUser.uid)

@@ -42,10 +42,10 @@ class CreateGroupChatController extends GetxController {
   void onInit() async {
     users = await userProvider.getUsers();
     selected.add(MyUser(
-        uid: UserProvider.getCurrentUser()!.uid,
-        avatar: UserProvider.getCurrentUser()!.photoURL,
+        uid: UserProvider.getCurrentUser().uid,
+        avatar: UserProvider.getCurrentUser().photoURL,
         name: 'You',
-        email: UserProvider.getCurrentUser()!.email ?? '',
+        email: UserProvider.getCurrentUser().email ?? '',
         isActive: false));
     isLoading = false;
     super.onInit();

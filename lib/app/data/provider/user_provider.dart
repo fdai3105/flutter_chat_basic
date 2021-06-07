@@ -38,7 +38,7 @@ class UserProvider {
         .orderBy('name')
         .get();
     ref.docs.forEach((element) {
-      if (element.id != UserProvider.getCurrentUser()!.uid) {
+      if (element.id != UserProvider.getCurrentUser().uid) {
         users.add(MyUser.fromMap(element.id, element.data()));
       }
     });
@@ -54,7 +54,7 @@ class UserProvider {
       handleData: (snapshot, sink) {
         final users = <MyUser>[];
         snapshot.docs.forEach((element) {
-          if (element.id != getCurrentUser()!.uid) {
+          if (element.id != getCurrentUser().uid) {
             users.add(MyUser.fromMap(element.id, element.data()));
           }
         });
@@ -83,5 +83,5 @@ class UserProvider {
     }
   }
 
-  static User? getCurrentUser() => FirebaseAuth.instance.currentUser;
+  static User getCurrentUser() => FirebaseAuth.instance.currentUser!;
 }

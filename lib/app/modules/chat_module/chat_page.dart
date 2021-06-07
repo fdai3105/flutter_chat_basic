@@ -34,8 +34,8 @@ class ChatPage extends GetView<ChatController> {
                         dateTime:
                             '${DateFormat('hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(item.createdAt))}',
                         message: item.message,
-                        isMe: item.senderUID ==
-                            UserProvider.getCurrentUser()!.uid,
+                        isMe:
+                            item.senderUID == UserProvider.getCurrentUser().uid,
                         type: item.type,
                         avatar: item.senderAvatar,
                       );

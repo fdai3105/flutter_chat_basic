@@ -25,10 +25,10 @@ class ChatProvider {
 
   Stream<List<Message>> getMessagesFromContact(String contactUID) {
     var doc = '';
-    if (contactUID.hashCode <= UserProvider.getCurrentUser()!.uid.hashCode) {
-      doc = contactUID + UserProvider.getCurrentUser()!.uid;
+    if (contactUID.hashCode <= UserProvider.getCurrentUser().uid.hashCode) {
+      doc = contactUID + UserProvider.getCurrentUser().uid;
     } else {
-      doc = UserProvider.getCurrentUser()!.uid + contactUID;
+      doc = UserProvider.getCurrentUser().uid + contactUID;
     }
     final ref =
         store.collection('conversations').doc(doc).collection('messages');
@@ -63,7 +63,7 @@ class ChatProvider {
     } else {
       ref.set({
         'last_message': message.toMap(),
-        'members': [UserProvider.getCurrentUser()!.uid, message.senderUID],
+        'members': [UserProvider.getCurrentUser().uid, message.senderUID],
       });
     }
     ref.collection('messages').add(message.toMap());
@@ -71,10 +71,10 @@ class ChatProvider {
 
   Future sendMessageFromContact(String senderToUID, Message message) async {
     var doc = '';
-    if (senderToUID.hashCode <= UserProvider.getCurrentUser()!.uid.hashCode) {
-      doc = senderToUID + UserProvider.getCurrentUser()!.uid;
+    if (senderToUID.hashCode <= UserProvider.getCurrentUser().uid.hashCode) {
+      doc = senderToUID + UserProvider.getCurrentUser().uid;
     } else {
-      doc = UserProvider.getCurrentUser()!.uid + senderToUID;
+      doc = UserProvider.getCurrentUser().uid + senderToUID;
     }
 
     final ref = store.collection('conversations').doc(doc);
@@ -89,7 +89,7 @@ class ChatProvider {
     } else {
       ref.set({
         'last_message': message.toMap(),
-        'members': [UserProvider.getCurrentUser()!.uid, senderToUID],
+        'members': [UserProvider.getCurrentUser().uid, senderToUID],
       });
     }
     ref.collection('messages').add(message.toMap());

@@ -1,7 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pdteam_demo_chat/app/data/provider/provider.dart';
 import 'package:pdteam_demo_chat/app/modules/home_module/home.dart';
 import 'package:pdteam_demo_chat/app/modules/home_module/home_page.dart';
 import 'package:pdteam_demo_chat/app/modules/login_module/login_bindings.dart';
@@ -17,10 +17,11 @@ void main() async {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       getPages: AppPages.pages,
-      initialBinding: UserProvider.getCurrentUser() != null
+      initialBinding: FirebaseAuth.instance.currentUser != null
           ? HomeBinding()
           : LoginBinding(),
-      home: UserProvider.getCurrentUser() != null ? HomePage() : LoginPage(),
+      home:
+          FirebaseAuth.instance.currentUser != null ? HomePage() : LoginPage(),
     ),
   );
 }

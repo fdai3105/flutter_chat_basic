@@ -18,7 +18,7 @@ class WidgetAvatarChat extends StatelessWidget {
   Widget build(BuildContext context) {
     if (!isGroup) {
       final user = members.firstWhere(
-          (element) => element.uid != UserProvider.getCurrentUser()!.uid);
+          (element) => element.uid != UserProvider.getCurrentUser().uid);
       return WidgetAvatar(url: user.avatar, size: size);
     }
     if (members.length <= 2) {

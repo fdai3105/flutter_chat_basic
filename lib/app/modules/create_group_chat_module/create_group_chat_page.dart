@@ -85,7 +85,7 @@ class CreateGroupChatPage extends GetView<CreateGroupChatController> {
               padding: const EdgeInsets.only(right: 10),
               child: GestureDetector(
                 onTap: () {
-                  if (item.uid != UserProvider.getCurrentUser()!.uid) {
+                  if (item.uid != UserProvider.getCurrentUser().uid) {
                     controller.onSelect(item);
                   }
                 },
@@ -98,7 +98,7 @@ class CreateGroupChatPage extends GetView<CreateGroupChatController> {
                           isActive: false,
                           url: item.avatar,
                         ),
-                        item.uid == UserProvider.getCurrentUser()!.uid
+                        item.uid == UserProvider.getCurrentUser().uid
                             ? SizedBox()
                             : Positioned(
                                 top: 0,

@@ -110,9 +110,9 @@ class ChatController extends GetxController {
   void sendMessage() {
     if (textController.text.isNotEmpty) {
       final message = Message(
-        senderUID: UserProvider.getCurrentUser()!.uid,
-        senderName: UserProvider.getCurrentUser()!.displayName!,
-        senderAvatar: UserProvider.getCurrentUser()!.photoURL,
+        senderUID: UserProvider.getCurrentUser().uid,
+        senderName: UserProvider.getCurrentUser().displayName!,
+        senderAvatar: UserProvider.getCurrentUser().photoURL,
         message: textController.text,
         createdAt: DateTime.now().millisecondsSinceEpoch,
         type: 0,
@@ -120,17 +120,17 @@ class ChatController extends GetxController {
       if (fromContact) {
         provider.sendMessageFromContact(id, message);
         ntfProvider.pushNotifyToPeer(
-            UserProvider.getCurrentUser()!.displayName!,
+            UserProvider.getCurrentUser().displayName!,
             textController.text,
-            UserProvider.getCurrentUser()!.uid,
+            UserProvider.getCurrentUser().uid,
             deviceToken ?? []);
       } else {
         provider.sendMessage(id, message);
         ntfProvider.pushNotifyToPeer(
             name,
-            UserProvider.getCurrentUser()!.displayName! +
+            UserProvider.getCurrentUser().displayName! +
                 ': ${textController.text}',
-            UserProvider.getCurrentUser()!.uid,
+            UserProvider.getCurrentUser().uid,
             deviceToken ?? []);
       }
       textController.clear();
@@ -182,9 +182,9 @@ class ChatController extends GetxController {
         provider.sendMessage(
             id,
             Message(
-                senderUID: UserProvider.getCurrentUser()!.uid,
-                senderName: UserProvider.getCurrentUser()!.displayName!,
-                senderAvatar: UserProvider.getCurrentUser()!.photoURL,
+                senderUID: UserProvider.getCurrentUser().uid,
+                senderName: UserProvider.getCurrentUser().displayName!,
+                senderAvatar: UserProvider.getCurrentUser().photoURL,
                 message: url,
                 createdAt: DateTime.now().millisecondsSinceEpoch,
                 type: 1));

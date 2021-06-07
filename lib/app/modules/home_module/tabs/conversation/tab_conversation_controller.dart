@@ -27,7 +27,7 @@ class TabConversationController extends GetxController {
   String groupName(String grpName, List<MyUser> members, {int max = 3}) {
     if (members.length <= 2) {
       final find = members
-          .where((element) => element.uid != UserProvider.getCurrentUser()!.uid)
+          .where((element) => element.uid != UserProvider.getCurrentUser().uid)
           .first;
       return find.name;
     }
@@ -62,7 +62,7 @@ class TabConversationController extends GetxController {
     if (last.message.length > 10) {
       mess = last.message.substring(0, 10) + ' ...  ';
     }
-    if (last.senderUID == UserProvider.getCurrentUser()!.uid) {
+    if (last.senderUID == UserProvider.getCurrentUser().uid) {
       if (last.type == 1) {
         return 'You send a photo  •  ${formatDate(last.createdAt)}';
       }
