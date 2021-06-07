@@ -3,7 +3,7 @@ part of 'models.dart';
 class Group {
   final String uid;
   final String name;
-  final FirebaseMessage? lastMessage;
+  final Message? lastMessage;
   final List<MyUser> members;
   final List<dynamic>? membersToken;
 
