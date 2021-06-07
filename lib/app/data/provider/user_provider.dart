@@ -2,24 +2,24 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:pdteam_demo_chat/app/data/constant/constant.dart';
 import 'package:pdteam_demo_chat/app/data/models/models.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class UserProvider {
   final FirebaseFirestore store = FirebaseFirestore.instance;
+  final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
   Future saveUserToStore(User user) async {
     final ref = store.collection('user').doc(user.uid);
-    final isExit = await ref.get();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString('device_token');
+    final isExit = await store.collection('user').doc(user.uid).get();
+    final token = await firebaseMessaging.getToken(vapidKey: FB_VAPID_KEY);
+    final tokens = await getListDeviceToken(user.uid);
     if (!isExit.exists) {
       await ref.set(MyUser.fromAuth(user, token!).toMap());
+    } else {
+      ref.update({'deviceToken': tokens..add(token!)});
     }
-    final _tokens = await getListDeviceToken(user.uid)..add(token!);
-    store.collection('user').doc(user.uid).update({
-      'deviceToken': _tokens.toSet().toList(),
-    });
   }
 
   Future changeActive(bool isActive) async {
@@ -68,13 +68,15 @@ class UserProvider {
     return MyUser.fromMap(snapshot.id, snapshot.data()!);
   }
 
+  // todo: check duplicate token
   Future<List<String>> getListDeviceToken(String uid) async {
     final ref = store.collection('user');
     final data = await ref.doc(uid).get();
     final d = data.data();
-    if(d == null) {
+    if (d == null) {
       return [];
-    } if (d.containsKey('deviceToken')) {
+    }
+    if (d.containsKey('deviceToken')) {
       return List<String>.from(data.get('deviceToken'));
     } else {
       return [];

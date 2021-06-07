@@ -10,13 +10,12 @@ class LoginController extends GetxController {
   LoginController({required this.provider, required this.ntfProvider});
 
   void loginWithGoogle() async {
-    try {
-      final user = await provider.loginWithGoogle();
-      if (user != null) {
-        await UserProvider().saveUserToStore(user);
-        Get.offNamed(Routes.home);
-      }
-    } catch (e) {
+    final user = await provider.loginWithGoogle();
+    if (user != null) {
+      await UserProvider().saveUserToStore(user);
+      Get.offNamed(Routes.home);
+    }
+    try {} catch (e) {
       Get.snackbar('Something wrong', 'Please try again');
       print(e.toString());
     }
