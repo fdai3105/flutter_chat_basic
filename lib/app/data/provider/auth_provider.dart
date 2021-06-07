@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:pdteam_demo_chat/app/data/constant/constant.dart';
 import 'package:pdteam_demo_chat/app/data/provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthProvider {
   final FirebaseFirestore store = FirebaseFirestore.instance;
+  final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   static FirebaseAuth fba = FirebaseAuth.instance;
   static GoogleSignIn ggs = GoogleSignIn(
     scopes: ['email', "https://www.googleapis.com/auth/contacts.readonly"],
@@ -25,17 +27,17 @@ class AuthProvider {
   }
 
   Future<void> removeDeviceToken() async {
-    final _tokens = await UserProvider().getListDeviceToken(FirebaseAuth.instance.currentUser!.uid);
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final _currentToken = prefs.getString('device_token');
-    if(_tokens.isNotEmpty){
-      _tokens.removeWhere((userToken) => userToken == _currentToken);
-      store.collection('user')
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .update({
-        'deviceToken': _tokens.toSet().toList()
-      });
-    }
+    final _tokens = await UserProvider()
+        .getListDeviceToken(FirebaseAuth.instance.currentUser!.uid);
+    firebaseMessaging.getToken(vapidKey: FB_VAPID_KEY).then((value) {
+      if (_tokens.isNotEmpty) {
+        _tokens.removeWhere((userToken) => userToken == value);
+        store
+            .collection('user')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .update({'deviceToken': _tokens});
+      }
+    });
   }
 
   Future<void> logout() async {
