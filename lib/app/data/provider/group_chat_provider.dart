@@ -27,20 +27,20 @@ class GroupChatProvider {
       for (final u in List.from(element.get('members'))) {
         final user = await UserProvider().getUser(u);
         members.add(user);
-        for(final token in user.deviceToken!){
+        for (final token in user.deviceToken!) {
           membersToken.add(token);
         }
       }
       final group = Group(
-          uid: element.id,
-          name: element.data()['name'] ?? '',
-          lastMessage: element.data().containsKey('last_message')
-              ? Map.from(element.get('last_message')).isNotEmpty
-                  ? FirebaseMessage.fromMap(element.get('last_message'))
-                  : null
-              : null,
-          members: members,
-          membersToken: membersToken,
+        uid: element.id,
+        name: element.data()['name'] ?? '',
+        lastMessage: element.data().containsKey('last_message')
+            ? Map.from(element.get('last_message')).isNotEmpty
+                ? Message.fromMap(element.get('last_message'))
+                : null
+            : null,
+        members: members,
+        membersToken: membersToken,
       );
       groups.add(group);
     }

@@ -56,10 +56,10 @@ class TabConversationController extends GetxController {
     return name;
   }
 
-  String lastMess(FirebaseMessage? last) {
+  String lastMess(Message? last) {
     if (last == null) return 'Send your first message';
     var mess = last.message;
-    if(last.message.length > 10 ){
+    if (last.message.length > 10) {
       mess = last.message.substring(0, 10) + ' ...  ';
     }
     if (last.senderUID == UserProvider.getCurrentUser()!.uid) {

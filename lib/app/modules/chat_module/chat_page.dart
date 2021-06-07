@@ -1,9 +1,9 @@
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:pdteam_demo_chat/app/data/provider/provider.dart';
 import 'package:pdteam_demo_chat/app/modules/chat_module/chat.dart';
 import 'package:pdteam_demo_chat/app/modules/chat_module/widgets/widgets.dart';
 import 'package:pdteam_demo_chat/app/widgets/widgets.dart';
@@ -21,8 +21,8 @@ class ChatPage extends GetView<ChatController> {
             Expanded(
               child: GetX<ChatController>(
                 builder: (_) {
-                  if (controller.messages.isEmpty) {
-                    return SizedBox();
+                  if (controller.isLoading) {
+                    return Center(child: CircularProgressIndicator());
                   }
                   return ListView.builder(
                     controller: controller.scrollController,
@@ -31,13 +31,14 @@ class ChatPage extends GetView<ChatController> {
                     itemBuilder: (context, i) {
                       final item = controller.messages[i];
                       return WidgetBubble(
-                          dateTime:
-                              '${DateFormat('hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(item.createdAt))}',
-                          message: item.message,
-                          isMe: item.senderUID ==
-                              FirebaseAuth.instance.currentUser!.uid,
-                          type: item.type,
-                          avatar: item.sender.avatar,);
+                        dateTime:
+                            '${DateFormat('hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(item.createdAt))}',
+                        message: item.message,
+                        isMe: item.senderUID ==
+                            UserProvider.getCurrentUser()!.uid,
+                        type: item.type,
+                        avatar: item.senderAvatar,
+                      );
                     },
                   );
                 },

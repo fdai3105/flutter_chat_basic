@@ -25,6 +25,8 @@ class ChatController extends GetxController {
   final scrollController = ScrollController();
 
   final _id = ''.obs;
+  final _name = ''.obs;
+  final _deviceToken = <dynamic>[].obs;
   final _fromContact = false.obs;
   final _emojiShowing = false.obs;
   final _isKeyboardVisible = false.obs;
@@ -35,6 +37,18 @@ class ChatController extends GetxController {
 
   set id(value) {
     _id.value = value;
+  }
+
+  get name => _name.value;
+
+  set name(value) {
+    _name.value = value;
+  }
+
+  get deviceToken => _deviceToken;
+
+  set deviceToken(value) {
+    _deviceToken.value = value;
   }
 
   get fromContact => _fromContact.value;
@@ -73,73 +87,57 @@ class ChatController extends GetxController {
   @override
   void onInit() async {
     id = Get.arguments['uID'];
+    name = Get.arguments['name'];
     fromContact = Get.arguments['isFromContact'];
+    deviceToken = Get.arguments['deviceToken'];
 
     if (fromContact) {
       provider.getMessagesFromContact(id)
-        ..listen((event) {
-          messages = event;
+        ..listen((event) {}).onData((data) {
+          messages = data;
+          isLoading = false;
         });
     } else {
       provider.getMessages(id)
-        ..listen((event) {
-          messages = event;
+        ..listen((event) {}).onData((data) {
+          messages = data;
+          isLoading = false;
         });
     }
-    isLoading = false;
-    print('${Get.arguments['name']} TOKEN: ${Get.arguments['deviceToken']}');
     super.onInit();
   }
 
-  /// type 0: text; type 1: image
   void sendMessage() {
-    if (fromContact) {
-      if (textController.text.isNotEmpty) {
-        provider.sendMessageFromContact(
-            id,
-            FirebaseMessage(
-              senderUID: UserProvider.getCurrentUser()!.uid,
-              senderName: UserProvider.getCurrentUser()!.displayName!,
-              message: textController.text,
-              createdAt: DateTime
-                  .now()
-                  .millisecondsSinceEpoch,
-              type: 0,
-            ));
-        ntfProvider
-            .pushNotifyToPeer(
+    if (textController.text.isNotEmpty) {
+      final message = Message(
+        senderUID: UserProvider.getCurrentUser()!.uid,
+        senderName: UserProvider.getCurrentUser()!.displayName!,
+        senderAvatar: UserProvider.getCurrentUser()!.photoURL,
+        message: textController.text,
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        type: 0,
+      );
+      if (fromContact) {
+        provider.sendMessageFromContact(id, message);
+        ntfProvider.pushNotifyToPeer(
             UserProvider.getCurrentUser()!.displayName!,
             textController.text,
             UserProvider.getCurrentUser()!.uid,
-            Get.arguments['deviceToken'] ?? []);
-        textController.clear();
-      }
-    } else {
-      if (textController.text.isNotEmpty) {
-        provider.sendMessage(
-            id,
-            FirebaseMessage(
-              senderUID: UserProvider.getCurrentUser()!.uid,
-              senderName: UserProvider.getCurrentUser()!.displayName!,
-              message: textController.text,
-              createdAt: DateTime
-                  .now()
-                  .millisecondsSinceEpoch,
-              type: 0,
-            ));
-        ntfProvider
-            .pushNotifyToPeer(
-            Get.arguments['name'],
-            UserProvider.getCurrentUser()!.displayName! + ': ${textController.text}',
+            deviceToken ?? []);
+      } else {
+        provider.sendMessage(id, message);
+        ntfProvider.pushNotifyToPeer(
+            name,
+            UserProvider.getCurrentUser()!.displayName! +
+                ': ${textController.text}',
             UserProvider.getCurrentUser()!.uid,
-            Get.arguments['deviceToken'] ?? []);
-        textController.clear();
+            deviceToken ?? []);
       }
-    }
-
-    if (messages.length >= 1) {
-      scrollController.animateTo(0,
-          duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+      textController.clear();
+      if (messages.length >= 1) {
+        scrollController.animateTo(0,
+            duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+      }
     }
   }
 
@@ -183,17 +181,14 @@ class ChatController extends GetxController {
       ref.getDownloadURL().then((url) {
         provider.sendMessage(
             id,
-            FirebaseMessage(
+            Message(
                 senderUID: UserProvider.getCurrentUser()!.uid,
                 senderName: UserProvider.getCurrentUser()!.displayName!,
+                senderAvatar: UserProvider.getCurrentUser()!.photoURL,
                 message: url,
-                createdAt: DateTime
-                    .now()
-                    .millisecondsSinceEpoch,
+                createdAt: DateTime.now().millisecondsSinceEpoch,
                 type: 1));
       });
     }
   }
-
-
 }

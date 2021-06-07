@@ -7,33 +7,18 @@ import 'package:pdteam_demo_chat/app/data/provider/provider.dart';
 class ChatProvider {
   final FirebaseFirestore store = FirebaseFirestore.instance;
 
-  Stream<List<Message>> getMessages(String? uid) {
-    var ref;
-    if (uid == null) {
-      return Stream.empty();
-    } else {
-      ref = store.collection('conversations').doc(uid).collection('messages');
-    }
-    return ref
-        .orderBy('created_at', descending: true)
-        .snapshots()
-        .transform(StreamTransformer.fromHandlers(
-          handleData: _tranDocToMessages,
-        ));
+  Stream<List<Message>> getMessages(String id) {
+    final ref =
+        store.collection('conversations').doc(id).collection('messages');
+    return ref.orderBy('created_at', descending: true).snapshots().transform(
+        StreamTransformer.fromHandlers(handleData: _tranDocToMessages));
   }
 
-  Future _tranDocToMessages(QuerySnapshot<Map<String, dynamic>> snapshot,
-      EventSink<List<Message>> sink) async {
+  void _tranDocToMessages(QuerySnapshot<Map<String, dynamic>> snapshot,
+      EventSink<List<Message>> sink) {
     final messages = <Message>[];
     for (final element in snapshot.docs) {
-      messages.add(Message(
-        uid: element.id,
-        createdAt: element.data()['created_at'],
-        message: element.data()['message'],
-        senderUID: element.data()['sender_uid'],
-        sender: await UserProvider().getUser(element.data()['sender_uid']),
-        type: element.data()['type'],
-      ));
+      messages.add(Message.fromMap(element.data()));
     }
     sink.add(messages);
   }
@@ -55,24 +40,17 @@ class ChatProvider {
         ));
   }
 
-  Future _tranDocToMessagesFromContact(
+  void _tranDocToMessagesFromContact(
       QuerySnapshot<Map<String, dynamic>> snapshot,
-      EventSink<List<Message>> sink) async {
+      EventSink<List<Message>> sink) {
     final messages = <Message>[];
     for (final element in snapshot.docs) {
-      messages.add(Message(
-        uid: element.id,
-        createdAt: element.data()['created_at'],
-        message: element.data()['message'],
-        senderUID: element.data()['sender_uid'],
-        sender: await UserProvider().getUser(element.data()['sender_uid']),
-        type: element.data()['type'],
-      ));
+      messages.add(Message.fromMap(element.data()));
     }
     sink.add(messages);
   }
 
-  Future sendMessage(String? uid, FirebaseMessage message) async {
+  Future sendMessage(String? uid, Message message) async {
     final ref = store.collection('conversations').doc(uid);
     final a = await ref.get();
     if (a.data() != null) {
@@ -91,8 +69,7 @@ class ChatProvider {
     ref.collection('messages').add(message.toMap());
   }
 
-  Future sendMessageFromContact(
-      String senderToUID, FirebaseMessage message) async {
+  Future sendMessageFromContact(String senderToUID, Message message) async {
     var doc = '';
     if (senderToUID.hashCode <= UserProvider.getCurrentUser()!.uid.hashCode) {
       doc = senderToUID + UserProvider.getCurrentUser()!.uid;
