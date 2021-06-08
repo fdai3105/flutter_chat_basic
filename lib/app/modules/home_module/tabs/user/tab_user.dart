@@ -36,10 +36,13 @@ class UserTab extends GetView<TabUserController> {
                         'members': [item],
                       });
                     },
-                    leading: WidgetAvatar(
-                      url: item.avatar,
-                      showDot: true,
-                      isActive: item.isActive,
+                    leading: Hero(
+                      tag: item.uid,
+                      child: WidgetAvatar(
+                        url: item.avatar,
+                        showDot: true,
+                        isActive: item.isActive,
+                      ),
                     ),
                     title: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

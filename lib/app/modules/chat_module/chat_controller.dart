@@ -174,20 +174,33 @@ class ChatController extends GetxController {
   Future sendImage() async {
     ImagePicker imagePicker = ImagePicker();
     PickedFile? pickedFile;
-    pickedFile = await imagePicker.getImage(source: ImageSource.gallery);
+    pickedFile = await imagePicker.getImage(source: ImageSource.gallery, imageQuality: 30);
     if (pickedFile != null) {
       final imageFile = File(pickedFile.path);
       final ref = await storageProvider.uploadFile(imageFile);
       ref.getDownloadURL().then((url) {
-        provider.sendMessage(
-            id,
-            Message(
-                senderUID: UserProvider.getCurrentUser().uid,
-                senderName: UserProvider.getCurrentUser().displayName!,
-                senderAvatar: UserProvider.getCurrentUser().photoURL,
-                message: url,
-                createdAt: DateTime.now().millisecondsSinceEpoch,
-                type: 1));
+        final message = Message(
+            senderUID: UserProvider.getCurrentUser().uid,
+            senderName: UserProvider.getCurrentUser().displayName!,
+            senderAvatar: UserProvider.getCurrentUser().photoURL,
+            message: url,
+            createdAt: DateTime.now().millisecondsSinceEpoch,
+            type: 1);
+        if (fromContact) {
+          provider.sendMessageFromContact(id, message);
+          ntfProvider.pushNotifyToPeer(
+              UserProvider.getCurrentUser().displayName!,
+              UserProvider.getCurrentUser().displayName! + ' send a photo',
+              UserProvider.getCurrentUser().uid,
+              deviceToken ?? []);
+        } else {
+          provider.sendMessage(id, message);
+          ntfProvider.pushNotifyToPeer(
+              name,
+              UserProvider.getCurrentUser().displayName! +  ' send a photo ',
+              UserProvider.getCurrentUser().uid,
+              deviceToken ?? []);
+        }
       });
     }
   }
