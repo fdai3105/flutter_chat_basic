@@ -29,7 +29,9 @@ class AuthProvider {
   Future<void> removeDeviceToken() async {
     final tokens = await UserProvider()
         .getListDeviceToken(FirebaseAuth.instance.currentUser!.uid);
-    firebaseMessaging.getToken(vapidKey: FB_VAPID_KEY).then((value) {
+    await firebaseMessaging
+        .getToken(vapidKey: FB_VAPID_KEY)
+        .then((value) async {
       if (tokens.isNotEmpty) {
         tokens.removeWhere((userToken) => userToken == value);
         store

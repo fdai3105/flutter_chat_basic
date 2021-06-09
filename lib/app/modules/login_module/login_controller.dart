@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:pdteam_demo_chat/app/data/provider/provider.dart';
-import 'package:pdteam_demo_chat/app/data/provider/user_provider.dart';
 import 'package:pdteam_demo_chat/app/routes/app_pages.dart';
 
 class LoginController extends GetxController {
@@ -10,14 +9,14 @@ class LoginController extends GetxController {
   LoginController({required this.provider, required this.ntfProvider});
 
   void loginWithGoogle() async {
-    final user = await provider.loginWithGoogle();
-    if (user != null) {
-      await UserProvider().saveUserToStore(user);
-      Get.offNamed(Routes.home);
-    }
-    try {} catch (e) {
+    try {
+      final user = await provider.loginWithGoogle();
+      if (user != null) {
+        await UserProvider().saveUserToStore(user);
+        Get.offNamed(Routes.home);
+      }
+    } catch (e) {
       Get.snackbar('Something wrong', 'Please try again');
-      print(e.toString());
     }
   }
 }
