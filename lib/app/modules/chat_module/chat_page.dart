@@ -57,9 +57,9 @@ class ChatPage extends GetView<ChatController> {
                     ),
                     child: ListView.builder(
                       shrinkWrap: true,
-                      itemCount: controller.member2.length,
+                      itemCount: controller.members.length,
                       itemBuilder: (context, i) {
-                        final item = controller.member2[i];
+                        final item = controller.members[i];
                         return ListTile(
                           onTap: () => controller.onTagSelect(item),
                           leading: WidgetAvatar(

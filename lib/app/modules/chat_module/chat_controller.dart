@@ -37,7 +37,6 @@ class ChatController extends GetxController {
   final _tagging = false.obs;
   final _members = <MyUser>[].obs;
   final _listTagged = <MyUser>[].obs;
-  final _member2 = <MyUser>[].obs;
 
   get id => _id.value;
 
@@ -108,28 +107,20 @@ class ChatController extends GetxController {
     _listTagged.value = value;
   }
 
-  List<MyUser> get member2 => _member2;
-
-  set member2(List<MyUser> value) {
-    _member2.value = value;
-  }
-
   @override
   void onInit() async {
     id = Get.arguments['uID'];
     name = Get.arguments['name'];
     fromContact = Get.arguments['isFromContact'];
     deviceToken = Get.arguments['deviceToken'];
-    members = List<MyUser>.from(Get.arguments['members']);
+    members = List<MyUser>.from(Get.arguments['members'])
+        .where((element) => element.uid != UserProvider.getCurrentUser().uid)
+        .toList();
     /*-----------------------------------------------*/
     textController.addListener(() {
       textController.text.split(' ').forEach((e) {
         if (e.startsWith('@')) {
           tagging = true;
-          member2 = members
-              .where((element) =>
-                  element.name.toLowerCase().contains(e.replaceAll('@', '')))
-              .toList();
         } else {
           tagging = false;
         }
@@ -160,14 +151,7 @@ class ChatController extends GetxController {
 
   void sendMessage() {
     if (textController.text.isNotEmpty) {
-      final message = Message(
-        senderUID: UserProvider.getCurrentUser().uid,
-        senderName: UserProvider.getCurrentUser().displayName!,
-        senderAvatar: UserProvider.getCurrentUser().photoURL,
-        message: textController.text,
-        createdAt: DateTime.now().millisecondsSinceEpoch,
-        type: 0,
-      );
+      // TODO(ff3105): need to optimize
       if (listTagged.isNotEmpty) {
         for (var value in listTagged) {
           ntfProvider.pushNotifyToPeer(
@@ -177,6 +161,15 @@ class ChatController extends GetxController {
               value.deviceToken ?? []);
         }
       }
+
+      final message = Message(
+        senderUID: UserProvider.getCurrentUser().uid,
+        senderName: UserProvider.getCurrentUser().displayName!,
+        senderAvatar: UserProvider.getCurrentUser().photoURL,
+        message: textController.text,
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        type: 0,
+      );
       if (fromContact) {
         provider.sendMessageFromContact(id, message);
         ntfProvider.pushNotifyToPeer(
