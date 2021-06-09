@@ -174,7 +174,8 @@ class ChatController extends GetxController {
   Future sendImage() async {
     ImagePicker imagePicker = ImagePicker();
     PickedFile? pickedFile;
-    pickedFile = await imagePicker.getImage(source: ImageSource.gallery, imageQuality: 30);
+    pickedFile = await imagePicker.getImage(
+        source: ImageSource.gallery, imageQuality: 30);
     if (pickedFile != null) {
       final imageFile = File(pickedFile.path);
       final ref = await storageProvider.uploadFile(imageFile);
@@ -197,7 +198,7 @@ class ChatController extends GetxController {
           provider.sendMessage(id, message);
           ntfProvider.pushNotifyToPeer(
               name,
-              UserProvider.getCurrentUser().displayName! +  ' send a photo ',
+              UserProvider.getCurrentUser().displayName! + ' send a photo ',
               UserProvider.getCurrentUser().uid,
               deviceToken ?? []);
         }

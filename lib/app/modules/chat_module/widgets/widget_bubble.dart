@@ -19,7 +19,7 @@ class WidgetBubble extends StatelessWidget {
     final uri = Uri.tryParse(message);
     if (uri != null && type != 1) {
       if (uri.isAbsolute) {
-        return Demo1(
+        return _WidgetUrlPreview(
           url: message,
           avatar: avatar,
           dateTime: dateTime,
@@ -266,13 +266,13 @@ class WidgetBubble extends StatelessWidget {
   }
 }
 
-class Demo1 extends StatefulWidget {
+class _WidgetUrlPreview extends StatefulWidget {
   final String url;
   final bool isMe;
   final String dateTime;
   final String? avatar;
 
-  const Demo1({
+  const _WidgetUrlPreview({
     Key? key,
     required this.isMe,
     required this.url,
@@ -281,10 +281,10 @@ class Demo1 extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _Demo1State createState() => _Demo1State();
+  _WidgetUrlPreviewState createState() => _WidgetUrlPreviewState();
 }
 
-class _Demo1State extends State<Demo1> {
+class _WidgetUrlPreviewState extends State<_WidgetUrlPreview> {
   PreviewData? data;
 
   @override
@@ -319,34 +319,7 @@ class _Demo1State extends State<Demo1> {
             style: TextStyle(color: Colors.black26),
           ),
         ),
-        Flexible(
-          child: ClipRRect(
-            borderRadius: BorderRadius.only(
-              topRight: Radius.circular(15),
-              topLeft: Radius.circular(15),
-              bottomRight: Radius.circular(widget.isMe ? 0 : 15),
-              bottomLeft: Radius.circular(!widget.isMe ? 0 : 15),
-            ),
-            child: Container(
-              decoration: BoxDecoration(
-                color: widget.isMe ? Colors.green : Colors.grey.shade200,
-              ),
-              child: LinkPreview(
-                width: double.infinity,
-                text: widget.url,
-                linkStyle: TextStyle(color: Colors.white),
-                headerStyle: TextStyle(color: Colors.white),
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                onPreviewDataFetched: (data) {
-                  setState(() {
-                    this.data = data;
-                  });
-                },
-                previewData: data,
-              ),
-            ),
-          ),
-        )
+        _buildContent()
       ],
     );
   }
@@ -361,32 +334,7 @@ class _Demo1State extends State<Demo1> {
           size: 45,
         ),
         SizedBox(width: 5),
-        Flexible(
-          child: Container(
-            padding: EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              color: widget.isMe ? Colors.green : Colors.grey.shade200,
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(15),
-                topLeft: Radius.circular(15),
-                bottomRight: Radius.circular(widget.isMe ? 0 : 15),
-                bottomLeft: Radius.circular(!widget.isMe ? 0 : 15),
-              ),
-            ),
-            child: Container(
-              child: LinkPreview(
-                onPreviewDataFetched: (data) {
-                  setState(() {
-                    this.data = data;
-                  });
-                },
-                previewData: data,
-                text: widget.url,
-                width: double.infinity,
-              ),
-            ),
-          ),
-        ),
+        _buildContent(),
         Padding(
           padding: const EdgeInsets.all(5),
           child: Text(
@@ -395,6 +343,39 @@ class _Demo1State extends State<Demo1> {
           ),
         ),
       ],
+    );
+  }
+
+  Flexible _buildContent() {
+    return Flexible(
+      child: ClipRRect(
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(15),
+          topLeft: Radius.circular(15),
+          bottomRight: Radius.circular(widget.isMe ? 0 : 15),
+          bottomLeft: Radius.circular(!widget.isMe ? 0 : 15),
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            color: widget.isMe ? Colors.green : Colors.grey.shade200,
+          ),
+          child: LinkPreview(
+            enableAnimation: true,
+            width: double.infinity,
+            text: widget.url,
+            linkStyle: TextStyle(
+              color: widget.isMe ? Colors.white : Colors.black87,
+            ),
+            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            onPreviewDataFetched: (data) {
+              setState(() {
+                this.data = data;
+              });
+            },
+            previewData: data,
+          ),
+        ),
+      ),
     );
   }
 }
