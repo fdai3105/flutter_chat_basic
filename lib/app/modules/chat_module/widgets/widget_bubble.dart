@@ -16,6 +16,18 @@ class WidgetBubble extends StatelessWidget {
   });
 
   Widget build(BuildContext context) {
+    final uri = Uri.tryParse(message);
+    if (uri != null && type != 1) {
+      if (uri.isAbsolute) {
+        return Demo1(
+          url: message,
+          avatar: avatar,
+          dateTime: dateTime,
+          isMe: isMe,
+        );
+      }
+    }
+
     if (type == 0) {
       return _buildTextBubble();
     } else {
@@ -250,6 +262,139 @@ class WidgetBubble extends StatelessWidget {
           )
         ],
       ),
+    );
+  }
+}
+
+class Demo1 extends StatefulWidget {
+  final String url;
+  final bool isMe;
+  final String dateTime;
+  final String? avatar;
+
+  const Demo1({
+    Key? key,
+    required this.isMe,
+    required this.url,
+    required this.dateTime,
+    required this.avatar,
+  }) : super(key: key);
+
+  @override
+  _Demo1State createState() => _Demo1State();
+}
+
+class _Demo1State extends State<Demo1> {
+  PreviewData? data;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(5),
+      padding: EdgeInsets.only(
+        left: widget.isMe ? 40 : 0,
+        right: widget.isMe ? 0 : 40,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Column(
+            crossAxisAlignment:
+                widget.isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            children: [widget.isMe ? _buildIsMe() : _buildNotMe()],
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildIsMe() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(5),
+          child: Text(
+            widget.dateTime,
+            style: TextStyle(color: Colors.black26),
+          ),
+        ),
+        Flexible(
+          child: ClipRRect(
+            borderRadius: BorderRadius.only(
+              topRight: Radius.circular(15),
+              topLeft: Radius.circular(15),
+              bottomRight: Radius.circular(widget.isMe ? 0 : 15),
+              bottomLeft: Radius.circular(!widget.isMe ? 0 : 15),
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: widget.isMe ? Colors.green : Colors.grey.shade200,
+              ),
+              child: LinkPreview(
+                width: double.infinity,
+                text: widget.url,
+                linkStyle: TextStyle(color: Colors.white),
+                headerStyle: TextStyle(color: Colors.white),
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                onPreviewDataFetched: (data) {
+                  setState(() {
+                    this.data = data;
+                  });
+                },
+                previewData: data,
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _buildNotMe() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        WidgetAvatar(
+          url: widget.avatar,
+          isActive: false,
+          size: 45,
+        ),
+        SizedBox(width: 5),
+        Flexible(
+          child: Container(
+            padding: EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              color: widget.isMe ? Colors.green : Colors.grey.shade200,
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(15),
+                topLeft: Radius.circular(15),
+                bottomRight: Radius.circular(widget.isMe ? 0 : 15),
+                bottomLeft: Radius.circular(!widget.isMe ? 0 : 15),
+              ),
+            ),
+            child: Container(
+              child: LinkPreview(
+                onPreviewDataFetched: (data) {
+                  setState(() {
+                    this.data = data;
+                  });
+                },
+                previewData: data,
+                text: widget.url,
+                width: double.infinity,
+              ),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(5),
+          child: Text(
+            widget.dateTime,
+            style: TextStyle(color: Colors.black26),
+          ),
+        ),
+      ],
     );
   }
 }
