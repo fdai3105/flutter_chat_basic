@@ -16,6 +16,7 @@ class WidgetBubble extends StatelessWidget {
   });
 
   Widget build(BuildContext context) {
+    message.isURL;
     final uri = Uri.tryParse(message);
     if (uri != null && type != 1) {
       if (uri.isAbsolute) {
@@ -296,14 +297,9 @@ class _WidgetUrlPreviewState extends State<_WidgetUrlPreview> {
         right: widget.isMe ? 0 : 40,
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Column(
-            crossAxisAlignment:
-                widget.isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-            children: [widget.isMe ? _buildIsMe() : _buildNotMe()],
-          )
-        ],
+        crossAxisAlignment:
+            widget.isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        children: [widget.isMe ? _buildIsMe() : _buildNotMe()],
       ),
     );
   }

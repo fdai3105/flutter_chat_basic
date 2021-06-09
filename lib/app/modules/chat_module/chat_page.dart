@@ -44,6 +44,36 @@ class ChatPage extends GetView<ChatController> {
                 },
               ),
             ),
+            GetX<ChatController>(
+              builder: (_) {
+                return Visibility(
+                  visible: controller.tagging,
+                  child: Container(
+                    width: double.infinity,
+                    margin: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: controller.member2.length,
+                      itemBuilder: (context, i) {
+                        final item = controller.member2[i];
+                        return ListTile(
+                          onTap: () => controller.onTagSelect(item),
+                          leading: WidgetAvatar(
+                            url: item.avatar,
+                            size: 40,
+                          ),
+                          title: Text(item.name),
+                        );
+                      },
+                    ),
+                  ),
+                );
+              },
+            ),
             WidgetInputField(
               controller: controller.textController,
               onSubmit: () => controller.sendMessage(),
@@ -131,7 +161,6 @@ class WidgetInputField extends StatelessWidget {
   final Function()? sendImage;
   final bool isKeyboardVisible;
   final bool isEmojiVisible;
-  final focusNode = FocusNode();
 
   WidgetInputField({
     Key? key,

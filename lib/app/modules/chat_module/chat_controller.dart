@@ -33,6 +33,12 @@ class ChatController extends GetxController {
   final _messages = <Message>[].obs;
   final _isLoading = true.obs;
 
+  /*------------------------*/
+  final _tagging = false.obs;
+  final _members = <MyUser>[].obs;
+  final _listTagged = <MyUser>[].obs;
+  final _member2 = <MyUser>[].obs;
+
   get id => _id.value;
 
   set id(value) {
@@ -84,13 +90,51 @@ class ChatController extends GetxController {
     _messages.value = value;
   }
 
+  get tagging => _tagging.value;
+
+  set tagging(value) {
+    _tagging.value = value;
+  }
+
+  List<MyUser> get members => _members;
+
+  set members(value) {
+    _members.value = value;
+  }
+
+  List<MyUser> get listTagged => _listTagged;
+
+  set listTagged(value) {
+    _listTagged.value = value;
+  }
+
+  List<MyUser> get member2 => _member2;
+
+  set member2(List<MyUser> value) {
+    _member2.value = value;
+  }
+
   @override
   void onInit() async {
     id = Get.arguments['uID'];
     name = Get.arguments['name'];
     fromContact = Get.arguments['isFromContact'];
     deviceToken = Get.arguments['deviceToken'];
-
+    members = List<MyUser>.from(Get.arguments['members']);
+    /*-----------------------------------------------*/
+    textController.addListener(() {
+      textController.text.split(' ').forEach((e) {
+        if (e.startsWith('@')) {
+          tagging = true;
+          member2 = members
+              .where((element) =>
+                  element.name.toLowerCase().contains(e.replaceAll('@', '')))
+              .toList();
+        } else {
+          tagging = false;
+        }
+      });
+    });
     if (fromContact) {
       provider.getMessagesFromContact(id)
         ..listen((event) {}).onData((data) {
@@ -107,6 +151,13 @@ class ChatController extends GetxController {
     super.onInit();
   }
 
+  void onTagSelect(MyUser user) {
+    tagging = !tagging;
+    textController.text += user.name;
+    listTagged.add(user);
+    _moveCursorToLast();
+  }
+
   void sendMessage() {
     if (textController.text.isNotEmpty) {
       final message = Message(
@@ -117,6 +168,15 @@ class ChatController extends GetxController {
         createdAt: DateTime.now().millisecondsSinceEpoch,
         type: 0,
       );
+      if (listTagged.isNotEmpty) {
+        for (var value in listTagged) {
+          ntfProvider.pushNotifyToPeer(
+              name,
+              UserProvider.getCurrentUser().displayName! + ' has mention you',
+              UserProvider.getCurrentUser().uid,
+              value.deviceToken ?? []);
+        }
+      }
       if (fromContact) {
         provider.sendMessageFromContact(id, message);
         ntfProvider.pushNotifyToPeer(
@@ -142,17 +202,13 @@ class ChatController extends GetxController {
   }
 
   void onEmojiSelected(Emoji emoji) {
-    textController
-      ..text += emoji.emoji
-      ..selection = TextSelection.fromPosition(
-          TextPosition(offset: textController.text.length));
+    textController.text += emoji.emoji;
+    _moveCursorToLast();
   }
 
   void onBackspacePressed() {
-    textController
-      ..text = textController.text.characters.skipLast(1).toString()
-      ..selection = TextSelection.fromPosition(
-          TextPosition(offset: textController.text.length));
+    textController.text = textController.text.characters.skipLast(1).string;
+    _moveCursorToLast();
   }
 
   void toggleEmojiKeyboard() {
@@ -204,5 +260,10 @@ class ChatController extends GetxController {
         }
       });
     }
+  }
+
+  void _moveCursorToLast() {
+    textController.selection = TextSelection.fromPosition(
+        TextPosition(offset: textController.text.length));
   }
 }
