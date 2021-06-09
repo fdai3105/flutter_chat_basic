@@ -29,6 +29,7 @@ class ChatController extends GetxController {
   final _deviceToken = <dynamic>[].obs;
   final _fromContact = false.obs;
   final _emojiShowing = false.obs;
+  final _stickerShowing = false.obs;
   final _isKeyboardVisible = false.obs;
   final _messages = <Message>[].obs;
   final _isLoading = true.obs;
@@ -62,8 +63,21 @@ class ChatController extends GetxController {
   set emojiShowing(value) {
     if (value && Get.window.viewInsets.bottom != 0) {
       FocusScope.of(Get.context!).requestFocus(FocusNode());
+    } else if (value && stickerShowing){
+      stickerShowing = false;
     }
     _emojiShowing.value = value;
+  }
+
+  get stickerShowing => _stickerShowing.value;
+
+  set stickerShowing(value) {
+    if (value && Get.window.viewInsets.bottom != 0) {
+      FocusScope.of(Get.context!).requestFocus(FocusNode());
+    } else if (value && emojiShowing){
+      emojiShowing = false;
+    }
+    _stickerShowing.value = value;
   }
 
   get isKeyboardVisible => _isKeyboardVisible.value;
@@ -104,33 +118,59 @@ class ChatController extends GetxController {
           isLoading = false;
         });
     }
+
+    var keyboardVisibilityController = KeyboardVisibilityController();
+    keyboardVisibilityController.onChange.listen((bool isKeyboardVisible) {
+      this.isKeyboardVisible = isKeyboardVisible;
+      if (isKeyboardVisible && emojiShowing) {
+        emojiShowing = false;
+      } else if (isKeyboardVisible && stickerShowing) {
+        stickerShowing = false;
+      }
+    });
     super.onInit();
   }
 
   void sendMessage() {
     if (textController.text.isNotEmpty) {
       final message = Message(
-        senderUID: UserProvider.getCurrentUser().uid,
-        senderName: UserProvider.getCurrentUser().displayName!,
-        senderAvatar: UserProvider.getCurrentUser().photoURL,
+        senderUID: UserProvider
+            .getCurrentUser()
+            .uid,
+        senderName: UserProvider
+            .getCurrentUser()
+            .displayName!,
+        senderAvatar: UserProvider
+            .getCurrentUser()
+            .photoURL,
         message: textController.text,
-        createdAt: DateTime.now().millisecondsSinceEpoch,
+        createdAt: DateTime
+            .now()
+            .millisecondsSinceEpoch,
         type: 0,
       );
       if (fromContact) {
         provider.sendMessageFromContact(id, message);
         ntfProvider.pushNotifyToPeer(
-            UserProvider.getCurrentUser().displayName!,
+            UserProvider
+                .getCurrentUser()
+                .displayName!,
             textController.text,
-            UserProvider.getCurrentUser().uid,
+            UserProvider
+                .getCurrentUser()
+                .uid,
             deviceToken ?? []);
       } else {
         provider.sendMessage(id, message);
         ntfProvider.pushNotifyToPeer(
             name,
-            UserProvider.getCurrentUser().displayName! +
+            UserProvider
+                .getCurrentUser()
+                .displayName! +
                 ': ${textController.text}',
-            UserProvider.getCurrentUser().uid,
+            UserProvider
+                .getCurrentUser()
+                .uid,
             deviceToken ?? []);
       }
       textController.clear();
@@ -138,6 +178,22 @@ class ChatController extends GetxController {
         scrollController.animateTo(0,
             duration: Duration(milliseconds: 300), curve: Curves.easeOut);
       }
+    }
+  }
+
+  void sendSticker(String? url) {
+    final message = Message(
+        senderUID: UserProvider.getCurrentUser().uid,
+        senderName: UserProvider.getCurrentUser().displayName!,
+        senderAvatar: UserProvider.getCurrentUser().photoURL,
+        message: url!,
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        type: 2
+    );
+    if (fromContact) {
+      provider.sendMessageFromContact(id, message);
+    } else {
+      provider.sendMessage(id, message);
     }
   }
 
@@ -165,6 +221,9 @@ class ChatController extends GetxController {
     if (emojiShowing) {
       toggleEmojiKeyboard();
       emojiShowing = !emojiShowing;
+    } else if (stickerShowing) {
+      toggleEmojiKeyboard();
+      stickerShowing = !stickerShowing;
     } else {
       Navigator.pop(Get.context!);
     }
@@ -174,7 +233,8 @@ class ChatController extends GetxController {
   Future sendImage() async {
     ImagePicker imagePicker = ImagePicker();
     PickedFile? pickedFile;
-    pickedFile = await imagePicker.getImage(source: ImageSource.gallery, imageQuality: 30);
+    pickedFile =
+    await imagePicker.getImage(source: ImageSource.gallery, imageQuality: 30);
     if (pickedFile != null) {
       final imageFile = File(pickedFile.path);
       final ref = await storageProvider.uploadFile(imageFile);
@@ -189,16 +249,26 @@ class ChatController extends GetxController {
         if (fromContact) {
           provider.sendMessageFromContact(id, message);
           ntfProvider.pushNotifyToPeer(
-              UserProvider.getCurrentUser().displayName!,
-              UserProvider.getCurrentUser().displayName! + ' send a photo',
-              UserProvider.getCurrentUser().uid,
+              UserProvider
+                  .getCurrentUser()
+                  .displayName!,
+              UserProvider
+                  .getCurrentUser()
+                  .displayName! + ' send a photo',
+              UserProvider
+                  .getCurrentUser()
+                  .uid,
               deviceToken ?? []);
         } else {
           provider.sendMessage(id, message);
           ntfProvider.pushNotifyToPeer(
               name,
-              UserProvider.getCurrentUser().displayName! +  ' send a photo ',
-              UserProvider.getCurrentUser().uid,
+              UserProvider
+                  .getCurrentUser()
+                  .displayName! + ' send a photo ',
+              UserProvider
+                  .getCurrentUser()
+                  .uid,
               deviceToken ?? []);
         }
       });

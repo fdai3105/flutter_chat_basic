@@ -65,11 +65,15 @@ class TabConversationController extends GetxController {
     if (last.senderUID == UserProvider.getCurrentUser().uid) {
       if (last.type == 1) {
         return 'You send a photo  •  ${formatDate(last.createdAt)}';
+      } else if (last.type == 2) {
+        return 'You send a emoji •  ${formatDate(last.createdAt)}';
       }
       return 'You : $mess  •  ${formatDate(last.createdAt)}';
     } else {
       if (last.type == 1) {
         return '${last.senderName} send a photo  •  ${formatDate(last.createdAt)}';
+      } else if(last.type == 2) {
+        return '${last.senderName} send a emoji •  ${formatDate(last.createdAt)}';
       }
       return '${last.senderName} : $mess  •  ${formatDate(last.createdAt)}';
     }
