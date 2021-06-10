@@ -30,8 +30,10 @@ class WidgetBubble extends StatelessWidget {
 
     if (type == 0) {
       return _buildTextBubble();
-    } else {
+    } else if (type == 1) {
       return _buildImageBubble(context);
+    } else {
+      return _buildStickerBubble(context);
     }
   }
 
@@ -258,6 +260,98 @@ class WidgetBubble extends StatelessWidget {
                         ),
                       ],
                     ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStickerBubble(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(5),
+      padding: isMe ? EdgeInsets.only(left: 40) : EdgeInsets.only(right: 40),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Column(
+            crossAxisAlignment:
+            isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            children: [
+              isMe
+                  ? Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: Text(
+                      dateTime,
+                      style: TextStyle(color: Colors.black26),
+                    ),
+                  ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    child: CachedNetworkImage(
+                      placeholder: (context, url) => Container(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.blue),
+                        ),
+                        width: 200,
+                        height: 200,
+                        padding: EdgeInsets.all(70.0),
+                        decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(8.0),
+                          ),
+                        ),
+                      ),
+                      errorWidget: (context, url, error) => Material(
+                        child: Image.asset(
+                          'assets/images/img_not_available.jpeg',
+                          fit: BoxFit.cover,
+                        ),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(8.0),
+                        ),
+                        clipBehavior: Clip.hardEdge,
+                      ),
+                      imageUrl: message,
+                      width: 200,
+                      fit: BoxFit.cover,
+                      alignment: Alignment.center,
+                    ),
+                  ),
+                ],
+              )
+                  : Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  WidgetAvatar(
+                    url: avatar,
+                    isActive: false,
+                    size: 45,
+                  ),
+                  SizedBox(width: 5),
+                  ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    child: CachedNetworkImage(
+                      imageUrl: message,
+                      width: 200,
+                      fit: BoxFit.cover,
+                      alignment: Alignment.center,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: Text(
+                      dateTime,
+                      style: TextStyle(color: Colors.black26),
+                    ),
+                  ),
+                ],
+              ),
             ],
           )
         ],
