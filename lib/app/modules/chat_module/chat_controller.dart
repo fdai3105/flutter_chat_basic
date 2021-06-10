@@ -63,7 +63,7 @@ class ChatController extends GetxController {
   set emojiShowing(value) {
     if (value && Get.window.viewInsets.bottom != 0) {
       FocusScope.of(Get.context!).requestFocus(FocusNode());
-    } else if (value && stickerShowing){
+    } else if (value && stickerShowing) {
       stickerShowing = false;
     }
     _emojiShowing.value = value;
@@ -74,7 +74,7 @@ class ChatController extends GetxController {
   set stickerShowing(value) {
     if (value && Get.window.viewInsets.bottom != 0) {
       FocusScope.of(Get.context!).requestFocus(FocusNode());
-    } else if (value && emojiShowing){
+    } else if (value && emojiShowing) {
       emojiShowing = false;
     }
     _stickerShowing.value = value;
@@ -134,43 +134,27 @@ class ChatController extends GetxController {
   void sendMessage() {
     if (textController.text.isNotEmpty) {
       final message = Message(
-        senderUID: UserProvider
-            .getCurrentUser()
-            .uid,
-        senderName: UserProvider
-            .getCurrentUser()
-            .displayName!,
-        senderAvatar: UserProvider
-            .getCurrentUser()
-            .photoURL,
+        senderUID: UserProvider.getCurrentUser().uid,
+        senderName: UserProvider.getCurrentUser().displayName!,
+        senderAvatar: UserProvider.getCurrentUser().photoURL,
         message: textController.text,
-        createdAt: DateTime
-            .now()
-            .millisecondsSinceEpoch,
+        createdAt: DateTime.now().millisecondsSinceEpoch,
         type: 0,
       );
       if (fromContact) {
         provider.sendMessageFromContact(id, message);
         ntfProvider.pushNotifyToPeer(
-            UserProvider
-                .getCurrentUser()
-                .displayName!,
+            UserProvider.getCurrentUser().displayName!,
             textController.text,
-            UserProvider
-                .getCurrentUser()
-                .uid,
+            UserProvider.getCurrentUser().uid,
             deviceToken ?? []);
       } else {
         provider.sendMessage(id, message);
         ntfProvider.pushNotifyToPeer(
             name,
-            UserProvider
-                .getCurrentUser()
-                .displayName! +
+            UserProvider.getCurrentUser().displayName! +
                 ': ${textController.text}',
-            UserProvider
-                .getCurrentUser()
-                .uid,
+            UserProvider.getCurrentUser().uid,
             deviceToken ?? []);
       }
       textController.clear();
@@ -188,12 +172,22 @@ class ChatController extends GetxController {
         senderAvatar: UserProvider.getCurrentUser().photoURL,
         message: url!,
         createdAt: DateTime.now().millisecondsSinceEpoch,
-        type: 2
-    );
+        type: 2);
     if (fromContact) {
       provider.sendMessageFromContact(id, message);
+      ntfProvider.pushNotifyToPeer(
+          UserProvider.getCurrentUser().displayName!,
+          UserProvider.getCurrentUser().displayName! + ' send a sticker',
+          UserProvider.getCurrentUser().uid,
+          deviceToken ?? []);
     } else {
       provider.sendMessage(id, message);
+      ntfProvider.pushNotifyToPeer(
+          name,
+          UserProvider.getCurrentUser().displayName! + ' send a sticker ',
+          UserProvider.getCurrentUser().uid,
+          deviceToken ?? []);
+
     }
   }
 
@@ -233,8 +227,8 @@ class ChatController extends GetxController {
   Future sendImage() async {
     ImagePicker imagePicker = ImagePicker();
     PickedFile? pickedFile;
-    pickedFile =
-    await imagePicker.getImage(source: ImageSource.gallery, imageQuality: 30);
+    pickedFile = await imagePicker.getImage(
+        source: ImageSource.gallery, imageQuality: 30);
     if (pickedFile != null) {
       final imageFile = File(pickedFile.path);
       final ref = await storageProvider.uploadFile(imageFile);
@@ -249,26 +243,16 @@ class ChatController extends GetxController {
         if (fromContact) {
           provider.sendMessageFromContact(id, message);
           ntfProvider.pushNotifyToPeer(
-              UserProvider
-                  .getCurrentUser()
-                  .displayName!,
-              UserProvider
-                  .getCurrentUser()
-                  .displayName! + ' send a photo',
-              UserProvider
-                  .getCurrentUser()
-                  .uid,
+              UserProvider.getCurrentUser().displayName!,
+              UserProvider.getCurrentUser().displayName! + ' send a photo',
+              UserProvider.getCurrentUser().uid,
               deviceToken ?? []);
         } else {
           provider.sendMessage(id, message);
           ntfProvider.pushNotifyToPeer(
               name,
-              UserProvider
-                  .getCurrentUser()
-                  .displayName! + ' send a photo ',
-              UserProvider
-                  .getCurrentUser()
-                  .uid,
+              UserProvider.getCurrentUser().displayName! + ' send a photo ',
+              UserProvider.getCurrentUser().uid,
               deviceToken ?? []);
         }
       });
