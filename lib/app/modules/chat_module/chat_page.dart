@@ -80,6 +80,9 @@ class ChatPage extends GetView<ChatController> {
               sendIcon: () {
                 controller.emojiShowing = !controller.emojiShowing;
               },
+              sendSticker: () {
+                controller.stickerShowing = !controller.stickerShowing;
+              },
               sendImage: () {
                 controller.sendImage();
               },
@@ -114,12 +117,20 @@ class ChatPage extends GetView<ChatController> {
                           recentsLimit: 28,
                           noRecentsText: 'No Recents',
                           noRecentsStyle:
-                              TextStyle(fontSize: 20, color: Colors.black26),
+                          TextStyle(fontSize: 20, color: Colors.black26),
                           categoryIcons: CategoryIcons(),
                           buttonMode: ButtonMode.MATERIAL)),
                 ),
               );
             }),
+            GetX<ChatController>(
+              builder: (_){
+                return  Visibility(
+                    visible: controller.stickerShowing,
+                    child: WidgetSticker()
+                );
+              },
+            ),
           ],
         ),
       ),
@@ -159,6 +170,7 @@ class WidgetInputField extends StatelessWidget {
   final Function()? onSubmit;
   final Function()? sendIcon;
   final Function()? sendImage;
+  final Function()? sendSticker;
   final bool isKeyboardVisible;
   final bool isEmojiVisible;
 
@@ -168,6 +180,7 @@ class WidgetInputField extends StatelessWidget {
     this.onSubmit,
     this.sendIcon,
     this.sendImage,
+    this.sendSticker,
     required this.isKeyboardVisible,
     required this.isEmojiVisible,
   }) : super(key: key);
@@ -187,6 +200,13 @@ class WidgetInputField extends StatelessWidget {
             onPressed: sendImage,
             icon: Icon(
               Icons.image,
+              color: Colors.green,
+            ),
+          ),
+          IconButton(
+            onPressed: sendSticker,
+            icon: Icon(
+              Icons.face,
               color: Colors.green,
             ),
           ),
@@ -219,3 +239,5 @@ class WidgetInputField extends StatelessWidget {
     );
   }
 }
+
+
