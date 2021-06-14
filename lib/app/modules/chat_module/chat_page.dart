@@ -50,6 +50,7 @@ class ChatPage extends GetView<ChatController> {
                 return Visibility(
                   visible: controller.tagging,
                   child: Container(
+                    height: 160,
                     width: double.infinity,
                     margin: EdgeInsets.all(10),
                     decoration: BoxDecoration(
