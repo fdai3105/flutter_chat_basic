@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pdteam_demo_chat/app/data/models/models.dart';
@@ -128,7 +129,10 @@ class ChatController extends GetxController {
     fromContact = Get.arguments['isFromContact'];
     deviceToken = Get.arguments['deviceToken'];
     members = List<MyUser>.from(Get.arguments['members'])
-        .where((element) => element.uid != UserProvider.getCurrentUser().uid)
+        .where((element) =>
+    element.uid != UserProvider
+        .getCurrentUser()
+        .uid)
         .toList();
     /*-----------------------------------------------*/
     textController.addListener(() {
@@ -180,34 +184,54 @@ class ChatController extends GetxController {
         for (var value in listTagged) {
           ntfProvider.pushNotifyToPeer(
               name,
-              UserProvider.getCurrentUser().displayName! + ' has mention you',
-              UserProvider.getCurrentUser().uid,
+              UserProvider
+                  .getCurrentUser()
+                  .displayName! + ' has mention you',
+              UserProvider
+                  .getCurrentUser()
+                  .uid,
               value.deviceToken ?? []);
         }
       }
 
       final message = Message(
-        senderUID: UserProvider.getCurrentUser().uid,
-        senderName: UserProvider.getCurrentUser().displayName!,
-        senderAvatar: UserProvider.getCurrentUser().photoURL,
+        senderUID: UserProvider
+            .getCurrentUser()
+            .uid,
+        senderName: UserProvider
+            .getCurrentUser()
+            .displayName!,
+        senderAvatar: UserProvider
+            .getCurrentUser()
+            .photoURL,
         message: textController.text,
-        createdAt: DateTime.now().millisecondsSinceEpoch,
+        createdAt: DateTime
+            .now()
+            .millisecondsSinceEpoch,
         type: 0,
       );
       if (fromContact) {
         provider.sendMessageFromContact(id, message);
         ntfProvider.pushNotifyToPeer(
-            UserProvider.getCurrentUser().displayName!,
+            UserProvider
+                .getCurrentUser()
+                .displayName!,
             textController.text,
-            UserProvider.getCurrentUser().uid,
+            UserProvider
+                .getCurrentUser()
+                .uid,
             deviceToken ?? []);
       } else {
         provider.sendMessage(id, message);
         ntfProvider.pushNotifyToPeer(
             name,
-            UserProvider.getCurrentUser().displayName! +
+            UserProvider
+                .getCurrentUser()
+                .displayName! +
                 ': ${textController.text}',
-            UserProvider.getCurrentUser().uid,
+            UserProvider
+                .getCurrentUser()
+                .uid,
             deviceToken ?? []);
       }
       textController.clear();
@@ -220,27 +244,44 @@ class ChatController extends GetxController {
 
   void sendSticker(String? url) {
     final message = Message(
-        senderUID: UserProvider.getCurrentUser().uid,
-        senderName: UserProvider.getCurrentUser().displayName!,
-        senderAvatar: UserProvider.getCurrentUser().photoURL,
+        senderUID: UserProvider
+            .getCurrentUser()
+            .uid,
+        senderName: UserProvider
+            .getCurrentUser()
+            .displayName!,
+        senderAvatar: UserProvider
+            .getCurrentUser()
+            .photoURL,
         message: url!,
-        createdAt: DateTime.now().millisecondsSinceEpoch,
+        createdAt: DateTime
+            .now()
+            .millisecondsSinceEpoch,
         type: 2);
     if (fromContact) {
       provider.sendMessageFromContact(id, message);
       ntfProvider.pushNotifyToPeer(
-          UserProvider.getCurrentUser().displayName!,
-          UserProvider.getCurrentUser().displayName! + ' send a sticker',
-          UserProvider.getCurrentUser().uid,
+          UserProvider
+              .getCurrentUser()
+              .displayName!,
+          UserProvider
+              .getCurrentUser()
+              .displayName! + ' send a sticker',
+          UserProvider
+              .getCurrentUser()
+              .uid,
           deviceToken ?? []);
     } else {
       provider.sendMessage(id, message);
       ntfProvider.pushNotifyToPeer(
           name,
-          UserProvider.getCurrentUser().displayName! + ' send a sticker ',
-          UserProvider.getCurrentUser().uid,
+          UserProvider
+              .getCurrentUser()
+              .displayName! + ' send a sticker ',
+          UserProvider
+              .getCurrentUser()
+              .uid,
           deviceToken ?? []);
-
     }
   }
 
@@ -250,7 +291,9 @@ class ChatController extends GetxController {
   }
 
   void onBackspacePressed() {
-    textController.text = textController.text.characters.skipLast(1).string;
+    textController.text = textController.text.characters
+        .skipLast(1)
+        .string;
     _moveCursorToLast();
   }
 
@@ -283,25 +326,43 @@ class ChatController extends GetxController {
       final ref = await storageProvider.uploadFile(imageFile);
       ref.getDownloadURL().then((url) {
         final message = Message(
-            senderUID: UserProvider.getCurrentUser().uid,
-            senderName: UserProvider.getCurrentUser().displayName!,
-            senderAvatar: UserProvider.getCurrentUser().photoURL,
+            senderUID: UserProvider
+                .getCurrentUser()
+                .uid,
+            senderName: UserProvider
+                .getCurrentUser()
+                .displayName!,
+            senderAvatar: UserProvider
+                .getCurrentUser()
+                .photoURL,
             message: url,
-            createdAt: DateTime.now().millisecondsSinceEpoch,
+            createdAt: DateTime
+                .now()
+                .millisecondsSinceEpoch,
             type: 1);
         if (fromContact) {
           provider.sendMessageFromContact(id, message);
           ntfProvider.pushNotifyToPeer(
-              UserProvider.getCurrentUser().displayName!,
-              UserProvider.getCurrentUser().displayName! + ' send a photo',
-              UserProvider.getCurrentUser().uid,
+              UserProvider
+                  .getCurrentUser()
+                  .displayName!,
+              UserProvider
+                  .getCurrentUser()
+                  .displayName! + ' send a photo',
+              UserProvider
+                  .getCurrentUser()
+                  .uid,
               deviceToken ?? []);
         } else {
           provider.sendMessage(id, message);
           ntfProvider.pushNotifyToPeer(
               name,
-              UserProvider.getCurrentUser().displayName! + ' send a photo ',
-              UserProvider.getCurrentUser().uid,
+              UserProvider
+                  .getCurrentUser()
+                  .displayName! + ' send a photo ',
+              UserProvider
+                  .getCurrentUser()
+                  .uid,
               deviceToken ?? []);
         }
       });
@@ -312,4 +373,63 @@ class ChatController extends GetxController {
     textController.selection = TextSelection.fromPosition(
         TextPosition(offset: textController.text.length));
   }
+
+  void sendLocation() async {
+    if (fromContact) {
+      await _getLocation().then((position) {
+        provider.sendMessageFromContact(
+            id,
+            Message(
+              senderUID: UserProvider
+                  .getCurrentUser()!
+                  .uid,
+              senderName: UserProvider
+                  .getCurrentUser()!
+                  .displayName!,
+              message: '${position.latitude} ${position.longitude}',
+              senderAvatar: UserProvider
+                  .getCurrentUser()!
+                  .photoURL!,
+              createdAt: DateTime
+                  .now()
+                  .millisecondsSinceEpoch,
+              type: 3,
+            ));
+      });
+    } else {
+      await _getLocation().then((position) =>
+      {
+        provider.sendMessage(
+            id,
+            Message(
+              senderUID: UserProvider
+                  .getCurrentUser()!
+                  .uid,
+              senderName: UserProvider
+                  .getCurrentUser()!
+                  .displayName!,
+              message: '${position.latitude} ${position.longitude}',
+              senderAvatar: UserProvider
+                  .getCurrentUser()!
+                  .photoURL!,
+              createdAt: DateTime
+                  .now()
+                  .millisecondsSinceEpoch,
+              type: 3,
+            ))
+      });
+    }
+  }
+
+  Future<Position> _getLocation() async {
+    var currentLocation;
+    try {
+      currentLocation = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.best);
+    } catch (e) {
+      currentLocation = null;
+    }
+    return currentLocation;
+  }
+
 }
