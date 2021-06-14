@@ -432,8 +432,9 @@ class WidgetBubble extends StatelessWidget {
           WidgetAvatar(
             url: avatar,
             isActive: false,
-            size: 35,
+            size: 45,
           ),
+          SizedBox(width: 5),
           SizedBox(
             height: 150,
             width: 220,
@@ -447,6 +448,15 @@ class WidgetBubble extends StatelessWidget {
               child: Stack(
                 children: [
                   GoogleMap(
+                    markers: {
+                      Marker(
+                        markerId: markerId1,
+                        position: LatLng(latitude, longitude),
+                        icon: BitmapDescriptor.
+                        defaultMarkerWithHue
+                          (BitmapDescriptor.hueAzure),
+                      )
+                    },
                     myLocationButtonEnabled: false,
                     zoomControlsEnabled: false,
                     myLocationEnabled: false,
@@ -457,7 +467,7 @@ class WidgetBubble extends StatelessWidget {
                       zoom: 11,),
                   ),
                   Align(
-                    alignment: Alignment.bottomRight,
+                    alignment: Alignment.bottomCenter,
                     child: TextButton(
                       onPressed: () => _showMap(context, latitude, longitude),
                       child: Text('View'),
