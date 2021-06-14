@@ -367,6 +367,7 @@ class WidgetBubble extends StatelessWidget {
   }
 
   Widget _buildMapviewBubble(BuildContext context, double latitude, double longitude) {
+    MarkerId markerId1 = MarkerId("1");
     return Container(
       margin: EdgeInsets.all(10),
       padding: isMe ? EdgeInsets.only(left: 40) : EdgeInsets.only(right: 40),
@@ -394,6 +395,15 @@ class WidgetBubble extends StatelessWidget {
               child: Stack(
                 children: [
                   GoogleMap(
+                    markers: {
+                      Marker(
+                        markerId: markerId1,
+                        position: LatLng(latitude, longitude),
+                        icon: BitmapDescriptor.
+                        defaultMarkerWithHue
+                          (BitmapDescriptor.hueAzure),
+                      )
+                    },
                     myLocationButtonEnabled: false,
                     zoomControlsEnabled: false,
                     myLocationEnabled: false,
@@ -470,29 +480,37 @@ class WidgetBubble extends StatelessWidget {
   }
 
   _showMap(BuildContext context, double latitude, double longitude) {
+    MarkerId markerId1 = MarkerId("1");
     showModalBottomSheet(
         context: context,
         builder: (context) => Scaffold(
-          body: Container(
-            padding: EdgeInsets.all(12),
-            child: GoogleMap(
-              initialCameraPosition: CameraPosition(
-                  target: LatLng(latitude, longitude),
-                  zoom: 11
-              ),
-              myLocationEnabled: true,
-              myLocationButtonEnabled: true,
-              scrollGesturesEnabled: true,
-              zoomControlsEnabled: false,
-              zoomGesturesEnabled: true,
-            ),
+      body: Container(
+        padding: EdgeInsets.all(12),
+        child: GoogleMap(
+          initialCameraPosition: CameraPosition(
+              target: LatLng(latitude, longitude),
+              zoom: 11
           ),
-          floatingActionButton: FloatingActionButton(
-            backgroundColor: Colors.green,
-            onPressed: () => Get.back(),
-            child: Icon(Icons.arrow_back),
-          ),
-        )
+          markers: {
+            Marker(
+              markerId: markerId1,
+              position: LatLng(latitude, longitude),
+              icon: BitmapDescriptor.
+              defaultMarkerWithHue
+                (BitmapDescriptor.hueAzure),
+            )
+          },
+          scrollGesturesEnabled: true,
+          zoomControlsEnabled: false,
+          zoomGesturesEnabled: true,
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.green,
+        onPressed: () => Get.back(),
+        child: Icon(Icons.arrow_back),
+      ),
+    )
     );
   }
 }

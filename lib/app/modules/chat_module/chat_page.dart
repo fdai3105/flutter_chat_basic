@@ -90,6 +90,7 @@ class ChatPage extends GetView<ChatController> {
               },
               sendLocation: () {
                 _showModalBottom(context);
+                controller.getLocation();
               },
               isEmojiVisible: controller.emojiShowing,
               isKeyboardVisible: controller.isKeyboardVisible,

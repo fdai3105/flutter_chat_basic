@@ -67,6 +67,8 @@ class TabConversationController extends GetxController {
         return 'You send a photo  •  ${formatDate(last.createdAt)}';
       } else if (last.type == 2) {
         return 'You send a sticker •  ${formatDate(last.createdAt)}';
+      } else if (last.type == 3) {
+        return 'You send a location •  ${formatDate(last.createdAt)}';
       }
       return 'You : $mess  •  ${formatDate(last.createdAt)}';
     } else {
@@ -74,6 +76,8 @@ class TabConversationController extends GetxController {
         return '${last.senderName} send a photo  •  ${formatDate(last.createdAt)}';
       } else if(last.type == 2) {
         return '${last.senderName} send a sticker •  ${formatDate(last.createdAt)}';
+      } else if(last.type == 3) {
+        return '${last.senderName} send a location •  ${formatDate(last.createdAt)}';
       }
       return '${last.senderName} : $mess  •  ${formatDate(last.createdAt)}';
     }
