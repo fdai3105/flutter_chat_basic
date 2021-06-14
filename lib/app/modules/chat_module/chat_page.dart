@@ -2,6 +2,7 @@ import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:pdteam_demo_chat/app/data/provider/provider.dart';
 import 'package:pdteam_demo_chat/app/modules/chat_module/chat.dart';
@@ -49,6 +50,7 @@ class ChatPage extends GetView<ChatController> {
                 return Visibility(
                   visible: controller.tagging,
                   child: Container(
+                    height: 160,
                     width: double.infinity,
                     margin: EdgeInsets.all(10),
                     decoration: BoxDecoration(
@@ -86,6 +88,9 @@ class ChatPage extends GetView<ChatController> {
               sendImage: () {
                 controller.sendImage();
               },
+              sendLocation: () {
+                _showModalBottom(context);
+              },
               isEmojiVisible: controller.emojiShowing,
               isKeyboardVisible: controller.isKeyboardVisible,
             ),
@@ -117,7 +122,7 @@ class ChatPage extends GetView<ChatController> {
                           recentsLimit: 28,
                           noRecentsText: 'No Recents',
                           noRecentsStyle:
-                              TextStyle(fontSize: 20, color: Colors.black26),
+                          TextStyle(fontSize: 20, color: Colors.black26),
                           categoryIcons: CategoryIcons(),
                           buttonMode: ButtonMode.MATERIAL)),
                 ),
@@ -161,6 +166,58 @@ class ChatPage extends GetView<ChatController> {
       ),
     );
   }
+
+  _showModalBottom(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) => Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.white,
+            elevation: 1,
+            title: Row(
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      hintText: 'Search',
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.search,
+                    color: Colors.green,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          body: Container(
+            padding: EdgeInsets.all(8),
+            child: GoogleMap(
+              initialCameraPosition: CameraPosition(
+                  target: LatLng(45.521563, -122.677433),
+                  zoom: 11
+              ),
+              myLocationEnabled: true,
+              myLocationButtonEnabled: true,
+              scrollGesturesEnabled: true,
+              zoomGesturesEnabled: true,
+              zoomControlsEnabled: false,
+            ),
+          ),
+          floatingActionButton: FloatingActionButton(
+            backgroundColor: Colors.green,
+            onPressed: () {
+              controller.sendLocation();
+              Get.back();
+            },
+            child: Icon(Icons.send),
+          ),
+        ));
+  }
 }
 
 class WidgetInputField extends GetView<ChatController> {
@@ -169,6 +226,7 @@ class WidgetInputField extends GetView<ChatController> {
   final Function()? sendIcon;
   final Function()? sendImage;
   final Function()? sendSticker;
+  final Function()? sendLocation;
   final bool isKeyboardVisible;
   final bool isEmojiVisible;
 
@@ -179,6 +237,7 @@ class WidgetInputField extends GetView<ChatController> {
     this.sendIcon,
     this.sendImage,
     this.sendSticker,
+    this.sendLocation,
     required this.isKeyboardVisible,
     required this.isEmojiVisible,
   }) : super(key: key);
@@ -211,6 +270,13 @@ class WidgetInputField extends GetView<ChatController> {
                       onPressed: sendIcon,
                       icon: Icon(
                         Icons.emoji_emotions,
+                        color: Colors.green,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: sendLocation,
+                      icon: Icon(
+                        Icons.add_location,
                         color: Colors.green,
                       ),
                     ),
@@ -268,3 +334,5 @@ class WidgetInputField extends GetView<ChatController> {
     );
   }
 }
+
+
