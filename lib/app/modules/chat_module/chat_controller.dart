@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pdteam_demo_chat/app/data/models/models.dart';
 import 'package:pdteam_demo_chat/app/data/provider/provider.dart';
@@ -123,6 +122,10 @@ class ChatController extends GetxController {
 
   List<MyUser> get members => _members;
 
+  List<MyUser> get membersWithoutMe => _members
+      .where((element) => element.uid != UserProvider.getCurrentUser().uid)
+      .toList();
+
   set members(value) {
     _members.value = value;
   }
@@ -139,9 +142,7 @@ class ChatController extends GetxController {
     name = Get.arguments['name'];
     fromContact = Get.arguments['isFromContact'];
     deviceToken = Get.arguments['deviceToken'];
-    members = List<MyUser>.from(Get.arguments['members'])
-        .where((element) => element.uid != UserProvider.getCurrentUser().uid)
-        .toList();
+    members = List<MyUser>.from(Get.arguments['members']);
     /*-----------------------------------------------*/
     textController.addListener(() {
       textController.text.split(' ').forEach((e) {
