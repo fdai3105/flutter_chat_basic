@@ -366,8 +366,7 @@ class WidgetBubble extends StatelessWidget {
     );
   }
 
-  Widget _buildMapviewBubble(
-      BuildContext context, double latitude, double longitude) {
+  Widget _buildMapviewBubble(BuildContext context, double latitude, double longitude) {
     MarkerId markerId1 = MarkerId("1");
     return Container(
       margin: EdgeInsets.all(10),
@@ -429,57 +428,65 @@ class WidgetBubble extends StatelessWidget {
               ],
             )
           : Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                WidgetAvatar(
-                  url: avatar,
-                  isActive: false,
-                  size: 35,
-                ),
-                SizedBox(
-                  height: 150,
-                  width: 220,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(15),
-                      topLeft: Radius.circular(15),
-                      bottomRight: Radius.circular(isMe ? 0 : 15),
-                      bottomLeft: Radius.circular(isMe ? 0 : 15),
-                    ),
-                    child: Stack(
-                      children: [
-                        GoogleMap(
-                          myLocationButtonEnabled: false,
-                          zoomControlsEnabled: false,
-                          myLocationEnabled: false,
-                          scrollGesturesEnabled: false,
-                          zoomGesturesEnabled: false,
-                          initialCameraPosition: CameraPosition(
-                            target: LatLng(latitude, longitude),
-                            zoom: 11,
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: TextButton(
-                            onPressed: () =>
-                                _showMap(context, latitude, longitude),
-                            child: Text('View'),
-                          ),
-                        )
-                      ],
-                    ),
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          WidgetAvatar(
+            url: avatar,
+            isActive: false,
+            size: 45,
+          ),
+          SizedBox(width: 5),
+          SizedBox(
+            height: 150,
+            width: 220,
+            child: ClipRRect(
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(15),
+                topLeft: Radius.circular(15),
+                bottomRight: Radius.circular(isMe ? 0 : 15),
+                bottomLeft: Radius.circular(isMe ? 0 : 15),
+              ),
+              child: Stack(
+                children: [
+                  GoogleMap(
+                    markers: {
+                      Marker(
+                        markerId: markerId1,
+                        position: LatLng(latitude, longitude),
+                        icon: BitmapDescriptor.
+                        defaultMarkerWithHue
+                          (BitmapDescriptor.hueAzure),
+                      )
+                    },
+                    myLocationButtonEnabled: false,
+                    zoomControlsEnabled: false,
+                    myLocationEnabled: false,
+                    scrollGesturesEnabled: false,
+                    zoomGesturesEnabled: false,
+                    initialCameraPosition: CameraPosition(
+                      target: LatLng(latitude, longitude),
+                      zoom: 11,),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(5),
-                  child: Text(
-                    dateTime,
-                    style: TextStyle(color: Colors.black26),
-                  ),
-                )
-              ],
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: TextButton(
+                      onPressed: () => _showMap(context, latitude, longitude),
+                      child: Text('View'),
+                    ),
+                  )
+                ],
+              ),
             ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(5),
+            child: Text(
+              dateTime,
+              style: TextStyle(color: Colors.black26),
+            ),
+          )
+        ],
+      ),
     );
   }
 
@@ -622,4 +629,7 @@ class _WidgetUrlPreviewState extends State<_WidgetUrlPreview> {
       ),
     );
   }
+
 }
+
+//hu
