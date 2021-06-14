@@ -30,9 +30,19 @@ class ChatController extends GetxController {
   final _fromContact = false.obs;
   final _emojiShowing = false.obs;
   final _stickerShowing = false.obs;
+  final _showMore = true.obs;
   final _isKeyboardVisible = false.obs;
   final _messages = <Message>[].obs;
   final _isLoading = true.obs;
+
+  get showMore => _showMore.value;
+
+  set showMore(value) {
+    if (value && Get.window.viewInsets.bottom != 0) {
+      FocusScope.of(Get.context!).requestFocus(FocusNode());
+    }
+    _showMore.value = value;
+  }
 
   get id => _id.value;
 
@@ -126,6 +136,8 @@ class ChatController extends GetxController {
         emojiShowing = false;
       } else if (isKeyboardVisible && stickerShowing) {
         stickerShowing = false;
+      } else if(isKeyboardVisible && showMore) {
+        showMore = false;
       }
     });
     super.onInit();

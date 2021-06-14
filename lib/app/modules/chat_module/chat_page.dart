@@ -45,7 +45,7 @@ class ChatPage extends GetView<ChatController> {
               ),
             ),
             WidgetInputField(
-              controller: controller.textController,
+              textEditingController: controller.textController,
               onSubmit: () => controller.sendMessage(),
               sendIcon: () {
                 controller.emojiShowing = !controller.emojiShowing;
@@ -87,18 +87,16 @@ class ChatPage extends GetView<ChatController> {
                           recentsLimit: 28,
                           noRecentsText: 'No Recents',
                           noRecentsStyle:
-                          TextStyle(fontSize: 20, color: Colors.black26),
+                              TextStyle(fontSize: 20, color: Colors.black26),
                           categoryIcons: CategoryIcons(),
                           buttonMode: ButtonMode.MATERIAL)),
                 ),
               );
             }),
             GetX<ChatController>(
-              builder: (_){
-                return  Visibility(
-                    visible: controller.stickerShowing,
-                    child: WidgetSticker()
-                );
+              builder: (_) {
+                return Visibility(
+                    visible: controller.stickerShowing, child: WidgetSticker());
               },
             ),
           ],
@@ -135,8 +133,8 @@ class ChatPage extends GetView<ChatController> {
   }
 }
 
-class WidgetInputField extends StatelessWidget {
-  final TextEditingController controller;
+class WidgetInputField extends GetView<ChatController> {
+  final TextEditingController textEditingController;
   final Function()? onSubmit;
   final Function()? sendIcon;
   final Function()? sendImage;
@@ -147,7 +145,7 @@ class WidgetInputField extends StatelessWidget {
 
   WidgetInputField({
     Key? key,
-    required this.controller,
+    required this.textEditingController,
     this.onSubmit,
     this.sendIcon,
     this.sendImage,
@@ -158,57 +156,86 @@ class WidgetInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(10),
-      padding: const EdgeInsets.only(top: 5, left: 15, bottom: 5, right: 10),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade200,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        children: [
-          IconButton(
-            onPressed: sendImage,
-            icon: Icon(
-              Icons.image,
-              color: Colors.green,
+    return Row(
+      children: [
+        GetX<ChatController>(
+          builder: (_){
+            return Visibility(
+                visible: controller.showMore,
+                child: Row(
+                  children: [
+                    IconButton(
+                      onPressed: sendImage,
+                      icon: Icon(
+                        Icons.image,
+                        color: Colors.green,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: sendSticker,
+                      icon: Icon(
+                        Icons.face,
+                        color: Colors.green,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: sendIcon,
+                      icon: Icon(
+                        Icons.emoji_emotions,
+                        color: Colors.green,
+                      ),
+                    ),
+                  ],
+                )
+            );
+          },
+        ),
+        GetX<ChatController>(
+          builder: (_){
+            return IconButton(
+                icon: Icon(
+                  controller.showMore
+                      ? Icons.arrow_back_ios : Icons.arrow_forward_ios,
+                  color: Colors.green,
+                ),
+                onPressed: (){
+                  controller.showMore = !controller.showMore;
+                }
+            );
+          },
+        ),
+        Expanded(
+          child: Container(
+            margin: const EdgeInsets.all(10),
+            padding: const EdgeInsets.only(top: 5, left: 15, bottom: 5, right: 10),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade200,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    controller: textEditingController,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                      hintText: 'Enter Message',
+                      border: InputBorder.none,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  onPressed: onSubmit,
+                  icon: Icon(
+                    Icons.send,
+                    color: Colors.green,
+                  ),
+                )
+              ],
             ),
           ),
-          IconButton(
-            onPressed: sendSticker,
-            icon: Icon(
-              Icons.face,
-              color: Colors.green,
-            ),
-          ),
-          IconButton(
-            onPressed: sendIcon,
-            icon: Icon(
-              Icons.emoji_emotions,
-              color: Colors.green,
-            ),
-          ),
-          Expanded(
-            child: TextFormField(
-              controller: controller,
-              keyboardType: TextInputType.text,
-              decoration: InputDecoration(
-                hintText: 'Enter Message',
-                border: InputBorder.none,
-              ),
-            ),
-          ),
-          IconButton(
-            onPressed: onSubmit,
-            icon: Icon(
-              Icons.send,
-              color: Colors.green,
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
-
-
