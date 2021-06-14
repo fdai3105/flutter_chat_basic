@@ -179,29 +179,6 @@ class ChatPage extends GetView<ChatController> {
     showModalBottomSheet(
         context: context,
         builder: (context) => Scaffold(
-              appBar: AppBar(
-                backgroundColor: Colors.white,
-                elevation: 1,
-                title: Row(
-                  children: [
-                    Expanded(
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          hintText: 'Search',
-                          border: InputBorder.none,
-                        ),
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.search,
-                        color: Colors.green,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
               body: Container(
                 padding: EdgeInsets.all(8),
                 child: GoogleMap(
