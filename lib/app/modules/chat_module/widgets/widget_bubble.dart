@@ -414,7 +414,7 @@ class WidgetBubble extends StatelessWidget {
                       zoom: 11,),
                   ),
                   Align(
-                    alignment: Alignment.bottomRight,
+                    alignment: Alignment.bottomCenter,
                     child: TextButton(
                       onPressed: () => _showMap(context, latitude, longitude),
                       child: Text('View'),

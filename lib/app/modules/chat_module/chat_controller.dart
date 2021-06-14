@@ -32,7 +32,7 @@ class ChatController extends GetxController {
   final _fromContact = false.obs;
   final _emojiShowing = false.obs;
   final _stickerShowing = false.obs;
-  final _showMore = true.obs;
+  final _showMore = false.obs;
   final _isKeyboardVisible = false.obs;
   final _messages = <Message>[].obs;
   final _isLoading = true.obs;
@@ -358,15 +358,14 @@ class ChatController extends GetxController {
                   type: 3,
                 )),
             ntfProvider.pushNotifyToPeer(
-              name,
-              UserProvider.getCurrentUser().displayName! + ' send a location ',
-              UserProvider.getCurrentUser().uid,
-              deviceToken ?? [])
-
+                name,
+                UserProvider.getCurrentUser().displayName! +
+                    ' send a location ',
+                UserProvider.getCurrentUser().uid,
+                deviceToken ?? [])
           });
     }
   }
-
 
   Future<Position> getLocation() async {
     var currentLocation;
@@ -378,5 +377,4 @@ class ChatController extends GetxController {
     }
     return currentLocation;
   }
-
 }
